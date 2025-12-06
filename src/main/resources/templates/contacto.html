@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contacto - Sabor MasterClass</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Estilos globales -->
+  <link th:href="@{/css/styles.css}" rel="stylesheet">
+  <!-- Estilos específicos de contacto -->
+  <link th:href="@{/css/contacto.css}" rel="stylesheet">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top navbar-lg">
+    <div class="container">
+      <!-- Logo + Texto -->
+      <a class="navbar-brand fw-bold d-flex align-items-center" th:href="@{/}">
+        <img th:src="@{/img/logo.jpg(v=${#dates.format(#dates.createNow(),'yyyyMMddHHmmss')})}" 
+             alt="Logo" width="45" height="45" class="me-2">
+        Sabor MasterClass
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" th:href="@{/}">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" th:href="@{/nosotros}">Nosotros</a></li>
+          <li class="nav-item"><a class="nav-link" th:href="@{/cursos}">Cursos</a></li>
+          <li class="nav-item"><a class="nav-link active" th:href="@{/contacto}">Contacto</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- CONTENIDO DE CONTACTO -->
+  <main class="container my-5 pt-5">
+    <div class="row g-4 justify-content-center">
+
+      <!-- FORMULARIO -->
+      <div class="col-lg-7 col-12">
+        <div class="card card-form shadow-sm">
+          <div class="card-body">
+            <h3 class="mb-3 fw-bold">Contacto</h3>
+            <p class="text-muted">¿Tienes preguntas? ¡Envíanos un mensaje!</p>
+            <form>
+              <div class="row mb-3">
+                <div class="col">
+                  <label class="form-label">Nombre</label>
+                  <input type="text" class="form-control" placeholder="Nombre" required>
+                </div>
+                <div class="col">
+                  <label class="form-label">Apellido</label>
+                  <input type="text" class="form-control" placeholder="Apellido" required>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col">
+                  <label class="form-label">Email</label>
+                  <input type="email" class="form-control" placeholder="Correo electrónico" required>
+                </div>
+                <div class="col">
+                  <label class="form-label">Número de contacto</label>
+                  <input type="text" class="form-control" placeholder="Teléfono" required maxlength="10">
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Selecciona un tema</label><br>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="tema" id="certificados" checked>
+                  <label class="form-check-label" for="certificados">Certificados</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="tema" id="cursos">
+                  <label class="form-check-label" for="cursos">Cursos</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="tema" id="soporte">
+                  <label class="form-check-label" for="soporte">Soporte</label>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Mensaje</label>
+                <textarea class="form-control" rows="4" placeholder="Escribe aquí tu mensaje" required></textarea>
+              </div>
+              <button type="submit" class="btn btn-dark w-100">Enviar mensaje</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- INFO DE CONTACTO -->
+      <div class="col-lg-5 col-12">
+        <div class="card contact-info-card shadow-sm bg-dark">
+          <div class="card-body text-light">
+            <h4 class="fw-bold mb-3">Información de Contacto</h4>
+            <p>Envíanos tus comentarios</p>
+            <ul class="list-unstyled">
+              <li class="mb-2"><i class="bi bi-telephone-fill me-2"></i> +310 245 32XX</li>
+              <li class="mb-2"><i class="bi bi-envelope-fill me-2"></i> SaborMasterClass@gmail.com</li>
+              <li><i class="bi bi-geo-alt-fill me-2"></i> 300 Negra Arroyo Lane, Albuquerque</li>
+            </ul>
+            <div class="mt-4">
+              <a href="#" class="text-light me-3"><i class="bi bi-twitter"></i></a>
+              <a href="#" class="text-light me-3"><i class="bi bi-instagram"></i></a>
+              <a href="#" class="text-light"><i class="bi bi-discord"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-dark text-light text-center py-3 mt-5">
+    <p class="mb-0">© 2025 Sabor MasterClass. Todos los derechos reservados.</p>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,83 @@
+/* ============================= */
+/* NAVBAR                        */
+/* ============================= */
+.navbar-lg {
+  height: 90px;
+  background-color: rgb(0, 0, 0) !important;
+}
+
+.navbar-brand img {
+  margin-right: 10px;
+}
+
+/* ============================= */
+/* CONTENEDOR GENERAL            */
+/* ============================= */
+.contact-page-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 40px 15px;
+}
+
+/* Contenedor interno centrado */
+.contact-container {
+  width: 70%;
+  max-width: 1000px;
+}
+
+/* Fila sin márgenes laterales extras */
+.row {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0 15px;
+}
+
+/* ============================= */
+/* CARDS                         */
+/* ============================= */
+.card {
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-size: large;
+  height: 100%;
+}
+
+/* Card del formulario */
+.card-form {
+  background-color: #f8f9fa;
+}
+
+/* Card de información */
+.contact-info-card {
+  background-color: rgb(0, 0, 0);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  min-height: 400px;
+  font-size: 1.6rem;
+}
+
+/* Contenido centrado */
+.contact-info-card .card-body {
+  color: white;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+/* ============================= */
+/* ICONOS SOCIALES               */
+/* ============================= */
+.contact-info-card a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.5rem;
+  margin: 0 8px;
+}
+
+.contact-info-card a:hover {
+  color: #ccc;
+}

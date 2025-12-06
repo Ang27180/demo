@@ -1,0 +1,270 @@
+/* ============================= */
+/* Barra de navegación principal */
+/* ============================= */
+.navbar-lg {
+  height: 90px;
+  background-color: rgb(0, 0, 0) !important;
+}
+
+.navbar-brand img {
+  margin-right: 10px;
+}
+
+/* ============================= */
+/* Estructura base del body      */
+/* ============================= */
+body {
+  background-color: #ffffff;
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding-top: 80px; /* Espacio para navbar fija */
+  padding-bottom: 60px; /* Espacio para footer fijo */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ============================= */
+/* Hero section                  */
+/* ============================= */
+.hero-img-section {
+    height: 25vh; /* más pequeña */
+    background-color: #999999; /* gris */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+.hero-img-section .overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(59, 59, 59, 0.5);
+  z-index: 0;
+}
+
+.hero-content h1 {
+  font-size: 3rem; 
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  
+}
+
+.hero-content p {
+  font-size: 1.25rem;
+}
+
+.hero-content {
+  z-index: 1;
+}
+
+.curso-card .card-img-top {
+  padding: 0.8rem;
+  border-radius: 12px;
+}
+
+/* ============================= */
+/* Tarjetas de cursos            */
+/* ============================= */
+.curso-card .card-img-top {
+  padding: 0.8rem;
+  border-radius: 12px;
+}
+
+.curso-card {
+  background-color: #000000;
+  color: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+}
+
+.curso-img {
+  height: 160px;
+  object-fit: cover;
+}
+
+.curso-card .card-body {
+  flex: 1;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.curso-card .card-footer {
+  border-top: none;
+  background: none;
+  max-height: 200px;
+  overflow: hidden;
+}
+
+/* ============================= */
+/* Botones                       */
+/* ============================= */
+.btn-purple {
+  background-color: #7b39f3;
+  color: white;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.btn-purple:hover {
+  background-color: #9b59ff;
+}
+
+/* ============================= */
+/* Footer fijo                   */
+/* ============================= */
+footer.fixed-bottom {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1020;
+  border-top: 1px solid #1d1d1d;
+  background-color: rgb(0, 0, 0) !important;
+}
+
+footer i {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+footer i:hover {
+  transform: scale(1.1);
+}
+
+/* ============================= */
+/* Formularios y búsqueda        */
+/* ============================= */
+input.form-busqueda {
+  border-radius: 50px 0 0 50px;
+  padding-left: 30px;
+}
+
+.input-group-text {
+  border-radius: 0 30px 30px 0;
+}
+
+/* ============================= */
+/* Tarjetas de contenido         */
+/* ============================= */
+.card-title {
+  font-weight: bold;
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+  font-size: 1rem;
+}
+
+.card-text {
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* ============================= */
+/* Noticias                      */
+/* ============================= */
+@media (min-width: 768px) {
+  .noticia-row .col:nth-child(odd) {
+    clear: left;
+  }
+  .noticia-row .col {
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* ============================= */
+/* Validación de errores         */
+/* ============================= */
+.error {
+  color: red !important;
+  font-size: 0.8rem !important;
+  display: block !important;
+  margin: 4px 0 8px 0 !important;
+}
+
+.campo {
+  margin-bottom: 16px;
+}
+
+/* Quitamos borde rojo por defecto */
+input {
+  border: 1px solid #ccc;
+  padding: 8px;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 12px;
+  cursor: pointer;
+}
+
+/* ============================= */
+/* Modal                         */
+/* ============================= */
+.plus {
+  background-color: #9b59b6;
+  color: white;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+}
+
+.modal-content {
+  background: #fff;
+  color: #000;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 600px;
+  margin: 10% auto;
+  position: relative;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 20px;
+  cursor: pointer;
+  color: #000;
+}
+
+.modal-content ul {
+  padding-left: 20px;
+}

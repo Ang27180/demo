@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Personas</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #333;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #eee;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lista de Personas</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Documento</th>
+                <th>Tipo Documento</th>
+                <th>Género</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Dirección</th>
+                <th>Teléfono</th>
+                <th>Rol ID</th>
+                <th>Contraseña</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="persona : ${personas}">
+                <td th:text="${persona.id}">1</td>
+                <td th:text="${persona.documento}">12345678</td>
+                <td th:text="${persona.tipoDocumento}">CC</td>
+                <td th:text="${persona.genero}">Masculino</td>
+                <td th:text="${persona.nombre}">Juan Pérez</td>
+                <td th:text="${persona.email}">juan@mail.com</td>
+                <td th:text="${persona.direccion}">Calle 123</td>
+                <td th:text="${persona.telefono}">5551234</td>
+                <td th:text="${persona.rolId}">1</td>
+                <td th:text="${persona.contraseña}">1234</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
