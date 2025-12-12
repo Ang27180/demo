@@ -20,9 +20,10 @@ public class Estudiante {
     @Column(name = "progreso", nullable = false, length = 45)
     private String progreso;
 
-    @ManyToOne
-    @JoinColumn(name = "Persona_idPersona", referencedColumnName = "id_persona")
-    private Persona persona;
+   @ManyToOne
+@JoinColumn(name = "persona_id_persona", referencedColumnName = "id_persona")
+private Persona persona;
+
 
     // Getters y Setters
     public Integer getIdEstudiante() { return idEstudiante; }

@@ -7,10 +7,11 @@ import java.time.LocalDate;
 @Table(name = "inscripcion")
 public class Inscripcion {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idInscripcion")   
-    private Integer id;
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+@Column(name = "id_inscripcion")  // ← ESTE NOMBRE DEBE COINCIDIR
+private Integer id;
+
 
     @Column(name = "Fecha_Inscripcion", nullable = false)
     private LocalDate fechaInscripcion;

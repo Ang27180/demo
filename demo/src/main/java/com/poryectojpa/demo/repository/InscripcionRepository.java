@@ -1,8 +1,12 @@
 package com.poryectojpa.demo.repository;
 
+import java.util.List;  // ← ESTA ES LA CORRECTA
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.poryectojpa.demo.models.Inscripcion;
 
 public interface InscripcionRepository extends JpaRepository<Inscripcion, Integer> {
-    boolean existsByIdEstudianteAndCurso_Id(Integer idEstudiante, Integer idCurso);
+
+    List<Inscripcion> findByIdEstudiante(Integer idEstudiante);
+
 }
