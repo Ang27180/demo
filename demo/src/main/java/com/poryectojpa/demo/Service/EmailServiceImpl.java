@@ -17,12 +17,14 @@ public class EmailServiceImpl implements EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
+    // Se inyecta el correo configurado en application.properties para evitar errores de remitente desconocido
     @org.springframework.beans.factory.annotation.Value("${spring.mail.username}")
     private String fromEmail;
 
     @Override
     public void enviarTexto(String para, String asunto, String mensaje) {
         SimpleMailMessage mail = new SimpleMailMessage();
+        // Se establece explícitamente el remitente para corregir el error "can't determine local email address"
         mail.setFrom(fromEmail);
         mail.setTo(para);
         mail.setSubject(asunto);
@@ -36,6 +38,7 @@ public class EmailServiceImpl implements EmailService {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
+        // Uso del remitente configurado para envíos HTML
         helper.setFrom(fromEmail);
         helper.setTo(para);
         helper.setSubject(asunto);
@@ -49,6 +52,7 @@ public class EmailServiceImpl implements EmailService {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
+        // Uso del remitente configurado para envíos con adjuntos
         helper.setFrom(fromEmail);
         helper.setTo(para);
         helper.setSubject(asunto);

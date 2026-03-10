@@ -24,7 +24,7 @@ public class CorreoController {
     }
 
     // ============================================================
-    // 2️⃣ ENVÍO DESDE LA VISTA
+    // 2️⃣ ENVÍO DESDE LA VISTA (MEJORADO)
     // ============================================================
     @PostMapping("/enviar-desde-vista")
     public String enviarDesdeVista(
@@ -34,16 +34,18 @@ public class CorreoController {
             RedirectAttributes redirectAttributes) {
 
         try {
-            // Se genera el contenido HTML con la nueva plantilla premium del proyecto
+            // Se genera el contenido HTML con la nueva plantilla premium diseñada para el proyecto
+            // Se eliminó el parámetro 'tipo' para evitar el Error 400 cuando viene de la vista
             String html = generarPlantillaPremium(para, asunto, mensaje);
             
-            // Se envía como HTML para que luzca profesional
+            // Se envía forzosamente como HTML para mantener la estética institucional
             emailService.enviarHtml(para, asunto, html);
 
             redirectAttributes.addFlashAttribute("mensaje", "Correo enviado correctamente con la nueva plantilla premium");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
 
         } catch (Exception e) {
+            // Si falla el envío (por ejemplo, SMTP mal configurado), se captura y muestra en el formulario
             redirectAttributes.addFlashAttribute("mensaje", "Error al enviar el correo: " + e.getMessage());
             redirectAttributes.addFlashAttribute("tipoMensaje", "error");
         }

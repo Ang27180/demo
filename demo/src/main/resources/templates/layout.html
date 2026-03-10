@@ -56,6 +56,7 @@
       <!-- Usuario autenticado -->
       <div sec:authorize="isAuthenticated()" class="d-flex align-items-center">
         <span class="text-white me-3">
+          <!-- El nombre de usuario es ahora un enlace al perfil personal /perfil -->
           👋 Bienvenido, <a th:href="@{/perfil}" class="text-white text-decoration-none fw-bold"
             sec:authentication="name" title="Ver mi perfil"></a>
         </span>
