@@ -81,15 +81,37 @@
 
 <body>
     <main layout:fragment="contenido">
-        <!-- Header del Curso -->
-        <header class="course-header">
-            <div class="container text-center">
+        <!-- AJUSTE: Header del Curso que ocupa todo el ancho de lado a lado -->
+        <header class="course-header mt-5 pt-5">
+            <div class="container text-center py-4">
                 <span class="badge bg-success mb-2" th:text="${curso.aprendizaje}">Nivel</span>
-                <h1 class="display-4 fw-bold mb-3" th:text="${curso.nombre}">Nombre del Curso</h1>
-                <p class="lead opacity-75 mx-auto" style="max-width: 700px;" th:text="${curso.detalle}">Detalle breve.
-                </p>
+                <h1 class="display-4 fw-bold mb-3 text-white" th:text="${curso.nombre}">Nombre del Curso</h1>
+                <p class="lead opacity-75 mx-auto text-white" style="max-width: 700px;" th:text="${curso.detalle}">
+                    Detalle breve.</p>
             </div>
         </header>
+        <!-- Fin del ajuste -->
+
+        <!-- AJUSTE: Sección de certificado a lo largo (full width) con fondo de lado a lado -->
+        <div class="w-100 py-3" th:if="${inscripcion != null}"
+            style="background: #f8f9fa; border-bottom: 2px solid #e9ecef;">
+            <div class="container">
+                <div class="alert alert-success d-flex flex-wrap align-items-center justify-content-between p-4 rounded-4 shadow-sm border-0"
+                    style="background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);">
+                    <div>
+                        <h4 class="fw-bold mb-1 text-success"><i class="fas fa-award me-2"></i> ¡Certificación
+                            Disponible!</h4>
+                        <p class="mb-0 text-dark opacity-75">Has completado los requisitos para obtener tu certificado
+                            oficial de este curso.</p>
+                    </div>
+                    <a th:href="@{'/reportes/certificado/pdf/' + ${inscripcion.id}}"
+                        class="btn btn-success btn-lg rounded-pill px-4 shadow-sm mt-2 mt-md-0">
+                        <i class="fas fa-file-pdf me-2"></i> Descargar Certificado
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- Fin del ajuste -->
 
         <div class="container mb-5">
             <div class="row g-4">
@@ -153,7 +175,7 @@
                                 <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Acceso de por
                                     vida</li>
                             </ul>
-                            <div class="d-grid">
+                            <div class="d-grid gap-2">
                                 <a href="/mis-cursos" class="btn btn-outline-dark rounded-pill">
                                     <i class="fas fa-arrow-left me-2"></i> Volver a mis cursos
                                 </a>
