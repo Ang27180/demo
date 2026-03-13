@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+
+<head>
+    <meta charset="UTF-8" />
+    <title layout:fragment="titulo">Mi Perfil - Sabor MasterClass</title>
+</head>
+
+<body>
+    <section layout:fragment="contenido">
+
+        <!-- HERO SECTION (ESTILO GLOBAL) -->
+        <section class="hero-img-section">
+            <div class="overlay"></div>
+            <div class="hero-content">
+                <h1>Tu Perfil</h1>
+                <p>
+                    <i class="fas fa-user-circle me-2"></i>
+                    Gestiona tu información personal y mantén tus datos actualizados
+                </p>
+            </div>
+        </section>
+
+        <!-- CONTENIDO PRINCIPAL CENTRADO -->
+        <main class="container py-5">
+            <div class="row justify-content-center">
+
+                <!-- TARJETA DE PERFIL (CENTRADA) -->
+                <div class="col-md-9 col-lg-7">
+                    <div class="p-4 rounded shadow-sm" style="background-color: #f1f3f5; border: 1px solid #dee2e6;">
+
+                        <div class="text-center mb-4">
+                            <div class="bg-dark d-inline-block rounded-circle p-3 mb-2 shadow">
+                                <i class="fas fa-user text-white fs-1 px-2"></i>
+                            </div>
+                            <h4 class="fw-bold" th:text="${persona.nombre}">Nombre de Usuario</h4>
+                            <p class="text-muted" th:text="${persona.email}">correo@ejemplo.com</p>
+                        </div>
+
+                        <!-- Mensajes de éxito o error -->
+                        <div th:if="${mensaje}"
+                            th:class="'alert alert-' + (${tipoMensaje == 'success' ? 'success' : 'danger'}) + ' text-center'"
+                            th:text="${mensaje}">
+                        </div>
+
+                        <form th:action="@{/perfil/actualizar}" th:object="${persona}" method="post" class="row g-3">
+
+                            <!-- Campo oculto del ID -->
+                            <input type="hidden" th:field="*{id}">
+
+                            <!-- Sección 1: Datos Personales -->
+                            <div class="col-12">
+                                <h6 class="border-bottom pb-2 mb-3 fw-bold text-purple">Información Personal</h6>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="form-label fw-semibold">Nombre Completo</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white border-end-0"><i
+                                            class="fas fa-id-card text-muted"></i></span>
+                                    <input type="text" th:field="*{nombre}"
+                                        class="form-control border-start-0 shadow-sm" required>
+                                </div>
+                                <span class="text-danger small" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Teléfono</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white border-end-0"><i
+                                            class="fas fa-phone text-muted"></i></span>
+                                    <input type="text" th:field="*{telefono}"
+                                        class="form-control border-start-0 shadow-sm" required>
+                                </div>
+                                <span class="text-danger small" th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Género</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white border-end-0"><i
+                                            class="fas fa-venus-mars text-muted"></i></span>
+                                    <input type="text" th:value="${persona.genero}"
+                                        class="form-control border-start-0 shadow-sm" readonly
+                                        style="background-color: #e9ecef;">
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="form-label fw-semibold">Dirección</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white border-end-0"><i
+                                            class="fas fa-map-marker-alt text-muted"></i></span>
+                                    <input type="text" th:field="*{direccion}"
+                                        class="form-control border-start-0 shadow-sm" required>
+                                </div>
+                                <span class="text-danger small" th:if="${#fields.hasErrors('direccion')}" th:errors="*{direccion}"></span>
+                            </div>
+
+                            <!-- Información de Cuenta (Solo Lectura por seguridad) -->
+                            <div class="col-12 mt-4">
+                                <h6 class="border-bottom pb-2 mb-3 fw-bold text-purple">Detalles de Cuenta</h6>
+                                <small class="text-muted d-block mb-3">La identificación y el correo son datos sensibles
+                                    y no pueden ser modificados por el usuario directamente.</small>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Identificación</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-white border-end-0"><i
+                                            class="fas fa-id-badge text-muted"></i></span>
+                                    <input type="text" th:value="${persona.tipoDocumento + ' ' + persona.documento}"
+                                        class="form-control border-start-0 shadow-sm" readonly
+                                        style="background-color: #e9ecef;">
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Correo Electrónico</label>
+                                <div class="input-group">
+                                     <span class="input-group-text bg-white border-end-0"><i
+                                             class="fas fa-envelope text-muted"></i></span>
+                                     <input type="email" th:value="${persona.email}"
+                                         class="form-control border-start-0 shadow-sm" readonly
+                                         style="background-color: #e9ecef;">
+                                 </div>
+                             </div>
+
+                            <!-- Sección Acudiente (Solo para Estudiantes) -->
+                            <div th:if="${estudiante != null}" class="col-12 mt-4">
+                                <h6 class="border-bottom pb-2 mb-3 fw-bold text-success">Información del Acudiente</h6>
+                                <div class="row g-3">
+                                    <div class="col-md-12">
+                                        <label class="form-label fw-semibold">Nombre del Acudiente</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-white border-end-0"><i class="fas fa-user-shield text-muted"></i></span>
+                                            <input type="text" name="tutorNombre" th:value="${estudiante.tutorNombre}" class="form-control border-start-0 shadow-sm">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Teléfono del Acudiente</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-white border-end-0"><i class="fas fa-phone-alt text-muted"></i></span>
+                                            <input type="text" name="tutorTelefono" th:value="${estudiante.tutorTelefono}" class="form-control border-start-0 shadow-sm">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-semibold">Correo del Acudiente</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-white border-end-0"><i class="fas fa-at text-muted"></i></span>
+                                            <input type="email" name="tutorEmail" th:value="${estudiante.tutorEmail}" class="form-control border-start-0 shadow-sm">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Botón de Envío -->
+                            <div class="col-12 text-center mt-5">
+                                <button type="submit" class="btn btn-dark px-5 rounded-pill shadow">
+                                    <i class="fas fa-save me-2"></i>Actualizar Mi Perfil
+                                </button>
+                                <div class="mt-3">
+                                    <a th:href="@{/home}" class="text-decoration-none text-muted small">
+                                        <i class="fas fa-arrow-left me-1"></i>Regresar al Inicio
+                                    </a>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </section>
+</body>
+
+</html>

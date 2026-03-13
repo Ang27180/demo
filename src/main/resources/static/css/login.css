@@ -1,0 +1,118 @@
+/* ============================= */
+/* Fondo general para login      */
+/* ============================= */
+body.no-footer {
+  background-color: #ffffff;
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding-top: 80px;   /* espacio navbar */
+  padding-bottom: 60px; /* espacio footer */
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* AJUSTE: Evita el scroll */
+}
+
+/* ============================= */
+/* Navbar                        */
+/* ============================= */
+.navbar-lg {
+  height: 90px;
+  background-color: rgb(0, 0, 0) !important;
+}
+
+.navbar-brand img {
+  margin-right: 10px;
+}
+
+/* ============================= */
+/* Footer fijo                   */
+/* ============================= */
+footer.fixed-bottom {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1020;
+  border-top: 1px solid #000000;
+  background-color: rgb(0, 0, 0) !important;
+}
+
+footer i {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+footer i:hover {
+  transform: scale(1.1);
+}
+
+/* ============================= */
+/* Contenedor principal          */
+/* ============================= */
+.login-container {
+  background-color: #f8f9fa; /* gris muy suave */
+}
+
+/* ============================= */
+/* Card de login                 */
+/* ============================= */
+.login-container .card {
+  border-radius: 20px;
+  border: none;
+  box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.2);
+  background-color: #fff;
+}
+
+/* Título */
+.login-container h1 {
+  font-weight: bold;
+  font-size: 1.8rem;
+  color: #333;
+}
+
+/* ============================= */
+/* Inputs                        */
+/* ============================= */
+.login-container .form-control {
+  border-radius: 10px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-container .form-control:focus {
+  border-color: #000;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.25);
+}
+
+/* ============================= */
+/* Botones                       */
+/* ============================= */
+.login-container .btn-dark {
+  border-radius: 10px;
+  padding: 12px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.login-container .btn-dark:hover {
+  background-color: #000000;
+}
+
+.login-container .btn-outline-secondary,
+.login-container .btn-outline-primary {
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 500;
+}
+
+/* ============================= */
+/* Errores                       */
+/* ============================= */
+.error {
+  color: red !important;
+  font-size: 0.85rem !important;
+  margin: 4px 0 8px 0 !important;
+  display: block !important;
+}

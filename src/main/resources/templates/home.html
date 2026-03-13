@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout}">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Home | Sabor MasterClass</title>
+  <link rel="stylesheet" th:href="@{/css/Home.css}" />
+</head>
+
+<body>
+  <section layout:fragment="contenido">
+
+    <!-- Hero Section -->
+    <section class="hero-img-section">
+      <div class="overlay"></div>
+      <div class="hero-content">
+        <h1>Descubre el CHEF que llevas dentro</h1>
+        <p>
+          <i class="fas fa-utensils me-2"></i>
+          Cursos online de alta calidad impartidos por expertos gastronómicos
+          <i class="fas fa-utensils me-2"></i>
+        </p>
+      </div>
+    </section>
+
+    <!-- Contenido principal -->
+    <main class="container-fluid mt-1 pt-1 mb-3">
+      <div class="row g-4">
+
+        <!-- Noticias -->
+        <div class="col-md-4">
+          <h2 class="fw-bold mb-4">Noticias Gastronómicas</h2>
+          <p class="text-muted mb-4">Mantente al día con las tendencias y novedades del mundo culinario.</p>
+
+          <div class="row row-cols-1 row-cols-md-2 g-3 noticia-row">
+            <div class="col">
+              <div class="card h-100">
+                <div class="card-body">
+                  <h6 class="card-title">La Cocina Sostenible Gana Terreno</h6>
+                  <p class="card-text text-muted small">Restaurantes y chefs apuestan por ingredientes locales y métodos
+                    ecológicos.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col">
+              <div class="card h-100">
+                <div class="card-body">
+                  <h6 class="card-title">Nuevas Tendencias en Platos de Autor</h6>
+                  <p class="card-text text-muted small">Fusión de sabores asiáticos y latinos marcarán la pauta en 2025.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col">
+              <div class="card h-100">
+                <div class="card-body">
+                  <h6 class="card-title">Master Class Lanza Nuevos Cursos</h6>
+                  <p class="card-text text-muted small">Aprende de los mejores chefs con programas para todos los
+                    niveles.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col">
+              <div class="card h-100">
+                <div class="card-body">
+                  <h6 class="card-title">Panadería Artesanal en Auge</h6>
+                  <p class="card-text text-muted small">El pan de masa madre sigue conquistando a los amantes de lo
+                    natural.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col">
+              <div class="card h-100">
+                <div class="card-body">
+                  <h6 class="card-title">Evento Gastronómico del Año</h6>
+                  <p class="card-text text-muted small">No te pierdas la feria culinaria más grande de la región.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col">
+              <div class="card h-100">
+                <div class="card-body">
+                  <h6 class="card-title">Nos visita el Chef Nelson Rodríguez</h6>
+                  <p class="card-text text-muted small">El chef protagonista del programa de concursos nos da tips para
+                    mejorar en la cocina.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cursos -->
+        <div class="col-md-8">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold">Cursos Destacados</h2>
+            <div class="input-group w-50">
+              <input type="text" class="form-control form-busqueda" placeholder="Buscar cursos..." />
+              <span class="input-group-text bg-white border-start-0">
+                <i class="fas fa-search text-muted"></i>
+              </span>
+            </div>
+          </div>
+
+          <div class="row g-4">
+            <!-- Cursos dinámicos -->
+            <div class="col-md-6" th:each="curso : ${cursos}">
+              <div class="card curso-card h-100">
+                <img th:src="${#strings.contains(curso.imagen, 'http')} ? ${#strings.trim(curso.imagen)} : @{/imagenes/{img}(img=${#strings.trim(curso.imagen)})}" class="card-img-top curso-img" th:alt="${curso.nombre}">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6 class="card-title" th:text="${curso.nombre}">Nombre del Curso</h6>
+                    <span class="badge bg-warning text-dark"><i class="fas fa-star"></i> 5.0</span>
+                  </div>
+                  <p class="card-text text-white small" th:text="${curso.detalle}">Descripción del curso.</p>
+                  <p class="fw-bold" th:text="${#numbers.formatCurrency(curso.costo)}">$0.00</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <span class="badge bg-info text-dark" th:text="${curso.aprendizaje}">Nivel</span>
+                    <a th:href="@{/login}" class="btn btn-purple"><i class="fas fa-plus"></i></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Si no hay cursos -->
+            <div class="col-12 text-center" th:if="${#lists.isEmpty(cursos)}">
+              <p class="text-muted">No hay cursos disponibles en este momento.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </section>
+</body>
+
+</html>

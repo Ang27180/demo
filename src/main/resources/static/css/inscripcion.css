@@ -1,0 +1,57 @@
+body {
+    background: #000;
+    font-family: 'Inter', sans-serif;
+}
+
+.inscripcion-card {
+    width: 420px;
+    margin: 50px auto;
+    background: #111;
+    padding: 30px;
+    border-radius: 22px;
+    color: white;
+    box-shadow: 0 0 25px rgba(123, 44, 191, 0.35);
+}
+
+.inscripcion-card h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.inscripcion-card label {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 8px;
+    margin-top: 15px;
+}
+
+.inscripcion-card select {
+    width: 100%;
+    padding: 14px;
+    background: #1c1c1e;
+    color: #e5e5e7;
+    border: 1px solid #2C2C2E;
+    border-radius: 12px;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.inscripcion-card button {
+    width: 100%;
+    padding: 16px;
+    background: #7B2CBF;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: 0.2s;
+}
+
+.inscripcion-card button:hover {
+    background: #9A42E5;
+}
