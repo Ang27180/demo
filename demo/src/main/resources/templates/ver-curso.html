@@ -141,7 +141,10 @@
 
                             <div th:id="'collapse' + ${modulo.id}" class="collapse" data-bs-parent="#accordionModulos">
                                 <div class="card-body p-0 border-top">
-                                    <div class="lesson-item" th:each="leccion : ${modulo.lecciones}">
+                                    <a th:href="${leccion.contenidoUrl}" target="_blank" 
+                                       class="lesson-item text-decoration-none text-dark" 
+                                       th:each="leccion : ${modulo.lecciones}"
+                                       th:title="'Abrir ' + ${leccion.nombre}">
                                         <div class="d-flex align-items-center">
                                             <i class="fas fa-play-circle me-3 text-success"
                                                 th:if="${leccion.contenidoTipo == 'video'}"></i>
@@ -149,12 +152,12 @@
                                                 th:if="${leccion.contenidoTipo == 'texto'}"></i>
                                             <i class="fas fa-file-pdf me-3 text-danger"
                                                 th:if="${leccion.contenidoTipo == 'pdf'}"></i>
-                                            <span th:text="${leccion.nombre}">Nombre de la lección</span>
+                                            <span class="fw-medium" th:text="${leccion.nombre}">Nombre de la lección</span>
                                         </div>
                                         <span th:class="'content-badge badge-' + ${leccion.contenidoTipo}"
                                             th:text="${leccion.contenidoTipo == 'video' ? 'VIDEO' : (leccion.contenidoTipo == 'pdf' ? 'PDF' : 'LECTURA')}">
                                         </span>
-                                    </div>
+                                    </a>
                                 </div>
                             </div>
                         </div>
