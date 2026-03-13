@@ -66,6 +66,7 @@ main {
 }
 
 .curso-card {
+  position: relative;
   background-color: #000000;
   color: white;
   border-radius: 16px;
@@ -75,12 +76,27 @@ main {
   flex-direction: column;
 }
 
+.curso-card::after {
+  content: "";
+  position: absolute;
+  top: 0.8rem; /* Matching image padding if needed, or 0 */
+  left: 0.8rem;
+  right: 0.8rem;
+  height: 250px;
+  background: linear-gradient(to bottom, transparent 60%, #000000 100%);
+  pointer-events: none;
+  border-radius: 12px;
+}
+
 .curso-img {
-  height: 220px;
+  height: 250px;
   object-fit: cover;
+  object-position: top center;
 }
 
 .curso-card .card-body {
+  position: relative;
+  z-index: 1;
   flex: 1;
   padding: 0.75rem;
   display: flex;
@@ -124,4 +140,7 @@ footer i:hover {
 
 .btn-purple:hover {
   background-color: #9b59ff;
+}
+.btn-purple:focus {
+  box-shadow: 0 0 0 3px rgba(123, 57, 243, 0.5);
 }

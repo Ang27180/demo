@@ -1,0 +1,157 @@
+/* Cursos.css */
+.navbar-lg {
+  height: 90px;
+  background-color: rgb(32, 35, 56) !important;
+}
+
+body {
+  background-color: #ffffff;
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding-top: 80px;
+  padding-bottom: 60px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.curso-card {
+  background-color: #1f172e;
+  color: #fff;
+  border: none;
+  border-radius: 1rem;
+  padding: 1rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease;
+}
+
+.curso-card:hover {
+  transform: translateY(-4px);
+}
+
+.card-img-top {
+  height: 160px;
+  object-fit: cover;
+  width: 100%;
+  border-radius: 0.75rem;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #ffffff;
+}
+
+.card-text {
+  font-size: 0.95rem;
+  color: #d1d1d1;
+  flex-grow: 1;
+  line-height: 1.4;
+}
+
+.price {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #ffffff;
+}
+
+.rating {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background-color: #ffc107;
+  color: #0d0d12;
+  padding: 0.25rem 0.5rem;
+  border-radius: 1rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.btn-purple {
+  background-color: #a259ff;
+  color: #fff;
+  border: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.btn-purple:hover {
+  background-color: #8e45e6;
+  cursor: pointer;
+}
+
+.testimonial-card {
+  background: #f8f9fa;
+  border: none;
+  border-left: 4px solid #7e5bef;
+  border-radius: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  padding: 1rem 1.25rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-3px);
+}
+
+.testimonial-card .quote-mark {
+  position: absolute;
+  top: -10px;
+  right: 15px;
+  font-size: 4rem;
+  color: #000000;
+  z-index: 0;
+  line-height: 1;
+}
+
+.testimonial-card .card-body {
+  position: relative;
+  z-index: 1;
+}
+
+.testimonial-card .card-title {
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+  color: #000000;
+}
+
+.testimonial-card .card-text {
+  font-style: italic;
+  font-size: 1.09rem;
+  color: #000000;
+}
+
+.testimonial-card .text-muted {
+  font-size: 0.85rem;
+}
+
+/* Footer fijo */
+footer.fixed-bottom {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1020;
+  border-top: 1px solid #1d1d1d;
+  background-color: rgb(32, 35, 56) !important;
+}
+
+footer i {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+footer i:hover {
+  transform: scale(1.1);
+}

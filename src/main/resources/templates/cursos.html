@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+
+<body>
+    <div class="container mt-5" layout:fragment="contenido">
+
+        <h2 class="text-center fw-bold mb-4">Cursos Disponibles</h2>
+
+        <div th:if="${param.yaInscrito}" class="alert alert-warning alert-dismissible fade show" role="alert">
+            ⚠️ Ya estás inscrito en este curso.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${exito}" class="alert alert-success alert-dismissible fade show">
+            <span th:text="${exito}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div class="row">
+
+            <!-- 📌 Columna de Cursos (9 columnas) -->
+            <div class="col-lg-9">
+                <div class="row g-4">
+
+                    <!-- Tarjeta dinámica -->
+                    <div class="col-sm-6 col-lg-4 col-xl-3 d-flex" th:each="curso : ${cursos}">
+                        <div class="card curso-card position-relative w-100">
+
+                            <span class="rating">★ 5.0</span>
+                            <!-- Imagen -->
+                            <img th:src="${curso.imagen != null ? curso.imagen : '/imagenes/default.jpg'}" class="card-img-top" th:alt="${curso.nombre}">
+                            <div class="card-body d-flex flex-column">
+
+                                <h5 class="card-title" th:text="${curso.nombre}">Nombre curso</h5>
+
+                                <p class="card-text" th:text="${curso.detalle}">
+                                    Descripción del curso
+                                </p>
+
+                                <div class="mt-auto d-flex justify-content-between align-items-center">
+
+                                    <span class="price" th:text="${curso.costo}">$0.00</span>
+
+                                    <a th:href="@{/inscripciones/nueva(idCurso=${curso.id})}" class="btn btn-purple">
+                                        <i class="fas fa-plus"></i>
+                                    </a>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- 📌 Columna de Opiniones (3 columnas) -->
+            <div class="col-lg-3 mt-4 mt-lg-0">
+                <h5 class="mb-3">Opiniones de estudiantes</h5>
+
+                <div class="card testimonial-card mb-3">
+                    <div class="quote-mark">“</div>
+                    <div class="card-body">
+                        <h6 class="card-title">María López</h6>
+                        <small class="text-muted">★ 5.0</small>
+                        <p class="card-text mt-2">El curso de repostería fue increíble. Aprendí muchísimo.</p>
+                    </div>
+                </div>
+
+                <div class="card testimonial-card mb-3">
+                    <div class="quote-mark">“</div>
+                    <div class="card-body">
+                        <h6 class="card-title">Carlos Jiménez</h6>
+                        <small class="text-muted">★ 4.5</small>
+                        <p class="card-text mt-2">La cocina japonesa me encantó. Muy bien explicado.</p>
+                    </div>
+                </div>
+
+                <div class="card testimonial-card mb-3">
+                    <div class="quote-mark">“</div>
+                    <div class="card-body">
+                        <h6 class="card-title">Luis Herrera</h6>
+                        <small class="text-muted">★ 5.0</small>
+                        <p class="card-text mt-2">¡Excelente curso de cocina internacional! Me abrió el apetito por
+                            aprender más sobre otras culturas.</p>
+                    </div>
+                </div>
+
+                <div class="card testimonial-card mb-3">
+                    <div class="quote-mark">“</div>
+                    <div class="card-body">
+                        <h6 class="card-title">Ana Sofía Ríos</h6>
+                        <small class="text-muted">★ 4.7</small>
+                        <p class="card-text mt-2">Muy buenos instructores y recetas fáciles de seguir. ¡Recomiendo el
+                            curso de cocina rápida!</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</body>
+
+</html>
