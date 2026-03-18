@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <title layout:fragment="titulo" th:text="${persona.id == null} ? 'Nueva Persona' : 'Editar Persona'"></title>
+</head>
+<body>
+    <div layout:fragment="contenido" class="container mt-5">
+        <h1 class="mb-4" th:text="${persona.id == null} ? 'Nueva Persona' : 'Editar Persona'"></h1>
+        
+        <form th:action="@{${persona.id == null} ? '/personas' : '/personas/' + ${persona.id}}" th:object="${persona}" method="post" class="row g-3">
+
+        <div class="col-md-6">
+            <label class="form-label">Documento</label>
+            <input type="text" th:field="*{documento}" class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Tipo Documento</label>
+            <input type="text" th:field="*{tipoDocumento}" class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Género</label>
+            <input type="text" th:field="*{genero}" class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Nombre</label>
+            <input type="text" th:field="*{nombre}" class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Email</label>
+            <input type="email" th:field="*{email}" class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Dirección</label>
+            <input type="text" th:field="*{direccion}" class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Teléfono</label>
+            <input type="text" th:field="*{telefono}" class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Rol ID</label>
+            <input type="number" th:field="*{rolId}" class="form-control" />
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Contraseña</label>
+            <input type="password" th:field="*{contrasena}" class="form-control" />
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-success">Guardar</button>
+            <a th:href="@{/personas}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+
+    </div>
+</body>
+</html>
