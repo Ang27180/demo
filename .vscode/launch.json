@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "HannaApplication",
+            "request": "launch",
+            "mainClass": "com.poryectojpa.demo.HannaApplication",
+            "projectName": "demo"
+        }
+    ]
+}
