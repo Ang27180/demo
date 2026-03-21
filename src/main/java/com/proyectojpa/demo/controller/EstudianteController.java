@@ -40,12 +40,7 @@ public class EstudianteController {
             com.proyectojpa.demo.models.Persona persona = personaRepository.findByEmail(email);
             
             com.proyectojpa.demo.models.Estudiante estudiante = estudianteService.findByPersona(persona).orElse(null);
-            
-            System.out.println("DEBUG: Cargando dashboard estudiante para " + email + ", Estudiante found: " + (estudiante != null));
-            if (estudiante != null) {
-                System.out.println("DEBUG: Tutor name: " + estudiante.getTutorNombre());
-            }
-            
+
             model.addAttribute("estudiante", estudiante);
         }
 

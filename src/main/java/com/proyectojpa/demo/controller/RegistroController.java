@@ -65,19 +65,12 @@ public class RegistroController {
         // Cifrar la contraseña antes de guardar
         persona.setContrasena(passwordEncoder.encode(persona.getContrasena()));
 
-        System.out.println("DEBUG: Procesando registro para " + persona.getEmail() + ", Rol recibido: " + persona.getRolId());
-
         // Guardar persona en la base de datos
         Persona guardada = PersonaRepository.save(persona);
-
-        System.out.println("DEBUG: Persona guardada con ID: " + guardada.getId() + ", Rol guardado: " + guardada.getRolId());
 
         // AJUSTE: Si el rol es Usuario (2), creamos automáticamente su perfil de estudiante
         if (guardada.getRolId() != null && guardada.getRolId() == 2) {
 
-            System.out.println("DEBUG: Creando perfil de estudiante para " + guardada.getEmail());
-            System.out.println("DEBUG: Datos tutor recibidos: " + persona.getTutorNombre() + ", " + persona.getTutorTelefono());
-            
             com.proyectojpa.demo.models.Estudiante estudiante = new com.proyectojpa.demo.models.Estudiante();
             estudiante.setPersona(guardada);
             estudiante.setProgreso("0%");
@@ -86,7 +79,6 @@ public class RegistroController {
             estudiante.setTutorTelefono(persona.getTutorTelefono());
             estudiante.setTutorEmail(persona.getTutorEmail());
             estudianteRepository.save(estudiante);
-            System.out.println("DEBUG: Estudiante guardado con éxito.");
         }
 
 

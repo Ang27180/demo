@@ -1,7 +1,7 @@
 package com.proyectojpa.demo.security;
 
-import java.util.Optional;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,15 +14,16 @@ import com.proyectojpa.demo.repository.PersonaRepository;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
+    private static final Logger log = LoggerFactory.getLogger(CustomUserDetailsService.class);
+
     @Autowired
     private PersonaRepository PersonaRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        System.out.println("Intentando autenticar: " + email);
+        log.debug("Carga de usuario por email");
         Persona persona = PersonaRepository.findByEmail(email);
-        System.out.println("Resultado: " + persona);
         if (persona == null) {
             throw new UsernameNotFoundException("Usuario no encontrado con el email: " + email);
         }

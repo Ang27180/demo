@@ -37,7 +37,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return persona.getNombre();
+        return persona.getEmail();
     }
 
     @Override

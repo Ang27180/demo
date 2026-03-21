@@ -40,11 +40,6 @@ public class PerfilController {
         // Buscamos si tiene perfil de estudiante para mostrar datos de tutor
         Estudiante estudiante = estudianteRepository.findByPersona(persona).orElse(null);
 
-        System.out.println("DEBUG: Cargando perfil para " + persona.getEmail() + ", Estudiante found: " + (estudiante != null));
-        if (estudiante != null) {
-            System.out.println("DEBUG: Tutor name in DB: " + estudiante.getTutorNombre());
-        }
-
         model.addAttribute("persona", persona);
         model.addAttribute("estudiante", estudiante);
         return "perfil";
@@ -76,7 +71,6 @@ public class PerfilController {
                 estudiante.setTutorTelefono(tutorTelefono);
                 estudiante.setTutorEmail(tutorEmail);
                 estudianteRepository.save(estudiante);
-                System.out.println("DEBUG: Tutor actualizado para " + personaExistente.getEmail());
             }
 
             redirectAttributes.addFlashAttribute("mensaje", "¡Perfil actualizado con éxito!");

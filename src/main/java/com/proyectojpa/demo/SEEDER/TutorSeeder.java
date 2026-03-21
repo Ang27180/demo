@@ -1,6 +1,8 @@
 package com.proyectojpa.demo.SEEDER;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +13,8 @@ import com.proyectojpa.demo.repository.PersonaRepository;
 
 @Component
 public class TutorSeeder implements CommandLineRunner {
+
+    private static final Logger log = LoggerFactory.getLogger(TutorSeeder.class);
 
     private final TutorRepository tutorRepository;
     private final PersonaRepository PersonaRepository;
@@ -34,7 +38,7 @@ public class TutorSeeder implements CommandLineRunner {
 
             tutorRepository.save(t);
 
-            System.out.println(">>> Tutor inicial creado");
+            log.info("Tutor inicial creado");
         }
     }
 }
