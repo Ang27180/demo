@@ -141,6 +141,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
+                    <!-- CORRECCIÓN: Flag -parameters necesario en Spring Boot 3.2+
+                         para que Spring MVC resuelva nombres de @RequestParam sin name= explícito -->
+                    <parameters>true</parameters>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>

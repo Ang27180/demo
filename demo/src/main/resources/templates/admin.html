@@ -7,8 +7,8 @@
 </head>
 
 <body>
-    <div layout:fragment="contenido">
-        <h2 class="mt-5 mb-4 text-center fw-bold">Panel de Administración</h2>
+    <div layout:fragment="contenido" class="container mt-5 pt-5 pb-5">
+        <h2 class="mb-4 text-center fw-bold">Panel de Administración</h2>
 
         <!-- TARJETAS DE RESUMEN -->
         <div class="row g-4 mb-5">
@@ -47,7 +47,8 @@
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h4 class="fw-bold">Gestión de Usuarios</h4>
                 <div class="d-flex gap-2">
-                    <a th:href="@{/correo/formulario}" class="btn btn-outline-success"><i class="fas fa-paper-plane me-2"></i>Enviar Correo</a>
+                    <a th:href="@{/correo/formulario}" class="btn btn-outline-success"><i
+                            class="fas fa-paper-plane me-2"></i>Enviar Correo</a>
                     <a th:href="@{/personas/nueva}" class="btn btn-success">➕ Añadir Usuario</a>
                     <a th:href="@{/personas/exportarExcel(filtroNombre=${filtroNombre}, filtroRol=${filtroRol})}"
                         class="btn btn-outline-success">⬇️ Exportar Excel</a>
@@ -153,6 +154,12 @@
                             <td th:text="${curso.aprendizaje}"></td>
                             <td th:text="${curso.categoria}"></td>
                             <td class="text-center">
+                                <!-- AJUSTE: Botón para gestionar el contenido del curso (Módulos y Lecciones) -->
+                                <a th:href="@{'/admin/cursos/' + ${curso.id} + '/contenido'}"
+                                    class="btn btn-info btn-sm text-white" title="Gestionar Contenido">
+                                    <i class="fas fa-book-open"></i> Contenido
+                                </a>
+
                                 <a th:href="@{admin/cursos/form/{id}(id=${curso.id})}" class="btn btn-warning btn-sm">✏️
                                     Editar</a>
                                 <a th:href="@{/admin/cursos/eliminar/{id}(id=${curso.id})}"

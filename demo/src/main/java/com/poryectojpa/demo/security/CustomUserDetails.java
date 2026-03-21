@@ -18,9 +18,12 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Mapeo de roles según el valor de id_rol
-        String roleName;
-        roleName = switch (persona.getRolId()) {
+        // CORRECCIÓN: Protección contra rolId null para evitar NullPointerException
+        if (persona.getRolId() == null) {
+            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        }
+        // Mapeo de id_rol → ROLE_XXX que Spring Security entiende
+        String roleName = switch (persona.getRolId()) {
             case 1 -> "ROLE_ADMIN";
             case 2 -> "ROLE_ESTUDIANTE";
             case 3 -> "ROLE_TUTOR";
@@ -37,7 +40,10 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return persona.getNombre();
+        // CORRECCIÓN: Spring Security usa getUsername() para el lookup.
+        // Debe retornar el email (que es el campo con el que se autentica),
+        // NO el nombre de la persona.
+        return persona.getEmail();
     }
 
     @Override

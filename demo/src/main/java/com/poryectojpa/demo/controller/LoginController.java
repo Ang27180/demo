@@ -56,7 +56,7 @@ public class LoginController {
     }
 
     @PostMapping("/forgot-password")
-    public String procesarRecuperarContrasena(@RequestParam String email, Model model) {
+    public String procesarRecuperarContrasena(@RequestParam(name = "email") String email, Model model) {
         Persona user = personaRepository.findByEmail(email.trim());
         if (user == null) {
             model.addAttribute("error", "El correo no está registrado en el sistema.");

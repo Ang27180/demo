@@ -38,8 +38,9 @@ public class AdminController {
     // PANEL ADMIN CON FILTROS
     @GetMapping("/admin")
     public String mostrarPanelAdmin(
-            @RequestParam(required = false) String filtroNombre,
-            @RequestParam(required = false) Integer filtroRol,
+            // CORRECCIÓN: name= explícito requerido en Spring Boot 3.2+ sin flag -parameters
+            @RequestParam(name = "filtroNombre", required = false) String filtroNombre,
+            @RequestParam(name = "filtroRol", required = false) Integer filtroRol,
             Model model) {
 
         // inicializar si vienen nulos
@@ -74,8 +75,8 @@ public class AdminController {
     @GetMapping("/personas/exportarExcel")
     public void exportarExcel(
             HttpServletResponse response,
-            @RequestParam(required = false) String filtroNombre,
-            @RequestParam(required = false) Integer filtroRol) throws IOException {
+            @RequestParam(name = "filtroNombre", required = false) String filtroNombre,
+            @RequestParam(name = "filtroRol", required = false) Integer filtroRol) throws IOException {
 
         final String filtroNombreFinal = (filtroNombre == null) ? "" : filtroNombre;
 

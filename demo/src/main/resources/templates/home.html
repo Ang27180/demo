@@ -5,138 +5,352 @@
 <head>
   <meta charset="UTF-8" />
   <title>Home | Sabor MasterClass</title>
-  <link rel="stylesheet" th:href="@{/css/Home.css}" />
+  <!-- Google Fonts: Caveat para el 20% OFF -->
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">
 </head>
 
 <body>
   <section layout:fragment="contenido">
 
-    <!-- Hero Section -->
-    <section class="hero-img-section">
-      <div class="overlay"></div>
-      <div class="hero-content">
-        <h1>Descubre el CHEF que llevas dentro</h1>
-        <p>
-          <i class="fas fa-utensils me-2"></i>
-          Cursos online de alta calidad impartidos por expertos gastronómicos
-          <i class="fas fa-utensils me-2"></i>
+    <!-- ====================================================== -->
+    <!-- HERO SECTION: Fondo oscuro con imagen, título y botones -->
+    <!-- ====================================================== -->
+    <section class="hero-section text-center text-white position-relative">
+      <div class="hero-overlay"></div>
+      <div class="container position-relative z-1 hero-content">
+        <h1 class="display-4 fw-bold mb-3 font-serif">
+          Descubre el <span class="text-yellow text-uppercase"
+            style="font-family: 'Times New Roman', serif; font-style: italic;">Chef</span> que llevas dentro
+        </h1>
+        <p class="fs-5 mb-4 text-light d-flex justify-content-center align-items-center gap-2">
+          <i class="fas fa-utensils"></i>
+          Cursos online de alta cocina con expertos gastronómicos
+          <i class="fas fa-utensils"></i>
         </p>
+        <!-- Botones: Explorar Cursos (amarillo) y Ver Video (outline blanco) -->
+        <div class="d-flex justify-content-center gap-3 mt-4">
+          <a th:href="@{/cursos}" class="btn btn-yellow rounded-pill px-4 py-2 fw-bold text-dark fs-5 shadow">
+            Explorar Cursos
+          </a>
+          <a href="#" class="btn btn-outline-light text-white rounded-pill px-4 py-2 d-flex align-items-center gap-2 fw-bold fs-5">
+            <i class="fas fa-play-circle fs-4"></i> Ver Video
+          </a>
+        </div>
       </div>
     </section>
 
-    <!-- Contenido principal -->
-    <main class="container-fluid mt-1 pt-1 mb-3">
-      <div class="row g-4">
+    <!-- ============================================================== -->
+    <!-- FEATURES BAR: Iconos de características debajo del hero        -->
+    <!-- ============================================================== -->
+    <div class="features-bar py-3 bg-white shadow-sm mb-4 w-100">
+      <div class="container d-flex justify-content-center flex-wrap text-dark fw-bold text-center gap-0">
+        <div class="flex-fill py-1">
+          <i class="fas fa-certificate text-muted me-2 border p-1 rounded-circle bg-light border-dark"></i>
+          Certificados
+        </div>
+        <div class="border-start flex-fill py-1 px-2">
+          <i class="far fa-comment-alt text-warning me-2 border p-1 rounded-circle bg-light border-warning"></i>
+          Clases en Vivo
+        </div>
+        <div class="border-start flex-fill py-1 px-2">
+          <i class="fas fa-utensils text-dark me-2 border p-1 rounded-circle bg-light border-dark"></i>
+          Recetas Exclusivas
+        </div>
+        <div class="border-start flex-fill py-1 px-2">
+          <i class="fas fa-globe text-dark me-2 border p-1 rounded-circle bg-light border-dark"></i>
+          Comunidad Global
+        </div>
+      </div>
+    </div>
 
-        <!-- Noticias -->
-        <div class="col-md-4">
-          <h2 class="fw-bold mb-4">Noticias Gastronómicas</h2>
-          <p class="text-muted mb-4">Mantente al día con las tendencias y novedades del mundo culinario.</p>
+    <!-- ============================================================== -->
+    <!-- MAIN: 3 columnas: Noticias | Cursos + Banner | Sidebar         -->
+    <!-- Suma de columnas: 2 + 7 + 3 = 12 (correcto)                   -->
+    <!-- ============================================================== -->
+    <main class="container-fluid px-lg-4 py-2" style="max-width: 1400px;">
+      <div class="row gx-3 gy-4">
 
-          <div class="row row-cols-1 row-cols-md-2 g-3 noticia-row">
-            <div class="col">
-              <div class="card h-100">
-                <div class="card-body">
-                  <h6 class="card-title">La Cocina Sostenible Gana Terreno</h6>
-                  <p class="card-text text-muted small">Restaurantes y chefs apuestan por ingredientes locales y métodos
-                    ecológicos.</p>
-                </div>
-              </div>
+        <!-- ======================================= -->
+        <!-- COLUMNA IZQUIERDA: Noticias Gastronómicas -->
+        <!-- ======================================= -->
+        <div class="col-lg-2">
+          <div class="card bg-white shadow-sm border-0 rounded-4 p-3 sticky-top" style="top: 100px;">
+            <!-- Encabezado del panel -->
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+              <h6 class="fw-bold m-0 text-dark" style="font-size: 0.85rem;">Noticias Gastronómicas</h6>
+              <a href="#" class="text-dark fw-bold text-decoration-none" style="font-size: 0.72rem;">
+                Ver Todas <i class="fas fa-arrow-right"></i>
+              </a>
             </div>
-
-            <div class="col">
-              <div class="card h-100">
-                <div class="card-body">
-                  <h6 class="card-title">Nuevas Tendencias en Platos de Autor</h6>
-                  <p class="card-text text-muted small">Fusión de sabores asiáticos y latinos marcarán la pauta en 2025.
-                  </p>
-                </div>
+            <!-- Lista de noticias -->
+            <div class="d-flex flex-column gap-3">
+              <!-- Noticia 1 -->
+              <div class="d-flex align-items-center gap-2 news-item cursor-pointer">
+                <img th:src="@{/imagenes/pasta-794464_1280.jpg}"
+                     class="rounded-3 shadow-sm flex-shrink-0"
+                     alt="Noticia"
+                     style="width: 65px; height: 50px; object-fit: cover;">
+                <h6 class="mb-0 fw-bold text-dark" style="font-size: 0.72rem; line-height: 1.3;">
+                  Tendencias 2025: La Nueva Cocina Fusión
+                </h6>
               </div>
-            </div>
-
-            <div class="col">
-              <div class="card h-100">
-                <div class="card-body">
-                  <h6 class="card-title">Master Class Lanza Nuevos Cursos</h6>
-                  <p class="card-text text-muted small">Aprende de los mejores chefs con programas para todos los
-                    niveles.</p>
-                </div>
+              <!-- Noticia 2 -->
+              <div class="d-flex align-items-center gap-2 news-item cursor-pointer">
+                <img th:src="@{/imagenes/Panaderia-artesanal.jpg}"
+                     class="rounded-3 shadow-sm flex-shrink-0"
+                     alt="Noticia"
+                     style="width: 65px; height: 50px; object-fit: cover;">
+                <h6 class="mb-0 fw-bold text-secondary" style="font-size: 0.72rem; line-height: 1.3;">
+                  Panadería Sostenible: Ingredientes Locales
+                </h6>
               </div>
-            </div>
-
-            <div class="col">
-              <div class="card h-100">
-                <div class="card-body">
-                  <h6 class="card-title">Panadería Artesanal en Auge</h6>
-                  <p class="card-text text-muted small">El pan de masa madre sigue conquistando a los amantes de lo
-                    natural.</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="col">
-              <div class="card h-100">
-                <div class="card-body">
-                  <h6 class="card-title">Evento Gastronómico del Año</h6>
-                  <p class="card-text text-muted small">No te pierdas la feria culinaria más grande de la región.</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="col">
-              <div class="card h-100">
-                <div class="card-body">
-                  <h6 class="card-title">Nos visita el Chef Nelson Rodríguez</h6>
-                  <p class="card-text text-muted small">El chef protagonista del programa de concursos nos da tips para
-                    mejorar en la cocina.</p>
-                </div>
+              <!-- Noticia 3 -->
+              <div class="d-flex align-items-center gap-2 news-item cursor-pointer">
+                <img th:src="@{/imagenes/cocina_saludable.jpg}"
+                     class="rounded-3 shadow-sm flex-shrink-0"
+                     alt="Noticia"
+                     style="width: 65px; height: 50px; object-fit: cover;">
+                <h6 class="mb-0 fw-bold text-secondary" style="font-size: 0.72rem; line-height: 1.3;">
+                  Evento Gastronómico del Año
+                </h6>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Cursos -->
-        <div class="col-md-8">
-          <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="fw-bold">Cursos Destacados</h2>
-            <div class="input-group w-50">
-              <input type="text" class="form-control form-busqueda" placeholder="Buscar cursos..." />
-              <span class="input-group-text bg-white border-start-0">
-                <i class="fas fa-search text-muted"></i>
-              </span>
+        <!-- ============================================================== -->
+        <!-- COLUMNA CENTRAL: Cursos Destacados + Banner + Social Proof     -->
+        <!-- ============================================================== -->
+        <div class="col-lg-7">
+
+          <!-- Encabezado "Cursos Destacados" con línea punteada y Ver Todos -->
+          <div class="d-flex align-items-center mb-3">
+            <h3 class="fw-bold m-0 me-3" style="font-family: Arial, sans-serif; white-space: nowrap; font-size: 1.4rem;">
+              Cursos Destacados
+            </h3>
+            <div class="flex-grow-1" style="border-bottom: 1px dotted #bbb; height: 1px;"></div>
+            <a th:href="@{/cursos}" class="btn btn-outline-dark btn-sm rounded-pill px-3 ms-3">Ver Todos</a>
+          </div>
+
+          <!-- ======================================================= -->
+          <!-- TARJETAS DE CURSOS: máximo 4, organizadas en 4 columnas -->
+          <!-- ======================================================= -->
+          <div class="row row-cols-2 row-cols-md-4 g-3 mb-4">
+            <div class="col" th:each="curso, iter : ${cursos}" th:if="${iter.index < 4}">
+              <div class="card curso-card-dark h-100 shadow rounded-4 border-0 text-white position-relative overflow-hidden">
+
+                <!-- Badge: Nuevo (índice 0 y 3) / Bestseller (índice 1) -->
+                <div class="position-absolute top-0 start-0 m-2 z-1">
+                  <span th:if="${iter.index == 0}" class="badge badge-nuevo rounded-pill px-2 py-1">Nuevo</span>
+                  <span th:if="${iter.index == 1}" class="badge badge-bestseller rounded-pill px-2 py-1">Bestseller</span>
+                  <span th:if="${iter.index == 3}" class="badge badge-nuevo rounded-pill px-2 py-1">Nuevo</span>
+                </div>
+
+                <!-- Rating en esquina superior derecha -->
+                <div class="position-absolute top-0 end-0 m-2 z-1">
+                  <span class="badge bg-dark bg-opacity-75 rounded-pill px-2 py-1" style="font-size: 0.6rem;">
+                    <i class="fas fa-star text-warning" style="font-size: 0.55rem;"></i> 4.9
+                  </span>
+                </div>
+
+                <!-- Imagen del curso -->
+                <div class="w-100 overflow-hidden" style="height: 125px;">
+                  <img th:src="${curso.imagen != null and #strings.contains(curso.imagen, 'http') ? curso.imagen : '/imagenes/' + (curso.imagen != null ? curso.imagen : 'default.jpg')}"
+                       class="w-100 h-100"
+                       th:alt="${curso.nombre}"
+                       style="object-fit: cover;">
+                </div>
+
+                <!-- Cuerpo de la tarjeta -->
+                <div class="card-body p-2 d-flex flex-column">
+                  <!-- Nombre del curso -->
+                  <h6 class="card-title fw-bold mb-2" th:text="${curso.nombre}"
+                      style="font-size: 0.78rem; line-height: 1.25; min-height: 2rem; overflow: hidden;">
+                  </h6>
+                  <!-- Avatar e instructor -->
+                  <div class="d-flex align-items-center gap-2 mb-2">
+                    <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center flex-shrink-0"
+                         style="width: 20px; height: 20px;">
+                      <i class="fas fa-user text-white" style="font-size: 0.55rem;"></i>
+                    </div>
+                    <span class="text-muted" style="font-size: 0.63rem;">Chef Instructor</span>
+                  </div>
+                  <!-- Precio y botón Inscribirse -->
+                  <div class="mt-auto d-flex justify-content-between align-items-center gap-1">
+                    <span class="price-text" th:text="${'€' + #numbers.formatDecimal(curso.costo, 1, 2)}">€0.00</span>
+                    <a th:href="@{/login}" class="btn-enroll text-decoration-none">Inscribirse</a>
+                  </div>
+                </div>
+
+              </div>
             </div>
           </div>
 
-          <div class="row g-4">
-            <!-- Cursos dinámicos -->
-            <div class="col-md-6" th:each="curso : ${cursos}">
-              <div class="card curso-card h-100">
-                <img th:src="@{/imagenes/{img}(img=${curso.imagen})}" class="card-img-top curso-img" th:alt="${curso.nombre}">
-                <div class="card-body">
-                  <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h6 class="card-title" th:text="${curso.nombre}">Nombre del Curso</h6>
-                    <span class="badge bg-warning text-dark"><i class="fas fa-star"></i> 5.0</span>
+          <!-- ============================================================ -->
+          <!-- BANNER DE DESCUENTO con countdown funcional                  -->
+          <!-- ============================================================ -->
+          <div class="discount-banner shadow rounded-top-4 overflow-hidden mb-0">
+            <div class="banner-overlay p-4">
+              <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                <!-- Texto y countdown -->
+                <div>
+                  <!-- Título y 20% OFF en la misma línea -->
+                  <div class="d-flex align-items-center gap-2 flex-nowrap mb-2">
+                    <h3 class="text-white fw-bold m-0 flex-shrink-0" style="font-size: 1.05rem; white-space: nowrap;">
+                      Descuento de Lanzamiento
+                    </h3>
+                    <span class="text-yellow flex-shrink-0"
+                          style="font-family: 'Caveat', cursive; font-size: 2rem; display: inline-block; transform: rotate(-4deg); line-height: 1;">
+                      20% OFF
+                    </span>
                   </div>
-                  <p class="card-text text-white small" th:text="${curso.detalle}">Descripción del curso.</p>
-                  <p class="fw-bold" th:text="${#numbers.formatCurrency(curso.costo)}">$0.00</p>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <span class="badge bg-info text-dark" th:text="${curso.aprendizaje}">Nivel</span>
-                    <a th:href="@{/login}" class="btn btn-purple"><i class="fas fa-plus"></i></a>
+                  <!-- Countdown activo con JS -->
+                  <div class="d-flex align-items-center gap-2 text-white">
+                    <span class="small opacity-75">Termina en:</span>
+                    <div class="d-flex align-items-center gap-1">
+                      <div class="countdown-box" id="cd-hours">05</div>
+                      <span class="fw-bold text-yellow fs-5">:</span>
+                      <div class="countdown-box" id="cd-minutes">23</div>
+                      <span class="fw-bold text-yellow fs-5">:</span>
+                      <div class="countdown-box" id="cd-seconds">48</div>
+                    </div>
                   </div>
                 </div>
+                <!-- Botón Quiero mi Descuento -->
+                <a th:href="@{/login}"
+                   class="btn btn-danger px-4 py-2 rounded-pill fw-bold shadow text-decoration-none d-flex align-items-center gap-2"
+                   style="font-size: 0.88rem; background-color: #c62828; border: none;">
+                  Quiero mi Descuento <i class="fas fa-arrow-right"></i>
+                </a>
               </div>
             </div>
-            
-            <!-- Si no hay cursos -->
-            <div class="col-12 text-center" th:if="${#lists.isEmpty(cursos)}">
-              <p class="text-muted">No hay cursos disponibles en este momento.</p>
+          </div>
+
+          <!-- ============================================================ -->
+          <!-- SOCIAL PROOF BAR: Estudiantes + Marcas                       -->
+          <!-- ============================================================ -->
+          <div class="social-proof-bar d-flex flex-wrap align-items-center justify-content-between gap-2 py-2 px-4 bg-white border border-top-0 rounded-bottom-4 mb-4">
+            <!-- Estudiantes y estrellas -->
+            <div class="d-flex align-items-center gap-2">
+              <span class="fw-bold text-dark" style="font-size: 0.78rem;">++10,000 <span class="text-dark">Estudiantes</span></span>
+              <div class="text-warning d-flex" style="font-size: 0.6rem; gap: 2px;">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                <i class="fas fa-star"></i><i class="fas fa-star"></i>
+              </div>
             </div>
+            <!-- Marcas "As Seen In" -->
+            <div class="d-flex align-items-center gap-3 opacity-75 flex-wrap">
+              <span class="text-muted small fw-bold" style="font-size: 0.68rem;">As Seen In</span>
+              <span class="fw-bold text-dark" style="font-size: 0.7rem; letter-spacing: 1px; font-style: italic;">&#120528;OURMET</span>
+              <span class="fw-bold text-dark" style="font-size: 0.7rem;">EL PA&Iacute;S</span>
+              <span class="fw-bold text-dark" style="font-size: 0.7rem;">BBC FOOD</span>
+              <span class="fw-bold text-dark" style="font-size: 0.7rem;">MasterChef</span>
+            </div>
+          </div>
+
+        </div>
+        <!-- fin col-lg-7 -->
+
+        <!-- ============================================================== -->
+        <!-- COLUMNA DERECHA: ¿Por qué elegirnos? (Sidebar)                 -->
+        <!-- ============================================================== -->
+        <div class="col-lg-3">
+          <div class="card bg-white shadow-sm border-0 rounded-4 p-4 sticky-top" style="top: 100px;">
+            <h6 class="fw-bold mb-4 text-dark" style="font-size: 1rem;">¿Por qué elegirnos?</h6>
+            <ul class="list-unstyled mb-0 d-flex flex-column gap-0">
+              <!-- Item 1: Expertos Certificados -->
+              <li class="d-flex align-items-center gap-3 pb-3 mb-3 border-bottom">
+                <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                     style="width: 36px; height: 36px; background-color: #fff0f0;">
+                  <i class="fas fa-award text-danger"></i>
+                </div>
+                <span class="fw-bold text-dark" style="font-size: 0.85rem;">Expertos Certificados</span>
+              </li>
+              <!-- Item 2: Acceso de Por Vida -->
+              <li class="d-flex align-items-center gap-3 pb-3 mb-3 border-bottom">
+                <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                     style="width: 36px; height: 36px; background-color: #f0f0f0;">
+                  <i class="fas fa-check-circle text-secondary"></i>
+                </div>
+                <span class="fw-bold text-secondary" style="font-size: 0.85rem;">Acceso de Por Vida</span>
+              </li>
+              <!-- Item 3: Soporte 24/7 -->
+              <li class="d-flex align-items-center gap-3 pb-3 mb-3 border-bottom">
+                <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                     style="width: 36px; height: 36px; background-color: #fef8e7;">
+                  <i class="fas fa-headset text-warning"></i>
+                </div>
+                <span class="fw-bold text-secondary" style="font-size: 0.85rem;">Soporte 24/7</span>
+              </li>
+              <!-- Item 4: Recetario Descargable -->
+              <li class="d-flex align-items-center gap-3">
+                <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
+                     style="width: 36px; height: 36px; background-color: #f0f0f0;">
+                  <i class="far fa-file-alt text-dark"></i>
+                </div>
+                <span class="fw-bold text-dark" style="font-size: 0.85rem;">Recetario Descargable</span>
+              </li>
+            </ul>
           </div>
         </div>
 
       </div>
     </main>
+
+    <!-- ============================================================== -->
+    <!-- FOOTER: Barra oscura con redes sociales y copyright            -->
+    <!-- ============================================================== -->
+    <footer class="footer-home text-white py-4 mt-3">
+      <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
+        <!-- Iconos de redes sociales -->
+        <div class="d-flex gap-3">
+          <a href="#" class="social-icon text-white"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-icon text-white"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-icon text-white"><i class="fab fa-youtube"></i></a>
+          <a href="#" class="social-icon text-white"><i class="fab fa-tiktok"></i></a>
+        </div>
+        <!-- Copyright -->
+        <p class="m-0 text-center text-white-50" style="font-size: 0.85rem;">
+          <strong class="text-white">SaborMasterClass</strong> &copy; 2024 &bull; Todos los derechos reservados.
+        </p>
+      </div>
+    </footer>
+
+    <!-- ============================================================== -->
+    <!-- COUNTDOWN TIMER: JavaScript funcional para la cuenta regresiva -->
+    <!-- ============================================================== -->
+    <script>
+      (function () {
+        // Duración inicial: 5h 23m 48s
+        let totalSeconds = 5 * 3600 + 23 * 60 + 48;
+
+        function pad(n) {
+          return String(n).padStart(2, '0');
+        }
+
+        function tick() {
+          if (totalSeconds < 0) totalSeconds = 0;
+
+          const h = Math.floor(totalSeconds / 3600);
+          const m = Math.floor((totalSeconds % 3600) / 60);
+          const s = totalSeconds % 60;
+
+          const elH = document.getElementById('cd-hours');
+          const elM = document.getElementById('cd-minutes');
+          const elS = document.getElementById('cd-seconds');
+
+          if (elH) elH.textContent = pad(h);
+          if (elM) elM.textContent = pad(m);
+          if (elS) elS.textContent = pad(s);
+
+          if (totalSeconds > 0) totalSeconds--;
+        }
+
+        tick();
+        setInterval(tick, 1000);
+      })();
+    </script>
+
   </section>
 </body>
-
 </html>
