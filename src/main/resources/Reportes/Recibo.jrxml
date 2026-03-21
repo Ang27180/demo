@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReciboPago" pageWidth="595" pageHeight="842" columnWidth="515" leftMargin="40" rightMargin="40" topMargin="40" bottomMargin="40" uuid="a1b2c3d4-e5f6-7890-abcd-ef1234567890">
+	<parameter name="NOMBRE_CURSO" class="java.lang.String"/>
+	<parameter name="NOMBRE_ESTUDIANTE" class="java.lang.String"/>
+	<parameter name="MEDIO_NOMBRE" class="java.lang.String"/>
+	<parameter name="MEDIO_TIPO" class="java.lang.String"/>
+	<parameter name="FECHA_EMISION" class="java.lang.String"/>
+	<parameter name="REFERENCIA" class="java.lang.String"/>
+	<parameter name="ESTADO_RECIBO" class="java.lang.String"/>
+	<parameter name="QR_IMAGE" class="java.awt.Image"/>
+	<title>
+		<band height="762" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="515" height="40" forecolor="#1a1a1a" uuid="b1c2d3e4-f5a6-7890-bcde-f12345678901"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="22" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RECIBO DE PAGO — SABOR MASTERCLASS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="55" width="150" height="20" uuid="c2d3e4f5-a6b7-8901-cdef-123456789012"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Curso:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="150" y="55" width="365" height="40" uuid="d3e4f5a6-b7c8-9012-def0-123456789013"/>
+				<textElement verticalAlignment="Top">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{NOMBRE_CURSO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="105" width="150" height="20" uuid="e4f5a6b7-c8d9-0123-ef01-23456789014"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Estudiante:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="105" width="365" height="24" uuid="f5a6b7c8-d9e0-1234-f012-3456789015"/>
+				<textFieldExpression><![CDATA[$P{NOMBRE_ESTUDIANTE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="140" width="150" height="20" uuid="a6b7c8d9-e0f1-2345-0123-456789016"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Medio de pago:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="140" width="365" height="24" uuid="b7c8d9e0-f1a2-3456-1234-56789017"/>
+				<textFieldExpression><![CDATA[$P{MEDIO_NOMBRE} + " (" + $P{MEDIO_TIPO} + ")"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="175" width="150" height="20" uuid="c8d9e0f1-a2b3-4567-2345-6789018"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha de emisión:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="175" width="365" height="24" uuid="d9e0f1a2-b3c4-5678-3456-789019"/>
+				<textFieldExpression><![CDATA[$P{FECHA_EMISION}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="210" width="150" height="20" uuid="e0f1a2b3-c4d5-6789-4567-890120"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Referencia / QR:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="150" y="210" width="365" height="50" uuid="f1a2b3c4-d5e6-7890-5678-90121"/>
+				<textElement verticalAlignment="Top">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{REFERENCIA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="270" width="150" height="20" uuid="a2b3c4d5-e6f7-8901-6789-01222"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Estado del recibo:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="150" y="270" width="365" height="24" uuid="b3c4d5e6-f7a8-9012-7890-12323"/>
+				<textFieldExpression><![CDATA[$P{ESTADO_RECIBO}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="RetainShape" hAlign="Center" vAlign="Middle">
+				<reportElement x="332" y="330" width="183" height="183" uuid="c4d5e6f7-a8b9-0123-8901-23456789024"/>
+				<imageExpression><![CDATA[$P{QR_IMAGE}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="0" y="530" width="515" height="60" forecolor="#555555" uuid="d5e6f7a8-b9c0-1234-9012-3456789025"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Este documento acredita la solicitud de pago asociada a la referencia indicada. Conserve el comprobante hasta que un administrador confirme el pago y active su acceso al curso. El código QR replica la referencia para verificación rápida.]]></text>
+			</staticText>
+		</band>
+	</title>
+</jasperReport>

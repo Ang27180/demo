@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+
+<head>
+    <title layout:fragment="titulo">Recibo de pago</title>
+</head>
+
+<body>
+    <main layout:fragment="contenido" class="container mt-5 pt-4">
+        <h2 class="mb-4">Recibo de pago</h2>
+        <div th:if="${msgRecibo}" class="alert alert-success" th:text="${msgRecibo}"></div>
+
+        <div class="card shadow-sm border-0 rounded-4 p-4" style="max-width: 520px;">
+            <p><strong>Curso:</strong> <span th:text="${recibo.inscripcion.curso.nombre}">—</span></p>
+            <p><strong>Estudiante:</strong> <span th:text="${recibo.inscripcion.estudiante.persona.nombre}">—</span></p>
+            <p><strong>Medio:</strong> <span th:text="${recibo.medioPago.nombre}">—</span>
+                (<span th:text="${recibo.medioPago.tipo}">QR</span>)</p>
+            <p><strong>Fecha emisión:</strong> <span th:text="${recibo.fechaEmision}">—</span></p>
+            <p><strong>Estado:</strong> <span th:text="${recibo.estado}">PENDIENTE</span></p>
+            <p><strong>Referencia:</strong> <code th:text="${recibo.codigoQrUnico}">REC-</code></p>
+
+            <div class="text-center my-4">
+                <img th:src="'data:image/png;base64,' + ${qrPngBase64}" alt="QR" class="img-fluid" style="max-width: 220px;">
+            </div>
+
+            <p class="small text-muted">El QR codifica la referencia del recibo. Tras confirmar el pago, un administrador
+                activará tu inscripción.</p>
+
+            <div class="d-flex flex-wrap gap-2 mb-3">
+                <a th:href="@{/reportes/recibo/pdf/{id}(id=${recibo.id})}" class="btn btn-primary">Descargar PDF</a>
+                <a th:href="@{/mis-cursos}" class="btn btn-outline-dark">Volver a Mis cursos</a>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

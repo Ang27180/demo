@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+
+<head>
+    <title layout:fragment="titulo">Generar recibo</title>
+</head>
+
+<body>
+    <main layout:fragment="contenido" class="container mt-5 pt-4">
+        <h2 class="mb-3">Generar recibo de pago</h2>
+        <p class="text-muted">Curso: <strong th:text="${inscripcion.curso.nombre}">—</strong></p>
+        <div th:if="${errorRecibo}" class="alert alert-danger" th:text="${errorRecibo}"></div>
+
+        <div th:if="${#lists.isEmpty(medios)}" class="alert alert-warning">
+            No hay medios de pago configurados. Un administrador debe registrarlos en el panel.
+        </div>
+
+        <form th:if="${!#lists.isEmpty(medios)}" th:action="@{/mis-cursos/recibo/generar}" method="post" class="row g-3">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <input type="hidden" name="idInscripcion" th:value="${inscripcion.id}">
+            <div class="col-md-6">
+                <label class="form-label">Medio de pago</label>
+                <select name="idMedioPago" class="form-select" required>
+                    <option value="">Seleccione…</option>
+                    <option th:each="m : ${medios}" th:value="${m.id}"
+                        th:text="${m.nombre} + ' (' + ${m.tipo} + ')'">Nequi</option>
+                </select>
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Generar recibo</button>
+                <a th:href="@{/mis-cursos}" class="btn btn-outline-secondary">Cancelar</a>
+            </div>
+        </form>
+    </main>
+</body>
+
+</html>

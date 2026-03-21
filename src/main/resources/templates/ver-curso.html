@@ -92,18 +92,47 @@
         </header>
 
         <div class="container mb-5">
+            <div th:if="${mensajeProgreso}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${mensajeProgreso}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div th:if="${errorProgreso}" class="alert alert-warning alert-dismissible fade show" role="alert">
+                <span th:text="${errorProgreso}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
             <div class="row g-4">
                 <!-- Columna Principal: Módulos -->
                 <div class="col-lg-8">
                     <h3 class="fw-bold mb-4">📖 Contenido del Curso</h3>
 
-                    <div th:if="${#lists.isEmpty(curso.modulos)}" class="text-center py-5 bg-light rounded-4">
+                    <div th:if="${pagoPendiente}" class="alert alert-warning">
+                        <strong>Pago pendiente.</strong> Tu inscripción está registrada; cuando el pago sea
+                        confirmado podrás ver las lecciones. Puedes generar el recibo desde
+                        <a th:href="@{/mis-cursos}" class="alert-link">Mis cursos</a>.
+                    </div>
+
+                    <div th:if="${puedeRegistrarProgreso}" class="mb-4 p-3 rounded-3 bg-light border">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="fw-semibold">Tu avance en este curso</span>
+                            <span class="text-success fw-bold" th:text="${progresoCursoPorcentaje} + '%'">0%</span>
+                        </div>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar bg-success" role="progressbar"
+                                th:style="|width: ${progresoCursoPorcentaje}%|"
+                                th:attr="aria-valuenow=${progresoCursoPorcentaje}" aria-valuemin="0" aria-valuemax="100">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div th:if="${#lists.isEmpty(curso.modulos)}" th:unless="${pagoPendiente}"
+                        class="text-center py-5 bg-light rounded-4">
                         <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
                         <p class="text-muted">Próximamente estaremos publicando el contenido detallado de este curso.
                         </p>
                     </div>
 
-                    <div class="accordion" id="accordionModulos">
+                    <div th:unless="${pagoPendiente}" class="accordion" id="accordionModulos">
                         <div class="card module-card" th:each="modulo, iter : ${curso.modulos}">
                             <div class="module-header d-flex align-items-center" data-bs-toggle="collapse"
                                 th:data-bs-target="'#collapse' + ${modulo.id}">
@@ -119,8 +148,8 @@
 
                             <div th:id="'collapse' + ${modulo.id}" class="collapse" data-bs-parent="#accordionModulos">
                                 <div class="card-body p-0 border-top">
-                                    <div class="lesson-item" th:each="leccion : ${modulo.lecciones}">
-                                        <div class="d-flex align-items-center">
+                                    <div class="lesson-item flex-wrap gap-2" th:each="leccion : ${modulo.lecciones}">
+                                        <div class="d-flex align-items-center flex-grow-1">
                                             <i class="fas fa-play-circle me-3 text-success"
                                                 th:if="${leccion.contenidoTipo == 'video'}"></i>
                                             <i class="fas fa-file-alt me-3 text-info"
@@ -129,9 +158,25 @@
                                                 th:if="${leccion.contenidoTipo == 'pdf'}"></i>
                                             <span th:text="${leccion.nombre}">Nombre de la lección</span>
                                         </div>
-                                        <span th:class="'content-badge badge-' + ${leccion.contenidoTipo}"
-                                            th:text="${leccion.contenidoTipo == 'video' ? 'VIDEO' : (leccion.contenidoTipo == 'pdf' ? 'PDF' : 'LECTURA')}">
-                                        </span>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span th:class="'content-badge badge-' + ${leccion.contenidoTipo}"
+                                                th:text="${leccion.contenidoTipo == 'video' ? 'VIDEO' : (leccion.contenidoTipo == 'pdf' ? 'PDF' : 'LECTURA')}">
+                                            </span>
+                                            <th:block th:if="${puedeRegistrarProgreso}">
+                                                <span th:if="${#lists.contains(leccionesCompletadasIds, leccion.id)}"
+                                                    class="badge bg-success rounded-pill"><i
+                                                        class="fas fa-check me-1"></i>Completada</span>
+                                                <form th:if="${!#lists.contains(leccionesCompletadasIds, leccion.id)}"
+                                                    th:action="@{/cursos/{cid}/lecciones/{lid}/completar(cid=${curso.id},lid=${leccion.id})}"
+                                                    method="post" class="d-inline">
+                                                    <input type="hidden" th:name="${_csrf.parameterName}"
+                                                        th:value="${_csrf.token}">
+                                                    <button type="submit" class="btn btn-sm btn-outline-success">
+                                                        Completar lección
+                                                    </button>
+                                                </form>
+                                            </th:block>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

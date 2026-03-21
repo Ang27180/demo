@@ -1,13 +1,25 @@
 package com.proyectojpa.demo.controller;
 
+import java.util.Collections;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.proyectojpa.demo.repository.cursoRepository;
+import com.proyectojpa.demo.Service.InscripcionAccesoService;
+import com.proyectojpa.demo.Service.ProgresoLeccionService;
+import com.proyectojpa.demo.domain.InscripcionEstados;
 import com.proyectojpa.demo.models.Curso;
+import com.proyectojpa.demo.repository.EstudianteRepository;
+import com.proyectojpa.demo.repository.InscripcionRepository;
+import com.proyectojpa.demo.repository.cursoRepository;
+import com.proyectojpa.demo.security.CustomUserDetails;
 
 @Controller
 @RequestMapping("/cursos")
@@ -16,54 +28,74 @@ public class CursoController {
     @Autowired
     private cursoRepository cursoRepository;
 
-    // Listar cursos
+    @Autowired
+    private EstudianteRepository estudianteRepository;
+
+    @Autowired
+    private InscripcionRepository inscripcionRepository;
+
+    @Autowired
+    private ProgresoLeccionService progresoLeccionService;
+
+    @Autowired
+    private InscripcionAccesoService inscripcionAccesoService;
+
     @GetMapping
     public String listarCursos(Model model) {
         model.addAttribute("cursos", cursoRepository.findAll());
         return "cursos";
     }
 
-    // Ver información del curso
     @GetMapping("/{id}")
-    public String verInformacionCurso(@org.springframework.web.bind.annotation.PathVariable("id") Integer id, Model model) {
-        Curso curso = cursoRepository.findById(id)
+    public String verInformacionCurso(@PathVariable("id") Integer id, Model model,
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Curso curso = cursoRepository.findByIdWithContenido(id)
                 .orElseThrow(() -> new IllegalArgumentException("Curso no encontrado: " + id));
         model.addAttribute("curso", curso);
+
+        model.addAttribute("puedeRegistrarProgreso", false);
+        model.addAttribute("pagoPendiente", false);
+        model.addAttribute("inscripcionActual", null);
+        model.addAttribute("leccionesCompletadasIds", Collections.emptyList());
+        model.addAttribute("progresoCursoPorcentaje", 0);
+
+        if (userDetails != null && userDetails.getPersona().getRolId() != null
+                && userDetails.getPersona().getRolId() == 2) {
+            estudianteRepository.findByPersona(userDetails.getPersona()).ifPresent(est -> inscripcionRepository
+                    .findByEstudianteAndCursoWithEstado(est, curso).ifPresent(insc -> {
+                        model.addAttribute("inscripcionActual", insc);
+                        boolean acceso = inscripcionAccesoService.permiteAccesoContenido(insc.getEstado());
+                        boolean pendiente = insc.getEstado() != null && InscripcionEstados.PENDIENTE_PAGO
+                                .equals(insc.getEstado().getCodigo());
+                        model.addAttribute("pagoPendiente", !acceso && pendiente);
+                        model.addAttribute("puedeRegistrarProgreso", acceso);
+                        if (acceso) {
+                            model.addAttribute("progresoCursoPorcentaje",
+                                    progresoLeccionService.calcularPorcentaje(est, curso));
+                            model.addAttribute("leccionesCompletadasIds",
+                                    progresoLeccionService.leccionIdsCompletadas(est, curso.getId()));
+                        }
+                    }));
+        }
+
         return "ver-curso";
     }
 
-    // // Mostrar formulario de creación
-    // @GetMapping("/nuevo")
-    // public String mostrarFormularioNuevo(Model model) {
-    //     model.addAttribute("curso", new Curso());
-    //     return "admin/cursos/form";
-    // }
-
-    // // Guardar curso
-    // @PostMapping("/guardar")
-    // public String guardarCurso(@Valid @ModelAttribute("curso") Curso curso,
-    //                            BindingResult result,
-    //                            Model model) {
-    //     if (result.hasErrors()) {
-    //         return "admin/cursos/form";
-    //     }
-    //     cursoRepository.save(curso);
-    //     return "redirect:/admin/cursos";
-    // }
-
-    // // Editar curso
-    // @GetMapping("/editar/{id}")
-    // public String editarCurso(@PathVariable("id") Integer id, Model model) {
-    //     Curso curso = cursoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Curso inválido"));
-    //     model.addAttribute("curso", curso);
-    //     return "admin/cursos/form";
-    // }
-
-    // // Eliminar curso
-    // @GetMapping("/eliminar/{id}")
-    // public String eliminarCurso(@PathVariable("id") Integer id) {
-    //     Curso curso = cursoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Curso inválido"));
-    //     cursoRepository.delete(curso);
-    //     return "redirect:/admin/cursos";
-    // }
+    @PostMapping("/{cursoId}/lecciones/{leccionId}/completar")
+    public String completarLeccion(@PathVariable Integer cursoId, @PathVariable Integer leccionId,
+            @AuthenticationPrincipal CustomUserDetails userDetails, RedirectAttributes redirectAttributes) {
+        if (userDetails == null || userDetails.getPersona() == null) {
+            return "redirect:/login";
+        }
+        try {
+            int pct = progresoLeccionService.marcarLeccionCompletada(userDetails.getPersona(), cursoId, leccionId);
+            redirectAttributes.addFlashAttribute("mensajeProgreso",
+                    "Lección completada. Avance del curso: " + pct + "%");
+        } catch (IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("errorProgreso", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorProgreso", e.getMessage());
+        }
+        return "redirect:/cursos/" + cursoId;
+    }
 }

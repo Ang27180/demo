@@ -1,4 +1,5 @@
 package com.proyectojpa.demo.controller;
+
 import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,6 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.proyectojpa.demo.Service.TutorService;
 import com.proyectojpa.demo.dto.TutorDTO;
 
+/**
+ * API de tutores: {@code GET /tutor} es público (catálogo). Creación y borrado requieren
+ * rol ADMIN (véase {@code SecurityConfig}). Las mutaciones exigen sesión + token CSRF.
+ */
 @RestController
 @RequestMapping("/tutor")
 public class TutorController {

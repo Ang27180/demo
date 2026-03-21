@@ -11,6 +11,12 @@ public class EstadoInscripcion {
     @Column(name = "id")
     private Integer id;
 
+    /**
+     * Clave estable: ACTIVO, PENDIENTE_PAGO, etc.
+     */
+    @Column(name = "codigo", unique = true, length = 32, nullable = true)
+    private String codigo;
+
     private String nombre;
 
     public Integer getId() {
@@ -19,6 +25,14 @@ public class EstadoInscripcion {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     public String getNombre() {

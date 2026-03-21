@@ -36,6 +36,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
+        <!-- Dialectos Hibernate para MySQL &lt; 8 (p. ej. XAMPP antiguo); evita HHH000511 con MySQLDialect estándar -->
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-community-dialects</artifactId>
+            <version>6.6.26.Final</version>
+        </dependency>
 
         <!-- Web -->
         <dependency>
@@ -116,6 +122,18 @@
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
             <version>5.2.3</version>
+        </dependency>
+
+        <!-- QR (recibos) -->
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+            <version>3.5.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>javase</artifactId>
+            <version>3.5.3</version>
         </dependency>
 
         <!-- Lombok -->

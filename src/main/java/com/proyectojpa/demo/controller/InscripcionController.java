@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.proyectojpa.demo.domain.InscripcionEstados;
 import com.proyectojpa.demo.models.Curso;
 import com.proyectojpa.demo.models.EstadoInscripcion;
 import com.proyectojpa.demo.models.Estudiante;
@@ -82,9 +83,15 @@ public class InscripcionController {
         Curso curso = cursoRepository.findById(idCurso)
                 .orElseThrow(() -> new RuntimeException("Curso no encontrado"));
 
-        // 4. Estado INSCRITO (mejor obtenerlo de BD)
-        EstadoInscripcion estado = estadoRepo.findById(1)
-                .orElseThrow(() -> new RuntimeException("Estado no encontrado"));
+        // 4. Estado según costo del curso
+        EstadoInscripcion estado;
+        if (curso.getCosto() != null && curso.getCosto() > 0) {
+            estado = estadoRepo.findByCodigo(InscripcionEstados.PENDIENTE_PAGO)
+                    .orElseThrow(() -> new RuntimeException("Estado PENDIENTE_PAGO no configurado en BD"));
+        } else {
+            estado = estadoRepo.findByCodigo(InscripcionEstados.ACTIVO)
+                    .orElseThrow(() -> new RuntimeException("Estado ACTIVO no configurado en BD"));
+        }
 
         // VALIDACIÓN: evitar inscripción duplicada
         if (inscripcionRepo.existsByEstudianteAndCurso(estudiante, curso)) {
@@ -100,10 +107,12 @@ public class InscripcionController {
 
         // 6. Guardar
         inscripcionRepo.save(insc);
-        redirectAttributes.addFlashAttribute(
-        "exito",
-        "¡Te has inscrito correctamente en el curso!"
-);
+        if (InscripcionEstados.PENDIENTE_PAGO.equals(estado.getCodigo())) {
+            redirectAttributes.addFlashAttribute("exito",
+                    "Inscripción registrada: pendiente de pago. Genera tu recibo desde «Mis cursos».");
+        } else {
+            redirectAttributes.addFlashAttribute("exito", "¡Te has inscrito correctamente en el curso!");
+        }
 
         return "redirect:/cursos";
     }

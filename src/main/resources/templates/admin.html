@@ -10,6 +10,11 @@
     <div layout:fragment="contenido">
         <h2 class="mt-5 mb-4 text-center fw-bold">Panel de Administración</h2>
 
+        <div class="container mb-4 d-flex flex-wrap gap-2 justify-content-center">
+            <a th:href="@{/admin/medios-pago}" class="btn btn-outline-primary btn-sm">Medios de pago</a>
+            <a th:href="@{/admin/recibos}" class="btn btn-outline-primary btn-sm">Recibos</a>
+        </div>
+
         <!-- TARJETAS DE RESUMEN -->
         <div class="row g-4 mb-5">
             <div class="col-md-3">

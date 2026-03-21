@@ -26,14 +26,24 @@
                         </p>
                     </div>
                     <div class="card-footer d-flex flex-column gap-2">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-muted" th:text="'Estado: ' + ${inscripcion.estado.nombre}">Estado</small>
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-1">
+                            <small class="text-muted" th:text="'Estado: ' + ${inscripcion.estado != null ? inscripcion.estado.nombre : '-'}">Estado</small>
                             <a th:href="@{'/cursos/' + ${inscripcion.curso.id}}" class="btn btn-sm btn-primary">
                                 Ver Curso
                             </a>
                         </div>
-                        <!-- NUEVO: BOTÓN PARA DESCARGAR EL CERTIFICADO (Se puede condicionar por estado si se desea) -->
-                        <a th:href="@{'/reportes/certificado/pdf/' + ${inscripcion.id}}"
+                        <a th:if="${inscripcion.estado != null and inscripcion.estado.codigo == 'PENDIENTE_PAGO'} and ${inscripcion.curso.costo != null} and ${inscripcion.curso.costo > 0} and ${yaTieneRecibo[inscripcion.id] == false}"
+                            th:href="@{'/mis-cursos/recibo/nuevo/' + ${inscripcion.id}}"
+                            class="btn btn-sm btn-warning w-100">
+                            <i class="fas fa-receipt me-1"></i> Generar recibo de pago
+                        </a>
+                        <a th:if="${inscripcion.estado != null and inscripcion.estado.codigo == 'PENDIENTE_PAGO'} and ${yaTieneRecibo[inscripcion.id] == true}"
+                            th:href="@{'/recibos/' + ${idReciboPorInscripcion[inscripcion.id]} + '/ver'}"
+                            class="btn btn-sm btn-outline-secondary w-100">
+                            Ver recibo (pendiente de confirmación)
+                        </a>
+                        <a th:if="${inscripcion.estado != null and inscripcion.estado.codigo == 'ACTIVO'}"
+                            th:href="@{'/reportes/certificado/pdf/' + ${inscripcion.id}}"
                             class="btn btn-sm btn-outline-success w-100">
                             <i class="fas fa-file-pdf me-1"></i> Descargar Certificado
                         </a>

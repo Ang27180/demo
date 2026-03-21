@@ -1,6 +1,8 @@
 package com.proyectojpa.demo.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +26,9 @@ public class MisCursosController {
     @Autowired
     private EstudianteRepository estudianteRepository;
 
+    @Autowired
+    private com.proyectojpa.demo.repository.ReciboRepository reciboRepository;
+
     @GetMapping("/mis-cursos")
     public String misCursos(Model model) {
 
@@ -45,9 +50,22 @@ public class MisCursosController {
                     return estudianteRepository.save(nuevoEstudiante);
                 });
 
-        List<Inscripcion> inscripciones = inscripcionRepo.findByEstudiante_IdEstudiante(estudiante.getIdEstudiante());
+        List<Inscripcion> inscripciones = inscripcionRepo
+                .findByEstudianteIdWithCursoAndEstado(estudiante.getIdEstudiante());
+
+        Map<Integer, Boolean> yaTieneRecibo = new HashMap<>();
+        Map<Integer, Integer> idReciboPorInscripcion = new HashMap<>();
+        for (Inscripcion i : inscripciones) {
+            boolean existe = reciboRepository.existsByInscripcion(i);
+            yaTieneRecibo.put(i.getId(), existe);
+            if (existe) {
+                reciboRepository.findByInscripcion(i).ifPresent(r -> idReciboPorInscripcion.put(i.getId(), r.getId()));
+            }
+        }
 
         model.addAttribute("inscripciones", inscripciones);
+        model.addAttribute("yaTieneRecibo", yaTieneRecibo);
+        model.addAttribute("idReciboPorInscripcion", idReciboPorInscripcion);
 
         return "misCursos";
     }

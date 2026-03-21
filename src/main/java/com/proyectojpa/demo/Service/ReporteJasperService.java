@@ -7,7 +7,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,6 +55,21 @@ public class ReporteJasperService {
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Error generando el certificado: " + e.getMessage(), e);
+        }
+    }
+
+    public byte[] generarReciboPdf(Map<String, Object> parametros) {
+        try {
+            InputStream jrxmlStream = getClass().getResourceAsStream("/Reportes/Recibo.jrxml");
+            if (jrxmlStream == null) {
+                throw new RuntimeException("No se encontró la plantilla: /Reportes/Recibo.jrxml");
+            }
+            JasperReport jasperReport = JasperCompileManager.compileReport(jrxmlStream);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, new JREmptyDataSource());
+            return JasperExportManager.exportReportToPdf(jasperPrint);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error generando el recibo PDF: " + e.getMessage(), e);
         }
     }
 }

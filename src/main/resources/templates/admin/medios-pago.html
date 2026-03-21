@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+
+    layout:decorate="~{layout}">
+
+
+
+<head>
+
+    <title layout:fragment="titulo">Medios de pago</title>
+
+</head>
+
+
+
+<body>
+
+    <main layout:fragment="contenido" class="container mt-5 pt-4">
+
+        <h2 class="mb-4">Medios de pago</h2>
+
+        <div th:if="${msgAdmin}" class="alert alert-success" th:text="${msgAdmin}"></div>
+
+        <div th:if="${errorAdmin}" class="alert alert-danger" th:text="${errorAdmin}"></div>
+
+
+
+        <div class="table-responsive mb-5">
+
+            <table class="table table-striped align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Nombre</th>
+
+                        <th>Tipo</th>
+
+                        <th>Imagen / QR</th>
+
+                        <th>Admin (ID)</th>
+
+                        <th class="text-end">Acciones</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr th:each="m : ${medios}">
+
+                        <td th:text="${m.id}">1</td>
+
+                        <td th:text="${m.nombre}">Nequi</td>
+
+                        <td th:text="${m.tipo}">QR</td>
+
+                        <td>
+
+                            <img th:if="${m.imagenQr != null and m.imagenQr.startsWith('/files/')}"
+
+                                th:src="${m.imagenQr}" alt="QR" class="img-thumbnail" style="max-height: 48px;">
+
+                            <span th:if="${m.imagenQr == null or !m.imagenQr.startsWith('/files/')}"
+
+                                class="text-muted small">Texto/base64</span>
+
+                        </td>
+
+                        <td th:text="${m.adminPersona != null ? m.adminPersona.id : '-'}">1</td>
+
+                        <td class="text-end text-nowrap">
+
+                            <button type="button" class="btn btn-sm btn-outline-primary"
+
+                                data-bs-toggle="modal"
+
+                                th:data-bs-target="'#modalEditar' + ${m.id}">Editar</button>
+
+                            <button type="button" class="btn btn-sm btn-outline-danger"
+
+                                data-bs-toggle="modal"
+
+                                th:data-bs-target="'#modalBorrar' + ${m.id}">Eliminar</button>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+
+        <!-- Modal editar (uno por fila) -->
+
+        <th:block th:each="m : ${medios}">
+
+            <div class="modal fade" th:id="'modalEditar' + ${m.id}" tabindex="-1" aria-hidden="true">
+
+                <div class="modal-dialog modal-lg modal-dialog-scrollable">
+
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+
+                            <h5 class="modal-title">Editar medio de pago</h5>
+
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+
+                        </div>
+
+                        <form th:action="@{/admin/medios-pago/{id}(id=${m.id})}" method="post"
+
+                            enctype="multipart/form-data">
+
+                            <input type="hidden" name="_method" value="put">
+
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+                            <div class="modal-body row g-3">
+
+                                <div class="col-md-6">
+
+                                    <label class="form-label">Nombre</label>
+
+                                    <input type="text" name="nombre" class="form-control" required
+
+                                        th:value="${m.nombre}">
+
+                                </div>
+
+                                <div class="col-md-6">
+
+                                    <label class="form-label">Tipo</label>
+
+                                    <input type="text" name="tipo" class="form-control" required
+
+                                        th:value="${m.tipo}">
+
+                                </div>
+
+                                <div class="col-12">
+
+                                    <label class="form-label">Nueva imagen QR (archivo)</label>
+
+                                    <input type="file" name="imagenArchivo" class="form-control" accept="image/*">
+
+                                    <div class="form-text">Opcional. Si subes archivo, sustituye la imagen anterior en disco.</div>
+
+                                </div>
+
+                                <div class="col-12">
+
+                                    <label class="form-label">Imagen QR (texto / base64)</label>
+
+                                    <textarea name="imagenQr" class="form-control" rows="3"
+
+                                        th:text="${m.imagenQr != null and !#strings.startsWith(m.imagenQr, '/files/')} ? m.imagenQr : ''"
+
+                                        placeholder="Opcional si usas archivo"></textarea>
+
+                                </div>
+
+                            </div>
+
+                            <div class="modal-footer">
+
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+
+                                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="modal fade" th:id="'modalBorrar' + ${m.id}" tabindex="-1" aria-hidden="true">
+
+                <div class="modal-dialog">
+
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+
+                            <h5 class="modal-title">Confirmar eliminación</h5>
+
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+
+                        </div>
+
+                        <div class="modal-body">
+
+                            <p>¿Eliminar el medio de pago <strong th:text="${m.nombre}">—</strong>?</p>
+
+                            <p class="small text-muted mb-0">No se puede eliminar si hay recibos asociados.</p>
+
+                        </div>
+
+                        <div class="modal-footer">
+
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+
+                            <form th:action="@{/admin/medios-pago/{id}(id=${m.id})}" method="post" class="d-inline">
+
+                                <input type="hidden" name="_method" value="delete">
+
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+                                <button type="submit" class="btn btn-danger">Eliminar</button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </th:block>
+
+
+
+        <h4 class="mb-3">Nuevo medio de pago</h4>
+
+        <form th:action="@{/admin/medios-pago}" method="post" enctype="multipart/form-data" class="row g-3">
+
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+            <div class="col-md-4">
+
+                <label class="form-label">Nombre</label>
+
+                <input type="text" name="nombre" class="form-control" required placeholder="Nequi">
+
+            </div>
+
+            <div class="col-md-3">
+
+                <label class="form-label">Tipo</label>
+
+                <input type="text" name="tipo" class="form-control" required placeholder="QR o TRANSFERENCIA">
+
+            </div>
+
+            <div class="col-12">
+
+                <label class="form-label">Archivo imagen QR</label>
+
+                <input type="file" name="imagenArchivo" class="form-control" accept="image/*">
+
+                <div class="form-text">Opcional. Si lo subes, se guarda en disco y se enlaza como <code>/files/medios-pago/…</code>.</div>
+
+            </div>
+
+            <div class="col-12">
+
+                <label class="form-label">Imagen QR (Base64 o texto)</label>
+
+                <textarea name="imagenQr" class="form-control" rows="3" placeholder="Opcional si ya subiste archivo"></textarea>
+
+            </div>
+
+            <div class="col-12">
+
+                <button type="submit" class="btn btn-primary">Guardar</button>
+
+                <a th:href="@{/admin}" class="btn btn-outline-secondary">Volver al panel</a>
+
+            </div>
+
+        </form>
+
+    </main>
+
+</body>
+
+
+
+</html>
+

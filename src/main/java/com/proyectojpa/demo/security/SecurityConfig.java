@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -32,21 +33,28 @@ public class SecurityConfig {
                         //  PERMITIR TODO LO DE CORREO
                         .requestMatchers("/correo/**").permitAll()
                         .requestMatchers("/correo/formulario", "/correo/enviar-desde-vista").permitAll()
+
+                        // Certificados y recibos PDF: autenticados (autorización fina en controlador/servicio)
+                        .requestMatchers(HttpMethod.GET, "/reportes/certificado/pdf/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/reportes/recibo/pdf/**").authenticated()
+
                         .requestMatchers("/reportes/**").permitAll()
-                        
-                        //  ENDPOINT TUTOR 100% PÚBLICO (GET y POST)
-                        .requestMatchers("/tutor").permitAll()
+
+                        // API Tutor: listado público; mutaciones solo administrador
+                        .requestMatchers(HttpMethod.GET, "/tutor").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/tutor").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/tutor/**").hasRole("ADMIN")
 
                         //  PÚBLICOS
                         .requestMatchers("/home", "/nosotros", "/contacto", "/registro", "/login",
-                                "/forgot-password", "/css/**", "/imagenes/**").permitAll()
+                                "/forgot-password", "/css/**", "/imagenes/**", "/files/medios-pago/**").permitAll()
 
                         // ADMIN
                         .requestMatchers("/admin/**", "/personas/**", "/personas/exportarExcel", "/correo/formulario")
                                 .hasRole("ADMIN")
 
                         //  ADMIN + ESTUDIANTE
-                        .requestMatchers("/cursos", "/estudiante/**")
+                        .requestMatchers("/cursos", "/cursos/**", "/estudiante/**", "/mis-cursos/**")
                                 .hasAnyRole("ADMIN", "ESTUDIANTE")
 
                         // Todo lo demás requiere login
@@ -76,10 +84,7 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/login?logout=true")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
-                        .permitAll())
-
-                // Desactivar CSRF para Postman
-                .csrf(csrf -> csrf.disable());
+                        .permitAll());
 
         return http.build();
     }
