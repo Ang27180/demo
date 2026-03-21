@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{layout}">
+
+<head>
+    <title layout:fragment="titulo">Mis Cursos - Sabor MasterClass</title>
+</head>
+
+<body>
+    <main class="container mt-5 pt-5" layout:fragment="contenido">
+        <h2 class="mb-4">📚 Mis Cursos Inscritos</h2>
+
+        <div th:if="${#lists.isEmpty(inscripciones)}" class="alert alert-info">
+            No estás inscrito en ningún curso todavía.
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" th:if="${!#lists.isEmpty(inscripciones)}">
+            <div class="col" th:each="inscripcion : ${inscripciones}">
+                <div class="card h-100 shadow-sm">
+                    <img th:src="${inscripcion.curso.imagen != null 
+                        ? inscripcion.curso.imagen 
+                        : '/imagenes/reposteria_francesa.jpg'}" class="card-img-top" alt="Imagen del curso">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${inscripcion.curso.nombre}">Nombre del Curso</h5>
+                        <p class="card-text" th:text="${inscripcion.curso.detalle}">Descripción breve del curso...
+                        </p>
+                    </div>
+                    <div class="card-footer d-flex flex-column gap-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted" th:text="'Estado: ' + ${inscripcion.estado.nombre}">Estado</small>
+                            <a th:href="@{'/cursos/' + ${inscripcion.curso.id}}" class="btn btn-sm btn-primary">
+                                Ver Curso
+                            </a>
+                        </div>
+                        <!-- AJUSTE: El botón de certificado se ha movido a la vista de "Ver Curso" según lo solicitado -->
+                        <!-- <a th:href="@{'/reportes/certificado/pdf/' + ${inscripcion.id}}"
+                            class="btn btn-sm btn-outline-success w-100">
+                            <i class="fas fa-file-pdf me-1"></i> Descargar Certificado
+                        </a> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

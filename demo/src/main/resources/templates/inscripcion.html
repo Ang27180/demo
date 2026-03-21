@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Inscripción</title>
+
+    <link rel="stylesheet" th:href="@{/css/inscripcion.css}">
+</head>
+
+<body>
+
+    <form action="/inscripciones/guardar" method="post">
+
+        <div class="inscripcion-card">
+            <h2>Registrar Inscripción</h2>
+
+            <!-- ID Estudiante -->
+            <input type="hidden" name="idEstudiante" th:value="${idEstudiante}">
+
+
+            <label>Curso</label>
+            <select name="idCurso" required>
+                <!-- AJUSTE: Quitamos la opción vacía si ya tenemos un curso seleccionado desde la vista anterior para mejorar la experiencia -->
+                <option value="" th:if="${idCurso == null}">Seleccione un curso</option>
+
+                <option th:each="curso : ${listaCursos}" th:value="${curso.id}" th:text="${curso.nombre}"
+                    th:selected="${idCurso == curso.id or #lists.size(listaCursos) == 1}">
+                </option>
+            </select>
+
+            <button type="submit">Guardar Inscripción</button>
+        </div>
+
+    </form>
+
+</body>
+
+</html>

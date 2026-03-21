@@ -1,0 +1,150 @@
+/* ============================= */
+/* Estilos exclusivos contacto   */
+/* ============================= */
+
+/* --- Contenedor principal --- */
+.contacto-container {
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+/* --- Layout en columnas iguales --- */
+.contacto-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.contacto-col {
+    flex: 1 1 50%; /* cada columna ocupa el 50% */
+    display: flex;
+}
+
+/* --- Tarjeta del formulario (claro) --- */
+.contacto-form {
+    background-color: #f8f9fa;
+    color: #212529;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease-in-out;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.contacto-form:hover {
+    transform: translateY(-3px);
+}
+
+.contacto-form h4 {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.contacto-form p {
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    color: #6c757d;
+}
+
+/* --- Labels --- */
+.contacto-form .form-label {
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+/* --- Inputs y textarea --- */
+.contacto-form .form-control,
+.contacto-form .form-select {
+    background-color: #fff;
+    color: #212529;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 12px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contacto-form .form-control:focus,
+.contacto-form .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 6px rgba(13, 110, 253, 0.5);
+}
+
+/* --- Botón --- */
+.contacto-form button {
+    background: #212529;
+    border: none;
+    color: #fff;
+    font-weight: bold;
+    padding: 12px;
+    border-radius: 10px;
+    transition: background 0.3s ease;
+    width: 100%;
+    margin-top: auto; /* mantiene botón al fondo */
+}
+
+.contacto-form button:hover {
+    background: #0d6efd;
+}
+
+/* --- Mensajes de validación --- */
+.form-control.is-invalid,
+.form-select.is-invalid {
+    border-color: #dc3545 !important;
+    box-shadow: none !important;
+}
+
+/* Mensajes de error */
+.invalid-feedback {
+    font-size: 0.85rem;
+    margin-top: 4px;
+    margin-bottom: 0;
+    color: #dc3545 !important;
+    display: block;
+    min-height: 18px;
+    line-height: 1.2;
+}
+
+/* --- Mensaje de éxito --- */
+.alert-success {
+    border-radius: 10px;
+    font-weight: bold;
+    background: #198754;
+    color: #fff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* --- Tarjeta de información (oscura) --- */
+.contacto-info {
+    background-color: #1e1e2f;
+    color: #ffffff;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.contacto-info h5 {
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.contacto-info p {
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+}
+
+.contacto-info a {
+    color: #ffffff !important;
+    font-size: 1.2rem;
+    margin-right: 15px;
+    transition: color 0.2s ease;
+}
+
+.contacto-info a:hover {
+    color: #0d6efd !important;
+}

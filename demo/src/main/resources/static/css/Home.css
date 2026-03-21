@@ -1,0 +1,264 @@
+/* ============================= */
+/* Barra de navegación principal */
+/* ============================= */
+.navbar-lg {
+  height: 90px;
+  background-color: rgb(0, 0, 0) !important;
+}
+
+.bg-dark {
+  --bs-bg-opacity: 1;
+  background-color: rgb(0, 0, 0) !important;
+}
+
+.navbar-brand img {
+  margin-right: 10px;
+}
+
+/* ============================= */
+/* Estructura base del body      */
+/* ============================= */
+body {
+  background-color: #ffffff;
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding-top: 80px;
+  /* Espacio para navbar fija */
+  padding-bottom: 60px;
+  /* Espacio para footer fijo */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ============================= */
+/* Hero section (franja superior) */
+/* ============================= */
+.hero-img-section {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  height: 25vh;
+  background-color: #7a7a7a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  position: relative;
+}
+
+
+.hero-img-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.55);
+  /* oscurece la imagen */
+  z-index: 0;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+}
+
+.hero-content h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin-bottom: 0.8rem;
+  color: #ffffff;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  color: #e4e4e4;
+}
+
+@media (max-width: 768px) {
+  .hero-img-section {
+    padding: 35px 15px;
+  }
+
+  .hero-content h1 {
+    font-size: 1.8rem;
+  }
+
+  .hero-content p {
+    font-size: 1rem;
+  }
+}
+
+
+.curso-card .card-img-top {
+  padding: 0.8rem;
+  border-radius: 12px;
+}
+
+/* ============================= */
+/* Tarjetas de cursos            */
+/* ============================= */
+.curso-card .card-img-top {
+  padding: 0.8rem;
+  border-radius: 12px;
+}
+
+.curso-card {
+  background-color: #000000;
+  color: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+}
+
+.curso-card {
+  background-color: #000000;
+  color: white;
+  border: none;
+  border-radius: 15px;
+}
+
+.curso-img {
+  height: 160px;
+  object-fit: cover;
+}
+
+.curso-card .card-body {
+  flex: 1;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.curso-card .card-footer {
+  border-top: none;
+  background: none;
+  max-height: 200px;
+  overflow: hidden;
+}
+
+/* ============================= */
+/* Botones                       */
+/* ============================= */
+.btn-purple {
+  background-color: #6619f5;
+  color: white;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.btn-purple:hover {
+  background-color: #6b11f3;
+}
+
+.text-purple {
+  color: #6619f5 !important;
+}
+
+/* ============================= */
+/* Footer fijo                   */
+/* ============================= */
+footer.fixed-bottom {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1020;
+  border-top: 1px solid #1d1d1d;
+  background-color: rgb(0, 0, 0) !important;
+}
+
+footer i {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+footer i:hover {
+  transform: scale(1.1);
+}
+
+/* ============================= */
+/* Formularios y búsqueda        */
+/* ============================= */
+input.form-busqueda {
+  border-radius: 50px 0 0 50px;
+  padding-left: 30px;
+}
+
+.input-group-text {
+  border-radius: 0 30px 30px 0;
+}
+
+/* ============================= */
+/* Tarjetas de contenido         */
+/* ============================= */
+.card-title {
+  font-weight: bold;
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+  font-size: 1rem;
+}
+
+.card-text {
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* ============================= */
+/* Noticias                      */
+/* ============================= */
+@media (min-width: 768px) {
+  .noticia-row .col:nth-child(odd) {
+    clear: left;
+  }
+
+  .noticia-row .col {
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* ============================= */
+/* Validación de errores         */
+/* ============================= */
+.error {
+  color: red !important;
+  font-size: 0.8rem !important;
+  display: block !important;
+  margin: 4px 0 8px 0 !important;
+}
+
+.campo {
+  margin-bottom: 16px;
+}
+
+/* Quitamos borde rojo por defecto */
+input {
+  border: 1px solid #ccc;
+  padding: 8px;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 12px;
+  cursor: pointer;
+}
+
+/* ============================= */
+/* Modal                         */
+/* ============================= */

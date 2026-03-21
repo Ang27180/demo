@@ -40,7 +40,7 @@ public class PersonaController {
     @PostMapping
     public String guardarPersona(@ModelAttribute Persona persona) {
         personaRepository.save(persona);
-        return "redirect:/personas";
+        return "redirect:/admin";
     }
 
     // EDITAR - mostrar formulario con datos
@@ -57,13 +57,13 @@ public class PersonaController {
     public String actualizarPersona(@PathVariable Integer id, @ModelAttribute Persona persona) {
         persona.setId(id);
         personaRepository.save(persona);
-        return "redirect:/personas";
+        return "redirect:/admin";
     }
 
     // ELIMINAR
     @GetMapping("/eliminar/{id}")
     public String eliminarPersona(@PathVariable Integer id) {
         personaRepository.deleteById(id);
-        return "redirect:/personas";
+        return "redirect:/admin";
     }
 }
