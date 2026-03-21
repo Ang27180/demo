@@ -81,58 +81,51 @@
 
 <body>
     <main layout:fragment="contenido">
-        <!-- Header del Curso -->
-        <header class="course-header">
-            <div class="container text-center">
+        <!-- AJUSTE: Header del Curso que ocupa todo el ancho de lado a lado -->
+        <header class="course-header mt-5 pt-5">
+            <div class="container text-center py-4">
                 <span class="badge bg-success mb-2" th:text="${curso.aprendizaje}">Nivel</span>
-                <h1 class="display-4 fw-bold mb-3" th:text="${curso.nombre}">Nombre del Curso</h1>
-                <p class="lead opacity-75 mx-auto" style="max-width: 700px;" th:text="${curso.detalle}">Detalle breve.
-                </p>
+                <h1 class="display-4 fw-bold mb-3 text-white" th:text="${curso.nombre}">Nombre del Curso</h1>
+                <p class="lead opacity-75 mx-auto text-white" style="max-width: 700px;" th:text="${curso.detalle}">
+                    Detalle breve.</p>
             </div>
         </header>
+        <!-- Fin del ajuste -->
+
+        <!-- AJUSTE: Sección de certificado a lo largo (full width) con fondo de lado a lado -->
+        <div class="w-100 py-3" th:if="${inscripcion != null}"
+            style="background: #f8f9fa; border-bottom: 2px solid #e9ecef;">
+            <div class="container">
+                <div class="alert alert-success d-flex flex-wrap align-items-center justify-content-between p-4 rounded-4 shadow-sm border-0"
+                    style="background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);">
+                    <div>
+                        <h4 class="fw-bold mb-1 text-success"><i class="fas fa-award me-2"></i> ¡Certificación
+                            Disponible!</h4>
+                        <p class="mb-0 text-dark opacity-75">Has completado los requisitos para obtener tu certificado
+                            oficial de este curso.</p>
+                    </div>
+                    <a th:href="@{'/reportes/certificado/pdf/' + ${inscripcion.id}}"
+                        class="btn btn-success btn-lg rounded-pill px-4 shadow-sm mt-2 mt-md-0">
+                        <i class="fas fa-file-pdf me-2"></i> Descargar Certificado
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- Fin del ajuste -->
 
         <div class="container mb-5">
-            <div th:if="${mensajeProgreso}" class="alert alert-success alert-dismissible fade show" role="alert">
-                <span th:text="${mensajeProgreso}"></span>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-            <div th:if="${errorProgreso}" class="alert alert-warning alert-dismissible fade show" role="alert">
-                <span th:text="${errorProgreso}"></span>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-
             <div class="row g-4">
                 <!-- Columna Principal: Módulos -->
                 <div class="col-lg-8">
                     <h3 class="fw-bold mb-4">📖 Contenido del Curso</h3>
 
-                    <div th:if="${pagoPendiente}" class="alert alert-warning">
-                        <strong>Pago pendiente.</strong> Tu inscripción está registrada; cuando el pago sea
-                        confirmado podrás ver las lecciones. Puedes generar el recibo desde
-                        <a th:href="@{/mis-cursos}" class="alert-link">Mis cursos</a>.
-                    </div>
-
-                    <div th:if="${puedeRegistrarProgreso}" class="mb-4 p-3 rounded-3 bg-light border">
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <span class="fw-semibold">Tu avance en este curso</span>
-                            <span class="text-success fw-bold" th:text="${progresoCursoPorcentaje} + '%'">0%</span>
-                        </div>
-                        <div class="progress" style="height: 10px;">
-                            <div class="progress-bar bg-success" role="progressbar"
-                                th:style="|width: ${progresoCursoPorcentaje}%|"
-                                th:attr="aria-valuenow=${progresoCursoPorcentaje}" aria-valuemin="0" aria-valuemax="100">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div th:if="${#lists.isEmpty(curso.modulos)}" th:unless="${pagoPendiente}"
-                        class="text-center py-5 bg-light rounded-4">
+                    <div th:if="${#lists.isEmpty(curso.modulos)}" class="text-center py-5 bg-light rounded-4">
                         <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
                         <p class="text-muted">Próximamente estaremos publicando el contenido detallado de este curso.
                         </p>
                     </div>
 
-                    <div th:unless="${pagoPendiente}" class="accordion" id="accordionModulos">
+                    <div class="accordion" id="accordionModulos">
                         <div class="card module-card" th:each="modulo, iter : ${curso.modulos}">
                             <div class="module-header d-flex align-items-center" data-bs-toggle="collapse"
                                 th:data-bs-target="'#collapse' + ${modulo.id}">
@@ -148,8 +141,8 @@
 
                             <div th:id="'collapse' + ${modulo.id}" class="collapse" data-bs-parent="#accordionModulos">
                                 <div class="card-body p-0 border-top">
-                                    <div class="lesson-item flex-wrap gap-2" th:each="leccion : ${modulo.lecciones}">
-                                        <div class="d-flex align-items-center flex-grow-1">
+                                    <div class="lesson-item" th:each="leccion : ${modulo.lecciones}">
+                                        <div class="d-flex align-items-center">
                                             <i class="fas fa-play-circle me-3 text-success"
                                                 th:if="${leccion.contenidoTipo == 'video'}"></i>
                                             <i class="fas fa-file-alt me-3 text-info"
@@ -158,25 +151,9 @@
                                                 th:if="${leccion.contenidoTipo == 'pdf'}"></i>
                                             <span th:text="${leccion.nombre}">Nombre de la lección</span>
                                         </div>
-                                        <div class="d-flex align-items-center gap-2">
-                                            <span th:class="'content-badge badge-' + ${leccion.contenidoTipo}"
-                                                th:text="${leccion.contenidoTipo == 'video' ? 'VIDEO' : (leccion.contenidoTipo == 'pdf' ? 'PDF' : 'LECTURA')}">
-                                            </span>
-                                            <th:block th:if="${puedeRegistrarProgreso}">
-                                                <span th:if="${#lists.contains(leccionesCompletadasIds, leccion.id)}"
-                                                    class="badge bg-success rounded-pill"><i
-                                                        class="fas fa-check me-1"></i>Completada</span>
-                                                <form th:if="${!#lists.contains(leccionesCompletadasIds, leccion.id)}"
-                                                    th:action="@{/cursos/{cid}/lecciones/{lid}/completar(cid=${curso.id},lid=${leccion.id})}"
-                                                    method="post" class="d-inline">
-                                                    <input type="hidden" th:name="${_csrf.parameterName}"
-                                                        th:value="${_csrf.token}">
-                                                    <button type="submit" class="btn btn-sm btn-outline-success">
-                                                        Completar lección
-                                                    </button>
-                                                </form>
-                                            </th:block>
-                                        </div>
+                                        <span th:class="'content-badge badge-' + ${leccion.contenidoTipo}"
+                                            th:text="${leccion.contenidoTipo == 'video' ? 'VIDEO' : (leccion.contenidoTipo == 'pdf' ? 'PDF' : 'LECTURA')}">
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -187,7 +164,7 @@
                 <!-- Barra Lateral: Info Adicional -->
                 <div class="col-lg-4">
                     <div class="card shadow-sm border-0 rounded-4 sidebar-info">
-                        <img th:src="${curso.imagen}" class="card-img-top rounded-top-4" alt="Curso">
+                        <img th:src="${curso.imagen != null and #strings.contains(curso.imagen, 'http') ? curso.imagen : '/imagenes/' + (curso.imagen != null ? curso.imagen : 'default.jpg')}" class="card-img-top rounded-top-4" alt="Curso">
                         <div class="card-body p-4">
                             <h5 class="fw-bold mb-3">Sobre este curso</h5>
                             <ul class="list-unstyled mb-4">
@@ -198,8 +175,8 @@
                                 <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Acceso de por
                                     vida</li>
                             </ul>
-                            <div class="d-grid">
-                                <a th:href="@{/mis-cursos}" class="btn btn-outline-dark rounded-pill">
+                            <div class="d-grid gap-2">
+                                <a href="/mis-cursos" class="btn btn-outline-dark rounded-pill">
                                     <i class="fas fa-arrow-left me-2"></i> Volver a mis cursos
                                 </a>
                             </div>

@@ -1,6 +1,8 @@
 package com.proyectojpa.demo.controller;
 
 import java.time.LocalDate;
+import java.util.List; // AJUSTE: Import para listas
+import java.util.Collections; // AJUSTE: Import para colecciones
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -43,12 +45,24 @@ public class InscripcionController {
 
     // ----------- MOSTRAR FORMULARIO -----------------
     @GetMapping({ "/nueva", "/nueva/{idEstudiante}" })
-    public String nuevaInscripcion(@PathVariable(required = false) Integer idEstudiante, Integer id_Curso,
-            Model model) {
+    public String nuevaInscripcion(@PathVariable(required = false) Integer idEstudiante, 
+                                   @RequestParam(name = "idCurso", required = false) Integer idCurso, // AJUSTE: Corregido nombre a idCurso y añadido @RequestParam
+                                   Model model) {
 
         model.addAttribute("idEstudiante", idEstudiante);
-        model.addAttribute("idCurso", id_Curso);
-        model.addAttribute("listaCursos", cursoRepository.findAll());
+        model.addAttribute("idCurso", idCurso);
+
+        // --- AJUSTE: Si viene un idCurso, mostramos solo ese curso en la lista para evitar confusiones ---
+        if (idCurso != null) {
+            cursoRepository.findById(idCurso).ifPresent(curso -> {
+                model.addAttribute("listaCursos", Collections.singletonList(curso));
+            });
+        } else {
+            // Si no viene idCurso, mostramos todos (funcionalidad original corregida)
+            model.addAttribute("listaCursos", cursoRepository.findAll());
+        }
+        // ------------------------------------------------------------------------------------------------
+
         model.addAttribute("listaEstados", estadoRepo.findAll());
 
         return "inscripcion"; // inscripcion.html en templates
@@ -56,7 +70,7 @@ public class InscripcionController {
 
     // ------------ GUARDAR INSCRIPCIÓN ----------------
     @PostMapping("/guardar")
-    public String guardarInscripcion(@RequestParam Integer idCurso, RedirectAttributes redirectAttributes) {
+    public String guardarInscripcion(@RequestParam(name = "idCurso") Integer idCurso, RedirectAttributes redirectAttributes) {
 
         // 1. Persona logueada
         Persona personaActual = getPersona();

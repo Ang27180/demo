@@ -28,9 +28,9 @@ public class CorreoController {
     // ============================================================
     @PostMapping("/enviar-desde-vista")
     public String enviarDesdeVista(
-            @RequestParam String para,
-            @RequestParam String asunto,
-            @RequestParam String mensaje,
+            @RequestParam(name = "para") String para,
+            @RequestParam(name = "asunto") String asunto,
+            @RequestParam(name = "mensaje") String mensaje,
             RedirectAttributes redirectAttributes) {
 
         try {
@@ -59,9 +59,9 @@ public class CorreoController {
     @ResponseBody
     @PostMapping("/texto")
     public ResponseEntity<String> enviarTexto(
-            @RequestParam String para,
-            @RequestParam String asunto,
-            @RequestParam String mensaje) {
+            @RequestParam(name = "para") String para,
+            @RequestParam(name = "asunto") String asunto,
+            @RequestParam(name = "mensaje") String mensaje) {
 
         emailService.enviarTexto(para, asunto, mensaje);
         return ResponseEntity.ok("Correo enviado correctamente (texto plano).");
@@ -70,8 +70,8 @@ public class CorreoController {
     @ResponseBody
     @PostMapping("/html")
     public ResponseEntity<String> enviarHtml(
-            @RequestParam String para,
-            @RequestParam String asunto) throws MessagingException {
+            @RequestParam(name = "para") String para,
+            @RequestParam(name = "asunto") String asunto) throws MessagingException {
 
         String html = generarPlantillaPremium(para, asunto, "Mensaje de bienvenida automático");
         emailService.enviarHtml(para, asunto, html);
@@ -82,10 +82,10 @@ public class CorreoController {
     @ResponseBody
     @PostMapping("/adjunto")
     public ResponseEntity<String> enviarAdjunto(
-            @RequestParam String para,
-            @RequestParam String asunto,
-            @RequestParam String mensaje,
-            @RequestParam String archivo) throws MessagingException {
+            @RequestParam(name = "para") String para,
+            @RequestParam(name = "asunto") String asunto,
+            @RequestParam(name = "mensaje") String mensaje,
+            @RequestParam(name = "archivo") String archivo) throws MessagingException {
 
         emailService.enviarConAdjunto(para, asunto, mensaje, archivo);
         return ResponseEntity.ok("Correo enviado con adjunto.");
