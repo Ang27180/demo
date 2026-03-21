@@ -1,4 +1,4 @@
-package com.proyectojpa.demo;
+package com.poryectojpa.demo;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
