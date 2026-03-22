@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+
+<head>
+    <title layout:fragment="titulo">Estudiantes Registrados - Tutor</title>
+</head>
+
+<body>
+    <div layout:fragment="contenido" class="container mt-5 pt-5 pb-5">
+        
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <h1 class="fw-bold text-white mb-1">Mis Estudiantes</h1>
+                <p class="text-white-50">Gestiona y revisa las inscripciones de tus cursos asignados.</p>
+            </div>
+            <a th:href="@{/tutor-panel}" class="btn btn-outline-light rounded-pill">
+                <i class="fas fa-arrow-left me-2"></i> Volver al Panel
+            </a>
+        </div>
+
+        <!-- Tabla de Estudiantes (Premium Dark) -->
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden" style="background-color: #1A1A1A;">
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0 align-middle">
+                    <thead class="bg-dark text-uppercase small l-spacing-1">
+                        <tr>
+                            <th class="px-4 py-3 border-secondary border-opacity-25">Estudiante</th>
+                            <th class="px-4 py-3 border-secondary border-opacity-25">Curso</th>
+                            <th class="px-4 py-3 border-secondary border-opacity-25">Email</th>
+                            <th class="px-4 py-3 border-secondary border-opacity-25">Fecha Inscripción</th>
+                            <th class="px-4 py-3 border-secondary border-opacity-25 text-end">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="ins : ${inscripciones}">
+                            <td class="px-4 py-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-yellow text-dark rounded-circle d-flex align-items-center justify-content-center fw-bold me-3" 
+                                         style="width: 40px; height: 40px; font-size: 14px;"
+                                         th:text="${#strings.substring(ins.estudiante.persona.nombre,0,1)}">A</div>
+                                    <div>
+                                        <div class="fw-bold text-white" th:text="${ins.estudiante.persona.nombre + ' ' + ins.estudiante.persona.apellido}">Nombre</div>
+                                        <small class="text-white-50">Estudiante activo</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-4">
+                                <span class="badge border border-warning text-yellow px-3 py-2 rounded-pill font-monospace small" 
+                                      th:text="${ins.curso.nombre}">Curso</span>
+                            </td>
+                            <td class="px-4 text-white-50" th:text="${ins.estudiante.persona.email}">email@example.com</td>
+                            <td class="px-4 text-white-50" th:text="${#temporals.format(ins.fechaInscripcion, 'dd/MM/yyyy')}">01/01/2024</td>
+                            <td class="px-4 text-end">
+                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2 rounded-4" 
+                                      th:text="${ins.estado.nombre}">Confirmado</span>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(inscripciones)}">
+                            <td colspan="5" class="text-center py-5 text-muted fst-italic">
+                                <i class="fas fa-user-slash fa-3x mb-3 d-block opacity-25"></i>
+                                Aún no tienes estudiantes inscritos en tus cursos.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

@@ -24,6 +24,9 @@ public class Estudiante {
     @Column(name = "progreso", nullable = false, length = 45)
     private String progreso;
 
+    @Column(name = "cantidad")
+    private Integer cantidad; // Nueva cantidad solicitada para el estudiante
+
     @ManyToOne
     @JoinColumn(name = "persona_id_persona", referencedColumnName = "id_persona")
     private Persona persona;
@@ -59,5 +62,13 @@ public class Estudiante {
 
     public void setPersona(Persona persona) {
         this.persona = persona;
+    }
+
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
     }
 }

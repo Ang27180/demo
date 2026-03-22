@@ -7,6 +7,7 @@ public class EstudianteDTO {
     private String progreso;
     private Integer idEstadoEstudiante;
     private Integer idPersona;
+    private Integer cantidad;
 
     // Getters & Setters
     public Integer getIdEstudiante() { return idEstudiante; }
@@ -23,4 +24,7 @@ public class EstudianteDTO {
 
     public Integer getIdPersona() { return idPersona; }
     public void setIdPersona(Integer idPersona) { this.idPersona = idPersona; }
+
+    public Integer getCantidad() { return cantidad; }
+    public void setCantidad(Integer cantidad) { this.cantidad = cantidad; }
 }

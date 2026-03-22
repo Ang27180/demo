@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${curso.id == null} ? 'Nuevo Curso' : 'Editar Curso'"></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+    <h1 class="mb-4" th:text="${curso.id == null} ? 'Nuevo Curso' : 'Editar Curso'"></h1>
+    <form th:action="@{/cursos/admin/guardar}" th:object="${curso}" method="post" class="row g-3">
+        <input type="hidden" th:field="*{id}" />
+        <div class="col-md-6">
+            <label class="form-label">Nombre del Curso</label>
+            <input type="text" th:field="*{nombre}" class="form-control" required />
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Duración</label>
+            <input type="text" th:field="*{duracion}" class="form-control" />
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Número Curso</label>
+            <input type="text" th:field="*{numcurso}" class="form-control" />
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Costo</label>
+            <input type="number" step="0.01" th:field="*{costo}" class="form-control" />
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Nivel de Aprendizaje</label>
+            <input type="text" th:field="*{aprendizaje}" class="form-control" />
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Categoría (ID)</label>
+            <input type="number" th:field="*{categoria}" class="form-control" />
+        </div>
+        <div class="col-12">
+            <label class="form-label">Detalle</label>
+            <textarea th:field="*{detalle}" class="form-control" rows="3"></textarea>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Imagen (URL o nombre archivo)</label>
+            <input type="text" th:field="*{imagen}" class="form-control" />
+        </div>
+        
+        <!-- ASOCIACIÓN CON TUTOR -->
+        <div class="col-md-6">
+            <label class="form-label">Asociar Tutor Responsable</label>
+            <select th:field="*{tutor}" class="form-select">
+                <option value="">-- Sin Tutor Asignado --</option>
+                <option th:each="t : ${tutores}" th:value="${t.idTutor}" 
+                        th:text="${t.persona.nombre} + ' (' + ${t.persona.email} + ')'"></option>
+            </select>
+        </div>
+
+        <div class="col-12 mt-4">
+            <button type="submit" class="btn btn-success">Guardar Curso</button>
+            <a th:href="@{/admin}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</body>
+</html>

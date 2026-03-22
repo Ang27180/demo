@@ -31,6 +31,9 @@ public class Leccion {
     @JoinColumn(name = "id_modulo", nullable = false)
     private Modulo modulo;
 
+    @Column(name = "cantidad")
+    private Integer cantidad; // Nueva cantidad solicitada
+
     public Integer getId() {
         return id;
     }
@@ -69,5 +72,13 @@ public class Leccion {
 
     public void setModulo(Modulo modulo) {
         this.modulo = modulo;
+    }
+
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
     }
 }

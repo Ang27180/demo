@@ -40,6 +40,10 @@ public class Curso {
     @Column(name = "imagen")
     private String imagen;
 
+    @jakarta.persistence.ManyToOne
+    @jakarta.persistence.JoinColumn(name = "id_tutor")
+    private Tutor tutor; // El tutor responsable de este curso
+
     @jakarta.persistence.OneToMany(mappedBy = "curso")
     private java.util.List<Modulo> modulos;
 
@@ -123,6 +127,11 @@ public class Curso {
         this.imagen = imagen;
     }
 
+    public Tutor getTutor() {
+        return tutor;
+    }
 
-    
+    public void setTutor(Tutor tutor) {
+        this.tutor = tutor;
+    }
 }

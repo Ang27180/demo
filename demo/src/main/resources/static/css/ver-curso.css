@@ -1,0 +1,161 @@
+/* ========================================= */
+/* VISTA DETALLE CURSO - PREMIUM DARK        */
+/* ========================================= */
+
+.course-detail-section {
+    background-color: #000;
+    min-height: 100vh;
+}
+
+.premium-header {
+    background: linear-gradient(rgba(0, 0, 0, 0.4), #000), 
+                url('https://images.unsplash.com/photo-1556910103-1c02745aae4d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+    background-size: cover;
+    background-position: center;
+    padding: 6rem 0 4rem;
+    text-align: center;
+    border-bottom: 2px solid rgba(248, 195, 37, 0.2);
+}
+
+.premium-header h1 {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: white;
+    letter-spacing: -1.5px;
+    margin-bottom: 1rem;
+}
+
+.level-badge {
+    background: #f8c325;
+    color: #000;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    padding: 6px 15px;
+    border-radius: 50px;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+}
+
+/* Certification Box Premium */
+.cert-box-premium {
+    background: linear-gradient(135deg, #1A1A1A 0%, #111 100%);
+    border: 1px solid rgba(248, 195, 37, 0.3);
+    border-radius: 24px;
+    padding: 2rem;
+    margin-top: -3rem;
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
+}
+
+.cert-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(248, 195, 37, 0.1);
+    color: #f8c325;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+}
+
+/* Modules Accordion */
+.module-accordion-dark .accordion-item {
+    background: #111;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 15px !important;
+    margin-bottom: 1rem;
+    overflow: hidden;
+}
+
+.module-accordion-dark .accordion-button {
+    background: #111;
+    color: white;
+    font-weight: 700;
+    padding: 1.5rem;
+    border: none;
+    box-shadow: none;
+}
+
+.module-accordion-dark .accordion-button:not(.collapsed) {
+    background: #1A1A1A;
+    color: #f8c325;
+}
+
+.module-accordion-dark .accordion-button::after {
+    filter: invert(1);
+}
+
+.module-accordion-dark .accordion-body {
+    background: #0a0a0a;
+    padding: 0;
+}
+
+/* Lesson Items */
+.lesson-row {
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    transition: all 0.3s ease;
+}
+
+.lesson-row:hover {
+    background: rgba(248, 195, 37, 0.05);
+    border-left: 3px solid #f8c325;
+}
+
+.lesson-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: #d0d0d0;
+}
+
+.lesson-info i {
+    font-size: 1.1rem;
+    color: #f8c325;
+}
+
+.lesson-badge {
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 4px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-video { background: #fee2e2; color: #dc2626; }
+.badge-pdf { background: #fef3c7; color: #d97706; }
+.badge-texto { background: #e0f2fe; color: #0284c7; }
+
+/* Sidebar Premium */
+.sidebar-sticky {
+    position: sticky;
+    top: 100px;
+    background: #1A1A1A;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 24px;
+    overflow: hidden;
+}
+
+.sidebar-sticky .card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+.sidebar-list li {
+    color: #b0b0b0;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar-list i {
+    color: #f8c325;
+}

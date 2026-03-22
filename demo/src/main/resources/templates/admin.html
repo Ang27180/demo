@@ -12,7 +12,7 @@
 
         <!-- TARJETAS DE RESUMEN -->
         <div class="row g-4 mb-5">
-            <div class="col-md-3">
+            <div class="col-md-3" sec:authorize="hasRole('ADMIN')">
                 <div class="card p-3 text-center">
                     <i class="bi bi-people-fill display-4 text-primary mb-2"></i>
                     <h5 class="fw-bold">Total Usuarios</h5>
@@ -26,7 +26,7 @@
                     <p class="fs-3" th:text="${totalCursos}">0</p>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3" sec:authorize="hasRole('ADMIN')">
                 <div class="card p-3 text-center">
                     <i class="bi bi-person-badge-fill display-4 text-warning mb-2"></i>
                     <h5 class="fw-bold">Tutores Registrados</h5>
@@ -43,7 +43,7 @@
         </div>
 
         <!-- GESTIÓN DE USUARIOS -->
-        <div class="card p-4 mb-5">
+        <div class="card p-4 mb-5" sec:authorize="hasRole('ADMIN')">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h4 class="fw-bold">Gestión de Usuarios</h4>
                 <div class="d-flex gap-2">
@@ -120,7 +120,7 @@
         <div class="card p-4 mb-5">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h4 class="fw-bold">Gestión de Cursos</h4>
-                <a th:href="@{/admin/cursos/form}" class="btn btn-success">➕ Añadir Curso</a>
+                <a th:href="@{/cursos/admin/form}" class="btn btn-success" sec:authorize="hasRole('ADMIN')">➕ Añadir Curso</a>
             </div>
 
             <div class="input-group mb-3">
@@ -160,11 +160,11 @@
                                     <i class="fas fa-book-open"></i> Contenido
                                 </a>
 
-                                <a th:href="@{admin/cursos/form/{id}(id=${curso.id})}" class="btn btn-warning btn-sm">✏️
+                                <a th:href="@{/cursos/admin/editar/{id}(id=${curso.id})}" class="btn btn-warning btn-sm" sec:authorize="hasRole('ADMIN')">✏️
                                     Editar</a>
-                                <a th:href="@{/admin/cursos/eliminar/{id}(id=${curso.id})}"
+                                <a th:href="@{/cursos/admin/eliminar/{id}(id=${curso.id})}"
                                     onclick="return confirm('¿Seguro que deseas eliminar este curso?')"
-                                    class="btn btn-danger btn-sm">🗑️ Eliminar</a>
+                                    class="btn btn-danger btn-sm" sec:authorize="hasRole('ADMIN')">🗑️ Eliminar</a>
                             </td>
                         </tr>
                     </tbody>

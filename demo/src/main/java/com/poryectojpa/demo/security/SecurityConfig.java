@@ -82,12 +82,13 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/admin", "/admin/**",
                     "/personas/**",
-                    "/personas/exportarExcel"
+                    "/personas/exportarExcel",
+                    "/cursos/admin/**"
                 ).hasRole("ADMIN")
 
-                // ADMIN o ESTUDIANTE
-                .requestMatchers("/estudiante/**", "/mis-cursos/**", "/perfil/**")
-                    .hasAnyRole("ADMIN", "ESTUDIANTE")
+                // ADMIN, ESTUDIANTE o TUTOR (Páginas de contenido y perfil)
+                .requestMatchers("/estudiante/**", "/mis-cursos/**", "/perfil/**", "/tutor-panel/**", "/tutor-panel-estudiantes/**", "/cursos/**")
+                    .hasAnyRole("ADMIN", "ESTUDIANTE", "TUTOR")
 
                 // Todo lo demás requiere autenticación
                 .anyRequest().authenticated()
@@ -107,7 +108,7 @@ public class SecurityConfig {
                     } else if (roles.stream().anyMatch(r -> r.getAuthority().equals("ROLE_ESTUDIANTE"))) {
                         destino = "/estudiante";
                     } else if (roles.stream().anyMatch(r -> r.getAuthority().equals("ROLE_TUTOR"))) {
-                        destino = "/home";
+                        destino = "/tutor-panel"; // Redirigir al Panel de Tutor
                     }
 
                     response.sendRedirect(destino);

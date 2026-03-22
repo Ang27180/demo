@@ -23,33 +23,9 @@ public class LoginController {
         return "login";
     }
 
-    @PostMapping("/login")
-    public String procesarLogin(
-            @Valid @ModelAttribute("login") LoginDTO loginDTO,
-            BindingResult result,
-            Model model) {
 
-        if (result.hasErrors()) {
-            return "login";
-        }
-
-        Persona user = personaRepository.findByEmail(loginDTO.getEmail().trim());
-        if (user == null) {
-            model.addAttribute("mensaje", "Correo o contraseña incorrectos");
-            return "login";
-        }
-
-        if (!user.getContrasena().equals(loginDTO.getContrasena())) {
-            model.addAttribute("mensaje", "Correo o contraseña incorrectos");
-            return "login";
-        }
-
-        if (user.getRolId() != null && user.getRolId() == 1) {
-            return "redirect:/admin";
-        } else {
-            return "redirect:/estudiante";
-        }
-    }
+    // El método @PostMapping("/login") ha sido eliminado. 
+    // Spring Security maneja el login automáticamente de forma segura.
     @GetMapping("/forgot-password")
     public String mostrarRecuperarContrasena() {
         return "forgot-password";

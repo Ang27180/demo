@@ -2,193 +2,170 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     layout:decorate="~{layout}">
 
-<body>
-    <div layout:fragment="contenido">
-        <title layout:fragment="titulo">Sobre Nosotros - Tutores</title>
+<head>
+    <meta charset="UTF-8" />
+    <title layout:fragment="titulo">Nuestros Tutores - Sabor MasterClass</title>
+    <!-- CSS Específico de Nosotros/Tutores -->
+    <link rel="stylesheet" th:href="@{/css/nosotros.css}">
+</head>
 
-        <!-- Hero -->
-        <!-- <section class="hero-img-section d-flex align-items-center justify-content-center text-center text-white"
-            th:style="'background-image: url(' + @{/imagenes/platos.png} + ')'">
-            <div class="hero-content position-relative z-1">
-                <h1 class="display-4 fw-bold">Conoce a nuestros
-                    expertos</h1>
-                <p class="lead">
-                    <i class="fas fa-hat-chef me-2"></i> Tutores apasionados
-                    por el arte culinario <i class="fas fa-hat-chef ms-2"></i>
+<body>
+    <div layout:fragment="contenido" class="nosotros-section">
+
+        <!-- Hero Section -->
+        <section class="hero-img-section mt-n1">
+            <div class="overlay"></div>
+            <div class="hero-content text-center">
+                <h1 class="display-3 fw-bold text-white mb-2">Conoce a tus Maestros</h1>
+                <p class="lead text-white mx-auto fw-medium" style="max-width: 700px;">
+                    <i class="fas fa-utensils me-2 text-yellow"></i>
+                    Aprende con chefs de talla internacional y expertos en cada rincón de la gastronomía.
                 </p>
             </div>
-        </section> -->
+        </section>
 
-        <!-- Cards de tutores -->
-        <main class="container mt-5 pt-5 mb-3">
-            <h2 class="fw-bold text-center mb-5">Nuestros Tutores</h2>
-            <div class="row g-4">
+        <!-- Filtros y Título (Opcional, futuro) -->
+        <div class="container py-5">
+            <div class="section-title-wrapper text-center mb-5">
+                <h2 class="display-5 fw-bold text-white">Expertos en Alta Cocina</h2>
+                <p class="text-white-50 mt-2">Combinando técnica profesional y pasión por el arte culinario</p>
+            </div>
 
+            <div class="row g-5">
                 <!-- Tutor 1 -->
-                <div class="col-md-4">
-                    <div class="card curso-card h-100">
-                        <img th:src="@{/imagenes/tutor-2.jpg}" class="card-img-top curso-img" alt="Arlie Cruz">
-                        <div class="card-body">
-                            <h6 class="card-title">Arlie Cruz</h6>
-                            <p class="text-warning small">⭐ 5.0 &nbsp; 🏆 12
-                                años &nbsp; 📚 7 cursos</p>
-                            <p class="fw-bold">Pastelería Francesa</p>
-                            <p class="text-white small">Apasionado por la
-                                repostería y la creación de postres gourmet.
-                                Especialista en técnicas de decoración y en
-                                transformar ingredientes simples en
-                                verdaderas obras de arte comestibles.</p>
+                <div class="col-md-6 col-lg-4">
+                    <div class="tutor-card h-100">
+                        <div class="tutor-img-wrapper">
+                            <img th:src="@{/imagenes/tutor-2.jpg}" class="tutor-img" alt="Arlie Cruz">
+                            <span class="tutor-badge"><i class="fas fa-certificate me-1"></i> Chef Certificado</span>
+                        </div>
+                        <div class="tutor-info">
+                            <div class="tutor-specialty">Pastelería Francesa</div>
+                            <h4 class="tutor-name">Arlie Cruz</h4>
+                            <div class="tutor-stats">
+                                <span class="tutor-stat-item"><i class="fas fa-star text-yellow"></i> 5.0</span>
+                                <span class="tutor-stat-item"><i class="fas fa-calendar-alt text-yellow"></i> 12 años</span>
+                                <span class="tutor-stat-item"><i class="fas fa-book-open text-yellow"></i> 7 cursos</span>
+                            </div>
+                            <p class="tutor-description">
+                                Especialista en técnicas gourmet y creación de postres de alta gama. Su misión es transformar ingredientes simples en obras de arte.
+                            </p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Tutor 2 -->
-                <div class="col-md-4">
-                    <div class="card curso-card h-100">
-                        <img th:src="@{/imagenes/tutor-1.jpg}" class="card-img-top curso-img" alt="Sofía Martínez">
-                        <div class="card-body">
-                            <h6 class="card-title">Sofía Martínez</h6>
-                            <p class="text-warning small">⭐ 4.0 &nbsp; 🏆 10
-                                años &nbsp; 📚 5 cursos</p>
-                            <p class="fw-bold">Cocina Italiana</p>
-                            <p class="text-white small">Experta en cocina
-                                italiana tradicional. Te enseñará a preparar
-                                pastas, salsas y platillos icónicos con
-                                técnicas profesionales y un toque
-                                casero.</p>
+                <div class="col-md-6 col-lg-4">
+                    <div class="tutor-card h-100">
+                        <div class="tutor-img-wrapper">
+                            <img th:src="@{/imagenes/tutor-1.jpg}" class="tutor-img" alt="Sofía Martínez">
+                            <span class="tutor-badge"><i class="fas fa-certificate me-1"></i> Experta Regional</span>
+                        </div>
+                        <div class="tutor-info">
+                            <div class="tutor-specialty">Cocina Italiana</div>
+                            <h4 class="tutor-name">Sofía Martínez</h4>
+                            <div class="tutor-stats">
+                                <span class="tutor-stat-item"><i class="fas fa-star text-yellow"></i> 4.8</span>
+                                <span class="tutor-stat-item"><i class="fas fa-calendar-alt text-yellow"></i> 10 años</span>
+                                <span class="tutor-stat-item"><i class="fas fa-book-open text-yellow"></i> 5 cursos</span>
+                            </div>
+                            <p class="tutor-description">
+                                Enseña los secretos de la pasta fresca y salsas artesanales con el auténtico sabor tradicional italiano.
+                            </p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Tutor 3 -->
-                <div class="col-md-4">
-                    <div class="card curso-card h-100">
-                        <img th:src="@{/imagenes/tutor-4.jpg}" class="card-img-top curso-img" alt="Diego Fernández">
-                        <div class="card-body">
-                            <h6 class="card-title">Diego Fernández</h6>
-                            <p class="text-warning small">⭐ 4.0 &nbsp; 🏆 8
-                                años &nbsp; 📚 12 cursos</p>
-                            <p class="fw-bold">Cocina Fusión</p>
-                            <p class="text-white small">Apasionado por la
-                                cocina fusión, combinando sabores e
-                                ingredientes de distintas culturas para
-                                crear experiencias gastronómicas únicas.</p>
+                <div class="col-md-6 col-lg-4">
+                    <div class="tutor-card h-100">
+                        <div class="tutor-img-wrapper">
+                            <img th:src="@{/imagenes/tutor-4.jpg}" class="tutor-img" alt="Diego Fernández">
+                            <span class="tutor-badge"><i class="fas fa-certificate me-1"></i> Innovación Gastronómica</span>
+                        </div>
+                        <div class="tutor-info">
+                            <div class="tutor-specialty">Cocina Fusión</div>
+                            <h4 class="tutor-name">Diego Fernández</h4>
+                            <div class="tutor-stats">
+                                <span class="tutor-stat-item"><i class="fas fa-star text-yellow"></i> 4.5</span>
+                                <span class="tutor-stat-item"><i class="fas fa-calendar-alt text-yellow"></i> 8 años</span>
+                                <span class="tutor-stat-item"><i class="fas fa-book-open text-yellow"></i> 12 cursos</span>
+                            </div>
+                            <p class="tutor-description">
+                                Fusionando sabores de oriente y occidente para crear experiencias gastronómicas multisensoriales.
+                            </p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Tutor 4 -->
-                <div class="col-md-4">
-                    <div class="card curso-card h-100">
-                        <img th:src="@{/imagenes/tutor-3.jpg}" class="card-img-top curso-img" alt="Mariana Ríos">
-                        <div class="card-body">
-                            <h6 class="card-title">Mariana Ríos</h6>
-                            <p class="text-warning small">⭐ 4.5 &nbsp; 🏆 22
-                                años &nbsp; 📚 8 cursos</p>
-                            <p class="fw-bold">Repostería Creativa</p>
-                            <p class="text-white small">Especialista en
-                                postres innovadores y técnicas de
-                                chocolatería. Aprenderás a crear cupcakes
-                                decorados, pasteles artísticos y esculturas
-                                de chocolate de alto nivel.</p>
+                <div class="col-md-6 col-lg-4">
+                    <div class="tutor-card h-100">
+                        <div class="tutor-img-wrapper">
+                            <img th:src="@{/imagenes/tutor-3.jpg}" class="tutor-img" alt="Mariana Ríos">
+                            <span class="tutor-badge"><i class="fas fa-certificate me-1"></i> Chocolatería Expert</span>
+                        </div>
+                        <div class="tutor-info">
+                            <div class="tutor-specialty">Repostería Creativa</div>
+                            <h4 class="tutor-name">Mariana Ríos</h4>
+                            <div class="tutor-stats">
+                                <span class="tutor-stat-item"><i class="fas fa-star text-yellow"></i> 4.9</span>
+                                <span class="tutor-stat-item"><i class="fas fa-calendar-alt text-yellow"></i> 22 años</span>
+                                <span class="tutor-stat-item"><i class="fas fa-book-open text-yellow"></i> 8 cursos</span>
+                            </div>
+                            <p class="tutor-description">
+                                Especialista en técnicas de chocolatería y decoración artística de pasteles para eventos de alto nivel.
+                            </p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Tutor 5 -->
-                <div class="col-md-4">
-                    <div class="card curso-card h-100">
-                        <img th:src="@{/imagenes/tutor-5.jpg}" class="card-img-top curso-img" alt="Hiroshi Tanaka">
-                        <div class="card-body">
-                            <h6 class="card-title">Hiroshi Tanaka</h6>
-                            <p class="text-warning small">⭐ 5.0 &nbsp; 🏆 13
-                                años &nbsp; 📚 9 cursos</p>
-                            <p class="fw-bold">Cocina Japonesa</p>
-                            <p class="text-white small">Maestro en sushi y
-                                ramen tradicional. Con experiencia en la
-                                auténtica cocina japonesa, enseña desde
-                                cortes de pescado hasta la preparación de
-                                caldos y arroces perfectos.</p>
+                <div class="col-md-6 col-lg-4">
+                    <div class="tutor-card h-100">
+                        <div class="tutor-img-wrapper">
+                            <img th:src="@{/imagenes/tutor-5.jpg}" class="tutor-img" alt="Hiroshi Tanaka">
+                            <span class="tutor-badge"><i class="fas fa-certificate me-1"></i> Maestro Sushi</span>
+                        </div>
+                        <div class="tutor-info">
+                            <div class="tutor-specialty">Cocina Japonesa</div>
+                            <h4 class="tutor-name">Hiroshi Tanaka</h4>
+                            <div class="tutor-stats">
+                                <span class="tutor-stat-item"><i class="fas fa-star text-yellow"></i> 5.0</span>
+                                <span class="tutor-stat-item"><i class="fas fa-calendar-alt text-yellow"></i> 13 años</span>
+                                <span class="tutor-stat-item"><i class="fas fa-book-open text-yellow"></i> 9 cursos</span>
+                            </div>
+                            <p class="tutor-description">
+                                Dominando el arte del corte perfecto de sashimi y las bases secretas del ramen tradicional japonés.
+                            </p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Tutor 6 -->
-                <div class="col-md-4">
-                    <div class="card curso-card h-100">
-                        <img th:src="@{/imagenes/tutor-6.jpg}" class="card-img-top curso-img" alt="Martín Gutiérrez">
-                        <div class="card-body">
-                            <h6 class="card-title">Martín Gutiérrez</h6>
-                            <p class="text-warning small">⭐ 4.5 &nbsp; 🏆 6
-                                años &nbsp; 📚 2 cursos</p>
-                            <p class="fw-bold">Parrilla y Ahumados</p>
-                            <p class="text-white small">Especialista en
-                                asados y técnicas de ahumado. Su pasión es
-                                el fuego y la carne, enseñando desde
-                                parrilladas clásicas hasta métodos avanzados
-                                de cocción lenta.</p>
+                <div class="col-md-6 col-lg-4">
+                    <div class="tutor-card h-100">
+                        <div class="tutor-img-wrapper">
+                            <img th:src="@{/imagenes/tutor-6.jpg}" class="tutor-img" alt="Martín Gutiérrez">
+                            <span class="tutor-badge"><i class="fas fa-certificate me-1"></i> Grill Master</span>
+                        </div>
+                        <div class="tutor-info">
+                            <div class="tutor-specialty">Parrilla y Ahumados</div>
+                            <h4 class="tutor-name">Martín Gutiérrez</h4>
+                            <div class="tutor-stats">
+                                <span class="tutor-stat-item"><i class="fas fa-star text-yellow"></i> 4.7</span>
+                                <span class="tutor-stat-item"><i class="fas fa-calendar-alt text-yellow"></i> 6 años</span>
+                                <span class="tutor-stat-item"><i class="fas fa-book-open text-yellow"></i> 2 cursos</span>
+                            </div>
+                            <p class="tutor-description">
+                                Apasionado por el fuego y la carne, experto en control de temperatura y técnicas de ahumado lento.
+                            </p>
                         </div>
                     </div>
                 </div>
-
-                <!-- Tutor 7 -->
-                <div class="col-md-4">
-                    <div class="card curso-card h-100">
-                        <img th:src="@{/imagenes/tutor-7.jpg}" class="card-img-top curso-img" alt="Camila Fernández">
-                        <div class="card-body">
-                            <h6 class="card-title">Camila Fernández</h6>
-                            <p class="text-warning small">⭐ 5.0 &nbsp; 🏆 4
-                                años &nbsp; 📚 5 cursos</p>
-                            <p class="fw-bold">Cocina Saludable</p>
-                            <p class="text-white small">Apasionada por la
-                                nutrición y el bienestar. Sus clases
-                                combinan ingredientes naturales con técnicas
-                                innovadoras para preparar comidas saludables
-                                y deliciosas.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tutor 8 -->
-                <div class="col-md-4">
-                    <div class="card curso-card h-100">
-                        <img th:src="@{/imagenes/tutor-9.jpg}" class="card-img-top curso-img" alt="José Ramírez">
-                        <div class="card-body">
-                            <h6 class="card-title">José Ramírez</h6>
-                            <p class="text-warning small">⭐ 5.0 &nbsp; 🏆 10
-                                años &nbsp; 📚 7 cursos</p>
-                            <p class="fw-bold">Sabores de México</p>
-                            <p class="text-white small">Experto en cocina
-                                tradicional mexicana, desde tacos y moles
-                                hasta salsas y tamales. Comparte recetas
-                                auténticas con técnicas heredadas de
-                                generaciones.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tutor 9 -->
-                <div class="col-md-4">
-                    <div class="card curso-card h-100">
-                        <img th:src="@{/imagenes/tutor-8.jpg}" class="card-img-top curso-img" alt="Sofía Lombardi">
-                        <div class="card-body">
-                            <h6 class="card-title">Sofía Lombardi</h6>
-                            <p class="text-warning small">⭐ 5.0 &nbsp; 🏆 18
-                                años &nbsp; 📚 9 cursos</p>
-                            <p class="fw-bold">Cocina Italiana</p>
-                            <p class="text-white small">Especialista en
-                                pastas frescas, risottos y salsas
-                                artesanales. Su objetivo es transmitir el
-                                amor por la cocina italiana con recetas
-                                caseras y tradicionales.</p>
-                        </div>
-                    </div>
-                </div>
-
             </div>
-        </main>
-        </main>
-
+        </div>
     </div>
+</body>
 
 </html>

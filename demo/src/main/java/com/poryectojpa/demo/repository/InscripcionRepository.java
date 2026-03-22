@@ -14,4 +14,7 @@ public interface InscripcionRepository extends JpaRepository<Inscripcion, Intege
     java.util.Optional<Inscripcion> findByEstudianteAndCurso(Estudiante estudiante, Curso curso);
 
     boolean existsByEstudianteAndCurso(Estudiante estudiante, Curso curso);
+    
+    // Buscar todas las inscripciones de los cursos asociados a un tutor específico
+    List<Inscripcion> findByCurso_Tutor_IdTutor(Integer idTutor);
 }

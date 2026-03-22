@@ -24,6 +24,9 @@ public class Tutor {
     @Column(name = "Observaciones", length = 255)
     private String observaciones;
 
+    @Column(name = "cantidad")
+    private Integer cantidad; // Nueva cantidad solicitada para el tutor
+
     // Relación con Persona
     @ManyToOne
 @JoinColumn(name = "persona_id_persona", referencedColumnName = "id_persona")
@@ -61,5 +64,13 @@ private Persona persona;
 
     public void setPersona(Persona persona) {
         this.persona = persona;
+    }
+
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
     }
 }
