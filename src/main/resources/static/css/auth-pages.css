@@ -1,0 +1,73 @@
+/**
+ * Área útil entre navbar fija y footer fijo: formulario + imagen sin desbordar el viewport.
+ */
+:root {
+  --auth-navbar-offset: 90px;
+  --auth-footer-offset: 80px;
+}
+
+.auth-page-shell {
+  width: 100%;
+  margin-top: var(--auth-navbar-offset);
+  box-sizing: border-box;
+  min-height: calc(100vh - var(--auth-navbar-offset) - var(--auth-footer-offset));
+  max-height: calc(100vh - var(--auth-navbar-offset) - var(--auth-footer-offset));
+  min-height: calc(100dvh - var(--auth-navbar-offset) - var(--auth-footer-offset));
+  max-height: calc(100dvh - var(--auth-navbar-offset) - var(--auth-footer-offset));
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-page-row {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+@media (min-width: 768px) {
+  .auth-page-row {
+    flex-wrap: nowrap;
+  }
+}
+
+.auth-page-row > .auth-form-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: 1rem 1rem 1.25rem;
+}
+
+/* Login: centrar el card en el espacio disponible */
+.auth-page-row > .auth-form-col.auth-form-col--center {
+  justify-content: center;
+}
+
+.auth-page-row > .auth-form-col .auth-card {
+  width: 100%;
+  max-width: 520px;
+  flex-shrink: 0;
+}
+
+.auth-page-row > .auth-image-col {
+  min-height: 0;
+  padding: 0 !important;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.auth-page-row > .auth-image-col img {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: cover;
+  flex: 1 1 auto;
+}

@@ -17,11 +17,14 @@ public class CertificadoAutorizacionService {
 
     private final InscripcionRepository inscripcionRepository;
     private final InscripcionAccesoService inscripcionAccesoService;
+    private final ProgresoLeccionService progresoLeccionService;
 
     public CertificadoAutorizacionService(InscripcionRepository inscripcionRepository,
-            InscripcionAccesoService inscripcionAccesoService) {
+            InscripcionAccesoService inscripcionAccesoService,
+            ProgresoLeccionService progresoLeccionService) {
         this.inscripcionRepository = inscripcionRepository;
         this.inscripcionAccesoService = inscripcionAccesoService;
+        this.progresoLeccionService = progresoLeccionService;
     }
 
     /**
@@ -33,8 +36,9 @@ public class CertificadoAutorizacionService {
         if (persona == null || idInscripcion == null) {
             return false;
         }
-        return inscripcionRepository.findById(idInscripcion)
+        return inscripcionRepository.findByIdForCertificado(idInscripcion)
                 .filter(insc -> inscripcionAccesoService.permiteCertificado(insc.getEstado()))
+                .filter(insc -> progresoLeccionService.calcularPorcentaje(insc.getEstudiante(), insc.getCurso()) >= 100)
                 .map(insc -> esTitularOAcudienteProvisional(persona, insc))
                 .orElse(false);
     }

@@ -1,10 +1,11 @@
 package com.proyectojpa.demo.controller;
 
 import java.time.LocalDate;
-import java.util.List; // AJUSTE: Import para listas
-import java.util.Collections; // AJUSTE: Import para colecciones
+import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,6 +43,24 @@ public class InscripcionController {
 
     @Autowired
     private EstudianteRepository estudianteRepository;
+
+    @Value("${app.inscripcion.dias-plazo-pago:7}")
+    private int diasPlazoPagoInscripcion;
+
+    /**
+     * Entrada pública desde el catálogo: anónimo → login con curso; estudiante → formulario de inscripción.
+     */
+    @GetMapping("/catalogo")
+    public String desdeCatalogo(@RequestParam(name = "idCurso") Integer idCurso, Authentication auth) {
+        if (auth == null || !(auth.getPrincipal() instanceof CustomUserDetails)) {
+            return "redirect:/login?curso=" + idCurso;
+        }
+        CustomUserDetails ud = (CustomUserDetails) auth.getPrincipal();
+        if (ud.getPersona().getRolId() != null && ud.getPersona().getRolId() == 2) {
+            return "redirect:/inscripciones/nueva?idCurso=" + idCurso;
+        }
+        return "redirect:/cursos?error=rol";
+    }
 
     // ----------- MOSTRAR FORMULARIO -----------------
     @GetMapping({ "/nueva", "/nueva/{idEstudiante}" })
@@ -88,7 +107,7 @@ public class InscripcionController {
                     Estudiante nuevoEstudiante = new Estudiante();
                     nuevoEstudiante.setPersona(personaActual);
                     nuevoEstudiante.setProgreso("0%");
-                    nuevoEstudiante.setEstadoEstudiante(1); // 1 = Activo por defecto
+                    estadoRepo.findByCodigo(InscripcionEstados.ACTIVO).ifPresent(nuevoEstudiante::setEstadoEstudiante);
                     return estudianteRepository.save(nuevoEstudiante);
                 });
 
@@ -118,6 +137,9 @@ public class InscripcionController {
         insc.setCurso(curso);
         insc.setEstado(estado);
         insc.setFechaInscripcion(LocalDate.now());
+        if (InscripcionEstados.PENDIENTE_PAGO.equals(estado.getCodigo())) {
+            insc.setFechaLimitePago(LocalDate.now().plusDays(diasPlazoPagoInscripcion));
+        }
 
         // 6. Guardar
         inscripcionRepo.save(insc);

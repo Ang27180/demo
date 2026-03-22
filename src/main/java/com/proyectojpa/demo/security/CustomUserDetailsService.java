@@ -8,7 +8,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.proyectojpa.demo.domain.InscripcionEstados;
 import com.proyectojpa.demo.models.Persona;
+import com.proyectojpa.demo.repository.EstudianteRepository;
 import com.proyectojpa.demo.repository.PersonaRepository;
 
 @Service
@@ -19,14 +21,31 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private PersonaRepository PersonaRepository;
 
+    @Autowired
+    private EstudianteRepository estudianteRepository;
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
         log.debug("Carga de usuario por email");
-        Persona persona = PersonaRepository.findByEmail(email);
+        if (email == null || email.isBlank()) {
+            throw new UsernameNotFoundException("Email vacío");
+        }
+        String trimmed = email.trim();
+        Persona persona = PersonaRepository.findByEmailIgnoreCase(trimmed)
+                .orElseGet(() -> PersonaRepository.findByEmail(trimmed));
         if (persona == null) {
             throw new UsernameNotFoundException("Usuario no encontrado con el email: " + email);
         }
-        return new CustomUserDetails(persona);        
+
+        boolean cuentaHabilitada = true;
+        if (persona.getRolId() != null && persona.getRolId() == 2) {
+            cuentaHabilitada = estudianteRepository.findByPersonaWithEstado(persona)
+                    .map(e -> e.getEstadoEstudiante() != null
+                            && InscripcionEstados.ACTIVO.equals(e.getEstadoEstudiante().getCodigo()))
+                    .orElse(false);
+        }
+
+        return new CustomUserDetails(persona, cuentaHabilitada);
     }
 }

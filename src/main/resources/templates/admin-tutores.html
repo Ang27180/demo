@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+<head>
+    <title layout:fragment="titulo">Gestión de tutores</title>
+</head>
+<body>
+    <div layout:fragment="contenido" class="container mt-5 pt-5 pb-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold">Gestión de tutores</h2>
+            <a th:href="@{/admin/tutores/nuevo}" class="btn btn-success"><i class="fas fa-plus me-2"></i>Nuevo tutor</a>
+        </div>
+        <a th:href="@{/admin}" class="btn btn-outline-secondary btn-sm mb-3">← Panel admin</a>
+        <div th:if="${msgAdmin}" class="alert alert-success" th:text="${msgAdmin}"></div>
+        <div th:if="${errorAdmin}" class="alert alert-danger" th:text="${errorAdmin}"></div>
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Persona</th>
+                        <th>Email</th>
+                        <th>Experiencia</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="t : ${tutores}">
+                        <td th:text="${t.idTutor}"></td>
+                        <td th:text="${t.persona != null ? t.persona.nombre : '—'}"></td>
+                        <td th:text="${t.persona != null ? t.persona.email : '—'}"></td>
+                        <td th:text="${t.experiencia}">—</td>
+                        <td class="text-center">
+                            <a th:href="@{/admin/tutores/editar/{id}(id=${t.idTutor})}" class="btn btn-warning btn-sm">Editar</a>
+                            <a th:href="@{/admin/tutores/eliminar/{id}(id=${t.idTutor})}"
+                                onclick="return confirm('¿Eliminar este tutor?')"
+                                class="btn btn-danger btn-sm">Eliminar</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

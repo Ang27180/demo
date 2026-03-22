@@ -93,7 +93,7 @@
         <!-- Fin del ajuste -->
 
         <!-- AJUSTE: Sección de certificado a lo largo (full width) con fondo de lado a lado -->
-        <div class="w-100 py-3" th:if="${inscripcion != null}"
+        <div class="w-100 py-3" th:if="${inscripcionActual != null && puedeDescargarCertificado}"
             style="background: #f8f9fa; border-bottom: 2px solid #e9ecef;">
             <div class="container">
                 <div class="alert alert-success d-flex flex-wrap align-items-center justify-content-between p-4 rounded-4 shadow-sm border-0"
@@ -101,10 +101,10 @@
                     <div>
                         <h4 class="fw-bold mb-1 text-success"><i class="fas fa-award me-2"></i> ¡Certificación
                             Disponible!</h4>
-                        <p class="mb-0 text-dark opacity-75">Has completado los requisitos para obtener tu certificado
-                            oficial de este curso.</p>
+                        <p class="mb-0 text-dark opacity-75">Has completado el 100% del curso. Puedes descargar tu
+                            certificado oficial.</p>
                     </div>
-                    <a th:href="@{'/reportes/certificado/pdf/' + ${inscripcion.id}}"
+                    <a th:href="@{'/reportes/certificado/pdf/' + ${inscripcionActual.id}}"
                         class="btn btn-success btn-lg rounded-pill px-4 shadow-sm mt-2 mt-md-0">
                         <i class="fas fa-file-pdf me-2"></i> Descargar Certificado
                     </a>

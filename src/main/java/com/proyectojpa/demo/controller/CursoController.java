@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.proyectojpa.demo.Service.CertificadoAutorizacionService;
 import com.proyectojpa.demo.Service.InscripcionAccesoService;
 import com.proyectojpa.demo.Service.ProgresoLeccionService;
 import com.proyectojpa.demo.domain.InscripcionEstados;
@@ -40,6 +41,9 @@ public class CursoController {
     @Autowired
     private InscripcionAccesoService inscripcionAccesoService;
 
+    @Autowired
+    private CertificadoAutorizacionService certificadoAutorizacionService;
+
     @GetMapping
     public String listarCursos(Model model) {
         model.addAttribute("cursos", cursoRepository.findAll());
@@ -58,6 +62,7 @@ public class CursoController {
         model.addAttribute("inscripcionActual", null);
         model.addAttribute("leccionesCompletadasIds", Collections.emptyList());
         model.addAttribute("progresoCursoPorcentaje", 0);
+        model.addAttribute("puedeDescargarCertificado", false);
 
         if (userDetails != null && userDetails.getPersona().getRolId() != null
                 && userDetails.getPersona().getRolId() == 2) {
@@ -70,10 +75,13 @@ public class CursoController {
                         model.addAttribute("pagoPendiente", !acceso && pendiente);
                         model.addAttribute("puedeRegistrarProgreso", acceso);
                         if (acceso) {
-                            model.addAttribute("progresoCursoPorcentaje",
-                                    progresoLeccionService.calcularPorcentaje(est, curso));
+                            int pct = progresoLeccionService.calcularPorcentaje(est, curso);
+                            model.addAttribute("progresoCursoPorcentaje", pct);
                             model.addAttribute("leccionesCompletadasIds",
                                     progresoLeccionService.leccionIdsCompletadas(est, curso.getId()));
+                            model.addAttribute("puedeDescargarCertificado",
+                                    certificadoAutorizacionService.puedeDescargar(userDetails.getPersona(),
+                                            insc.getId()));
                         }
                     }));
         }

@@ -1,19 +1,21 @@
 package com.proyectojpa.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Locale;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.proyectojpa.demo.domain.InscripcionEstados;
 import com.proyectojpa.demo.models.Persona;
 import com.proyectojpa.demo.repository.PersonaRepository;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import jakarta.validation.Valid;
 
 @Controller
 public class RegistroController {
@@ -27,19 +29,32 @@ public class RegistroController {
     @Autowired
     private com.proyectojpa.demo.repository.EstudianteRepository estudianteRepository; // AJUSTE: Agregado para crear perfil de estudiante
 
+    @Autowired
+    private com.proyectojpa.demo.repository.EstadoInscripcionRepository estadoInscripcionRepository;
+
+    @Autowired
+    private Validator validator;
+
     @GetMapping("/registro")
     public String mostrarFormulario(Model model) {
-        model.addAttribute("persona", new Persona());
+        Persona persona = new Persona();
+        persona.setRolId(2); // estudiante (formulario público: siempre rol 2)
+        model.addAttribute("persona", persona);
         return "registro"; // vista registro.html
     }
 
     @PostMapping("/registro")
     public String procesarFormulario(
-            @Valid @ModelAttribute("persona") Persona persona,
+            @ModelAttribute("persona") Persona persona,
             BindingResult result,
             Model model) {
 
-        // Validaciones de Spring
+        // Rol fijo antes de validar (@NotNull en rolId)
+        persona.setRolId(2);
+        if (persona.getEmail() != null) {
+            persona.setEmail(persona.getEmail().trim().toLowerCase(Locale.ROOT));
+        }
+        validator.validate(persona, result);
         if (result.hasErrors()) {
             return "registro";
         }
@@ -74,7 +89,8 @@ public class RegistroController {
             com.proyectojpa.demo.models.Estudiante estudiante = new com.proyectojpa.demo.models.Estudiante();
             estudiante.setPersona(guardada);
             estudiante.setProgreso("0%");
-            estudiante.setEstadoEstudiante(1);
+            estadoInscripcionRepository.findByCodigo(InscripcionEstados.ACTIVO)
+                    .ifPresent(estudiante::setEstadoEstudiante);
             estudiante.setTutorNombre(persona.getTutorNombre());
             estudiante.setTutorTelefono(persona.getTutorTelefono());
             estudiante.setTutorEmail(persona.getTutorEmail());

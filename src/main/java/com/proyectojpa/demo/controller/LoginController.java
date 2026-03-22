@@ -1,15 +1,15 @@
 package com.proyectojpa.demo.controller;
 
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.proyectojpa.demo.dto.LoginDTO;
 import com.proyectojpa.demo.models.Persona;
 import com.proyectojpa.demo.repository.PersonaRepository;
-import jakarta.validation.Valid;
 
 @Controller
 public class LoginController {
@@ -18,38 +18,16 @@ public class LoginController {
     private PersonaRepository PersonaRepository;
 
     @GetMapping("/login")
-    public String mostrarLogin(Model model) {
+    public String mostrarLogin(Model model, @RequestParam(name = "curso", required = false) Integer curso) {
         model.addAttribute("login", new LoginDTO());
+        if (curso != null) {
+            model.addAttribute("cursoInscripcionId", curso);
+        }
         return "login";
     }
 
-    @PostMapping("/login")
-    public String procesarLogin(
-            @Valid @ModelAttribute("login") LoginDTO loginDTO,
-            BindingResult result,
-            Model model) {
-
-        if (result.hasErrors()) {
-            return "login";
-        }
-
-        Persona user = PersonaRepository.findByEmail(loginDTO.getEmail().trim());
-        if (user == null) {
-            model.addAttribute("mensaje", "Correo o contraseña incorrectos");
-            return "login";
-        }
-
-        if (!user.getContrasena().equals(loginDTO.getContrasena())) {
-            model.addAttribute("mensaje", "Correo o contraseña incorrectos");
-            return "login";
-        }
-
-        if (user.getRolId() != null && user.getRolId() == 1) {
-            return "redirect:/admin";
-        } else {
-            return "redirect:/estudiante";
-        }
-    }
+    // POST /login lo procesa Spring Security (DaoAuthenticationProvider + BCrypt).
+    // No usar comprobación en claro aquí: chocaría con contraseñas cifradas en BD.
     @GetMapping("/forgot-password")
     public String mostrarRecuperarContrasena() {
         return "forgot-password";

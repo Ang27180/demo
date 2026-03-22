@@ -1,11 +1,11 @@
-package com.poryectojpa.demo.controller;
+package com.proyectojpa.demo.controller;
 
-import com.poryectojpa.demo.models.Curso;
-import com.poryectojpa.demo.models.Leccion;
-import com.poryectojpa.demo.models.Modulo;
-import com.poryectojpa.demo.repository.LeccionRepository;
-import com.poryectojpa.demo.repository.ModuloRepository;
-import com.poryectojpa.demo.repository.cursoRepository;
+import com.proyectojpa.demo.models.Curso;
+import com.proyectojpa.demo.models.Leccion;
+import com.proyectojpa.demo.models.Modulo;
+import com.proyectojpa.demo.repository.LeccionRepository;
+import com.proyectojpa.demo.repository.ModuloRepository;
+import com.proyectojpa.demo.repository.cursoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

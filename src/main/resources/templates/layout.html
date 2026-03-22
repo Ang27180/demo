@@ -19,7 +19,7 @@
 
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 navbar-lg fixed-top shadow-sm">
-    <a class="navbar-brand d-flex align-items-center" th:href="@{/home}">
+    <a class="navbar-brand d-flex align-items-center" th:href="@{/}">
       <img th:src="@{/imagenes/logo-sabor1.jpg}" height="70" class="me-2 rounded-circle" />
       <span class="fs-4 fw-semibold">SaborMasterClass</span>
     </a>
@@ -29,10 +29,13 @@
 
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav me-3">
-        <li class="nav-item"><a th:href="@{/home}" class="nav-link">Inicio</a></li>
-        <li class="nav-item"><a th:href="@{/nosotros}" class="nav-link">Nuestros Tutores</a></li>
-        <li class="nav-item" sec:authorize="hasAnyRole('ADMIN','ESTUDIANTE')">
-          <a th:href="@{/cursos}" class="nav-link">Más cursos</a>
+        <li class="nav-item"><a th:href="@{/}" class="nav-link">Inicio</a></li>
+        <li class="nav-item"><a th:href="@{/nuestros-tutores}" class="nav-link">Nuestros Tutores</a></li>
+        <li class="nav-item">
+          <a th:href="@{/cursos}" class="nav-link">Cursos</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasRole('TUTOR')">
+          <a th:href="@{/tutor/panel/cursos}" class="nav-link"><i class="fas fa-chalkboard-teacher me-1"></i>Mis cursos (tutor)</a>
         </li>
         <!-- Nuevo enlace solo para estudiantes -->
         <li class="nav-item" sec:authorize="hasRole('ESTUDIANTE')">

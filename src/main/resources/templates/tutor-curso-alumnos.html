@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+<head>
+    <title layout:fragment="titulo">Alumnos del curso</title>
+</head>
+<body>
+    <div layout:fragment="contenido" class="container mt-5 pt-5 pb-5">
+        <a th:href="@{/tutor/panel/cursos}" class="btn btn-outline-secondary btn-sm mb-3">← Volver</a>
+        <h2 class="mb-2" th:text="${curso.nombre}">Curso</h2>
+        <p class="text-muted">Progreso del curso según lecciones completadas.</p>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Estudiante</th>
+                        <th>Email</th>
+                        <th>Estado inscripción</th>
+                        <th>Progreso</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="i : ${inscripciones}">
+                        <td th:text="${i.estudiante.persona.nombre}">—</td>
+                        <td th:text="${i.estudiante.persona.email}">—</td>
+                        <td th:text="${i.estado != null ? i.estado.codigo : ''}">—</td>
+                        <td th:text="${progresoPorInscripcion.get(i.id)} + '%'">0%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

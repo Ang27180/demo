@@ -10,33 +10,82 @@
     <div layout:fragment="contenido" class="container mt-5 pt-5 pb-5">
         <h2 class="mb-4 text-center fw-bold">Panel de Administración</h2>
 
+        <div th:if="${msgAdmin}" class="alert alert-success" th:text="${msgAdmin}"></div>
+        <div th:if="${errorAdmin}" class="alert alert-danger" th:text="${errorAdmin}"></div>
+        <div th:if="${okCorreo}" class="alert alert-success" th:text="${okCorreo}"></div>
+
+        <!-- Accesos rápidos: finanzas, informes, comunicación, tutores -->
+        <div class="card mb-4 border-primary">
+            <div class="card-header bg-primary text-white fw-bold">
+                <i class="fas fa-bolt me-2"></i>Accesos rápidos
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <h6 class="text-muted text-uppercase small">Finanzas</h6>
+                        <a th:href="@{/admin/medios-pago}" class="btn btn-outline-secondary btn-sm me-1 mb-1">
+                            <i class="fas fa-qrcode me-1"></i>Medios de pago
+                        </a>
+                        <a th:href="@{/admin/recibos}" class="btn btn-outline-secondary btn-sm me-1 mb-1">
+                            <i class="fas fa-receipt me-1"></i>Recibos
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-muted text-uppercase small">Informes</h6>
+                        <a th:href="@{/reportes}" class="btn btn-outline-info btn-sm me-1 mb-1">
+                            <i class="fas fa-chart-pie me-1"></i>Reporte web
+                        </a>
+                        <a th:href="@{/personas/exportarExcel(filtroNombre=${filtroNombre}, filtroRol=${filtroRol})}"
+                            class="btn btn-outline-success btn-sm me-1 mb-1">
+                            <i class="fas fa-file-excel me-1"></i>Excel
+                        </a>
+                        <a th:href="@{/reportes/estadistico/pdf}" class="btn btn-outline-danger btn-sm mb-1" target="_blank">
+                            <i class="fas fa-file-pdf me-1"></i>PDF
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="text-muted text-uppercase small">Comunicación y tutores</h6>
+                        <a th:href="@{/correo/formulario}" class="btn btn-outline-success btn-sm me-1 mb-1">
+                            <i class="fas fa-envelope me-1"></i>Correo
+                        </a>
+                        <a th:href="@{/admin/correo-curso}" class="btn btn-outline-primary btn-sm me-1 mb-1">
+                            <i class="fas fa-users me-1"></i>Correo por curso
+                        </a>
+                        <a th:href="@{/admin/tutores}" class="btn btn-outline-dark btn-sm mb-1">
+                            <i class="fas fa-user-tie me-1"></i>Gestión tutores
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- TARJETAS DE RESUMEN -->
         <div class="row g-4 mb-5">
             <div class="col-md-3">
-                <div class="card p-3 text-center">
-                    <i class="bi bi-people-fill display-4 text-primary mb-2"></i>
+                <div class="card p-3 text-center h-100">
+                    <i class="fas fa-users display-5 text-primary mb-2"></i>
                     <h5 class="fw-bold">Total Usuarios</h5>
                     <p class="fs-3" th:text="${totalUsuarios}">0</p>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card p-3 text-center">
-                    <i class="bi bi-journal-check display-4 text-success mb-2"></i>
-                    <h5 class="fw-bold">Cursos Activos</h5>
+                <div class="card p-3 text-center h-100">
+                    <i class="fas fa-book display-5 text-success mb-2"></i>
+                    <h5 class="fw-bold">Cursos</h5>
                     <p class="fs-3" th:text="${totalCursos}">0</p>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card p-3 text-center">
-                    <i class="bi bi-person-badge-fill display-4 text-warning mb-2"></i>
-                    <h5 class="fw-bold">Tutores Registrados</h5>
+                <div class="card p-3 text-center h-100">
+                    <i class="fas fa-chalkboard-teacher display-5 text-warning mb-2"></i>
+                    <h5 class="fw-bold">Tutores</h5>
                     <p class="fs-3" th:text="${totalTutores}">0</p>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card p-3 text-center">
-                    <i class="bi bi-person-plus-fill display-4 text-danger mb-2"></i>
-                    <h5 class="fw-bold">Nuevas Inscripciones</h5>
+                <div class="card p-3 text-center h-100">
+                    <i class="fas fa-user-plus display-5 text-danger mb-2"></i>
+                    <h5 class="fw-bold">Inscripciones</h5>
                     <p class="fs-3" th:text="${nuevasInscripciones}">0</p>
                 </div>
             </div>
@@ -44,20 +93,20 @@
 
         <!-- GESTIÓN DE USUARIOS -->
         <div class="card p-4 mb-5">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
                 <h4 class="fw-bold">Gestión de Usuarios</h4>
-                <div class="d-flex gap-2">
-                    <a th:href="@{/correo/formulario}" class="btn btn-outline-success"><i
-                            class="fas fa-paper-plane me-2"></i>Enviar Correo</a>
-                    <a th:href="@{/personas/nueva}" class="btn btn-success">➕ Añadir Usuario</a>
+                <div class="d-flex flex-wrap gap-2">
+                    <a th:href="@{/correo/formulario}" class="btn btn-outline-success btn-sm"><i
+                            class="fas fa-paper-plane me-1"></i>Correo</a>
+                    <a th:href="@{/admin/correo-curso}" class="btn btn-outline-primary btn-sm"><i
+                            class="fas fa-users me-1"></i>Correo por curso</a>
+                    <a th:href="@{/personas/nueva}" class="btn btn-success btn-sm">➕ Añadir Usuario</a>
                     <a th:href="@{/personas/exportarExcel(filtroNombre=${filtroNombre}, filtroRol=${filtroRol})}"
-                        class="btn btn-outline-success">⬇️ Exportar Excel</a>
-                    <a th:href="@{/reportes/estadistico/pdf}" class="btn btn-success">⬇️ Exportar pdf</a>
+                        class="btn btn-outline-success btn-sm">⬇️ Excel</a>
+                    <a th:href="@{/reportes/estadistico/pdf}" class="btn btn-success btn-sm" target="_blank">⬇️ PDF</a>
                 </div>
             </div>
 
-
-            <!-- FORMULARIO DE FILTRO -->
             <form th:action="@{/admin}" method="get" class="row g-2 mb-3">
                 <div class="col-md-5">
                     <input type="text" name="filtroNombre" class="form-control" placeholder="Buscar por nombre..."
@@ -65,10 +114,11 @@
                 </div>
                 <div class="col-md-4">
                     <select name="filtroRol" class="form-select">
-                        <option th:value="1" th:selected="${filtroRol == 1}">Administrador</option>
-                        <option th:value="2" th:selected="${filtroRol == 2}">Estudiante</option>
-                        <option th:value="3" th:selected="${filtroRol == 3}">Tutor</option>
-                        <option th:value="4" th:selected="${filtroRol == 4}">Proveedor</option>
+                        <option value="" th:selected="${filtroRol == null}">Todos los roles</option>
+                        <option th:value="1" th:selected="${filtroRol != null && filtroRol == 1}">Administrador</option>
+                        <option th:value="2" th:selected="${filtroRol != null && filtroRol == 2}">Estudiante</option>
+                        <option th:value="3" th:selected="${filtroRol != null && filtroRol == 3}">Tutor</option>
+                        <option th:value="4" th:selected="${filtroRol != null && filtroRol == 4}">Proveedor</option>
                     </select>
                 </div>
                 <div class="col-md-3">
@@ -77,7 +127,7 @@
             </form>
 
             <div class="table-responsive">
-                <table class="table table-hover table-bordered">
+                <table class="table table-hover table-bordered table-sm">
                     <thead class="table-dark">
                         <tr>
                             <th>ID</th>
@@ -85,6 +135,7 @@
                             <th>Nombre</th>
                             <th>Email</th>
                             <th>Rol</th>
+                            <th>Estado cuenta</th>
                             <th class="text-center">Acciones</th>
                         </tr>
                     </thead>
@@ -103,12 +154,25 @@
                                     <span th:case="*">Sin rol</span>
                                 </span>
                             </td>
-                            <td class="text-center">
-                                <a th:href="@{/personas/editar/{id}(id=${persona.id})}"
-                                    class="btn btn-warning btn-sm">✏️ Editar</a>
+                            <td>
+                                <span th:if="${persona.rolId != 2}">—</span>
+                                <span th:if="${persona.rolId == 2 && persona.estudiante != null && persona.estudiante.estadoEstudiante != null}"
+                                    th:text="${persona.estudiante.estadoEstudiante.codigo}">ACTIVO</span>
+                                <span th:if="${persona.rolId == 2 && (persona.estudiante == null || persona.estudiante.estadoEstudiante == null)}">—</span>
+                            </td>
+                            <td class="text-center text-nowrap">
+                                <a th:href="@{/personas/editar/{id}(id=${persona.id})}" class="btn btn-warning btn-sm py-0">Editar</a>
+                                <form th:if="${persona.rolId == 2}" th:action="@{/personas/{id}/toggle-estado-cuenta(id=${persona.id})}" method="post" class="d-inline">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                    <button type="submit" class="btn btn-sm py-0"
+                                        th:classappend="${persona.estudiante != null && persona.estudiante.estadoEstudiante != null && persona.estudiante.estadoEstudiante.codigo == 'ACTIVO'} ? 'btn-outline-danger' : 'btn-outline-success'"
+                                        th:title="${persona.estudiante != null && persona.estudiante.estadoEstudiante != null && persona.estudiante.estadoEstudiante.codigo == 'ACTIVO'} ? 'Desactivar cuenta' : 'Activar cuenta'">
+                                        <i class="fas fa-power-off"></i>
+                                    </button>
+                                </form>
                                 <a th:href="@{/personas/eliminar/{id}(id=${persona.id})}"
                                     onclick="return confirm('¿Seguro que deseas eliminar esta persona?')"
-                                    class="btn btn-danger btn-sm">🗑️ Eliminar</a>
+                                    class="btn btn-danger btn-sm py-0">Eliminar</a>
                             </td>
                         </tr>
                     </tbody>
@@ -118,53 +182,35 @@
 
         <!-- GESTIÓN DE CURSOS -->
         <div class="card p-4 mb-5">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
                 <h4 class="fw-bold">Gestión de Cursos</h4>
                 <a th:href="@{/admin/cursos/form}" class="btn btn-success">➕ Añadir Curso</a>
             </div>
 
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Buscar curso por título o tutor...">
-                <button class="btn btn-outline-secondary" type="button"><i class="bi bi-search"></i></button>
-            </div>
-
             <div class="table-responsive">
-                <table class="table table-hover table-bordered">
+                <table class="table table-hover table-bordered table-sm">
                     <thead class="table-dark">
                         <tr>
                             <th>ID</th>
-                            <th>Duración</th>
-                            <th>Número Curso</th>
                             <th>Nombre</th>
-                            <th>Detalle</th>
                             <th>Costo</th>
                             <th>Nivel</th>
-                            <th>Categoría</th>
                             <th class="text-center">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="curso : ${cursos}">
                             <td th:text="${curso.id}"></td>
-                            <td th:text="${curso.duracion}"></td>
-                            <td th:text="${curso.numcurso}"></td>
                             <td th:text="${curso.nombre}"></td>
-                            <td th:text="${curso.detalle}"></td>
                             <td th:text="${curso.costo}"></td>
                             <td th:text="${curso.aprendizaje}"></td>
-                            <td th:text="${curso.categoria}"></td>
-                            <td class="text-center">
-                                <!-- AJUSTE: Botón para gestionar el contenido del curso (Módulos y Lecciones) -->
-                                <a th:href="@{'/admin/cursos/' + ${curso.id} + '/contenido'}"
-                                    class="btn btn-info btn-sm text-white" title="Gestionar Contenido">
-                                    <i class="fas fa-book-open"></i> Contenido
-                                </a>
-
-                                <a th:href="@{admin/cursos/form/{id}(id=${curso.id})}" class="btn btn-warning btn-sm">✏️
-                                    Editar</a>
+                            <td class="text-center text-nowrap">
+                                <a th:href="@{/admin/cursos/{id}/alumnos(id=${curso.id})}" class="btn btn-secondary btn-sm py-0">Alumnos</a>
+                                <a th:href="@{/admin/cursos/{id}/contenido(id=${curso.id})}" class="btn btn-info btn-sm text-white py-0">Contenido</a>
+                                <a th:href="@{/admin/cursos/form/{id}(id=${curso.id})}" class="btn btn-warning btn-sm py-0">Editar</a>
                                 <a th:href="@{/admin/cursos/eliminar/{id}(id=${curso.id})}"
-                                    onclick="return confirm('¿Seguro que deseas eliminar este curso?')"
-                                    class="btn btn-danger btn-sm">🗑️ Eliminar</a>
+                                    onclick="return confirm('¿Eliminar este curso?')"
+                                    class="btn btn-danger btn-sm py-0">Eliminar</a>
                             </td>
                         </tr>
                     </tbody>

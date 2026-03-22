@@ -11,16 +11,22 @@ import java.util.List;
 public class CustomUserDetails implements UserDetails {
 
     private final Persona persona;
+    /** Para ESTUDIANTE: solo true si {@code estado_inscripcion.codigo == ACTIVO}. Otros roles: true. */
+    private final boolean accountEnabled;
 
-    public CustomUserDetails(Persona persona) {
+    public CustomUserDetails(Persona persona, boolean accountEnabled) {
         this.persona = persona;
+        this.accountEnabled = accountEnabled;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Mapeo de roles según el valor de id_rol
-        String roleName;
-        roleName = switch (persona.getRolId()) {
+        // Mapeo de roles según id_rol (null-safe: evita NullPointerException en el switch)
+        Integer rid = persona.getRolId();
+        if (rid == null) {
+            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        }
+        String roleName = switch (rid) {
             case 1 -> "ROLE_ADMIN";
             case 2 -> "ROLE_ESTUDIANTE";
             case 3 -> "ROLE_TUTOR";
@@ -50,7 +56,9 @@ public class CustomUserDetails implements UserDetails {
     public boolean isCredentialsNonExpired() { return true; }
 
     @Override
-    public boolean isEnabled() { return true; }
+    public boolean isEnabled() {
+        return accountEnabled;
+    }
 
     public Persona getPersona() {
         return persona;

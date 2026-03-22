@@ -35,6 +35,10 @@ public class Inscripcion {
     @JoinColumn(name = "id_estado", nullable = false)
     private EstadoInscripcion estado;
 
+    /** Plazo para completar el pago (inscripciones PENDIENTE_PAGO). */
+    @Column(name = "fecha_limite_pago")
+    private LocalDate fechaLimitePago;
+
     // getters y setters
 
     public Integer getId() {
@@ -75,5 +79,13 @@ public class Inscripcion {
 
     public void setEstado(EstadoInscripcion estado) {
         this.estado = estado;
+    }
+
+    public LocalDate getFechaLimitePago() {
+        return fechaLimitePago;
+    }
+
+    public void setFechaLimitePago(LocalDate fechaLimitePago) {
+        this.fechaLimitePago = fechaLimitePago;
     }
 }

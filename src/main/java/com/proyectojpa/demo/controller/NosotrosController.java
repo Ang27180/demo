@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class NosotrosController {
 
-    @GetMapping("/nosotros")
+    @GetMapping({ "/nosotros", "/nuestros-tutores" })
     public String mostrarNosotros(Model model) {
         // Este atributo es opcional, solo para que tu layout muestre un título dinámico
         model.addAttribute("titulo", "Nosotros - Sabor MasterClass");

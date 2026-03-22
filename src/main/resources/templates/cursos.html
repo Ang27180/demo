@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
     layout:decorate="~{layout}">
 
 <body>
     <div class="container mt-5" layout:fragment="contenido">
 
         <h2 class="text-center fw-bold mb-4">Cursos Disponibles</h2>
+
+        <div th:if="${param.error != null && param.error[0] == 'rol'}" class="alert alert-warning alert-dismissible fade show" role="alert">
+            Solo los estudiantes pueden inscribirse en cursos. Si tienes cuenta de otro rol, usa el panel correspondiente.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
 
         <div th:if="${param.yaInscrito}" class="alert alert-warning alert-dismissible fade show" role="alert">
             ⚠️ Ya estás inscrito en este curso.
@@ -42,7 +48,8 @@
 
                                     <span class="price" th:text="${curso.costo}">$0.00</span>
 
-                                    <a th:href="@{/inscripciones/nueva(idCurso=${curso.id})}" class="btn btn-purple">
+                                    <a th:href="@{/inscripciones/catalogo(idCurso=${curso.id})}" class="btn btn-purple"
+                                        title="Inscribirse">
                                         <i class="fas fa-plus"></i>
                                     </a>
 

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+<head>
+    <title layout:fragment="titulo" th:text="${curso.id != null} ? 'Editar curso' : 'Nuevo curso'">Curso</title>
+</head>
+<body>
+    <div layout:fragment="contenido" class="container mt-5 pt-5 pb-5">
+        <a th:href="@{/admin}" class="btn btn-outline-secondary btn-sm mb-3">← Volver al panel</a>
+        <h2 class="mb-4" th:text="${curso.id != null} ? 'Editar curso' : 'Nuevo curso'">Curso</h2>
+        <form th:action="@{/admin/cursos/guardar}" method="post" class="card p-4">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <input type="hidden" name="id" th:value="${curso.id}" th:if="${curso.id != null}">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" name="nombre" class="form-control" required th:value="${curso.nombre}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Número de curso</label>
+                    <input type="text" name="numcurso" class="form-control" th:value="${curso.numcurso}">
+                </div>
+                <div class="col-md-12">
+                    <label class="form-label">Detalle</label>
+                    <textarea name="detalle" class="form-control" rows="3" th:text="${curso.detalle}"> </textarea>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Duración</label>
+                    <input type="text" name="duracion" class="form-control" th:value="${curso.duracion}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Costo</label>
+                    <input type="number" step="0.01" name="costo" class="form-control" th:value="${curso.costo}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Nivel / aprendizaje</label>
+                    <input type="text" name="aprendizaje" class="form-control" th:value="${curso.aprendizaje}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Categoría (número)</label>
+                    <input type="number" name="categoria" class="form-control" th:value="${curso.categoria}">
+                </div>
+                <div class="col-md-8">
+                    <label class="form-label">Imagen (nombre archivo o URL)</label>
+                    <input type="text" name="imagen" class="form-control" th:value="${curso.imagen}">
+                </div>
+                <div class="col-md-12">
+                    <label class="form-label">Tutor a cargo</label>
+                    <select name="idTutor" class="form-select">
+                        <option value="">— Sin asignar —</option>
+                        <option th:each="t : ${tutores}" th:value="${t.idTutor}"
+                            th:selected="${curso.tutor != null and curso.tutor.idTutor == t.idTutor}"
+                            th:text="${t.persona != null ? t.persona.nombre : ('Tutor #' + t.idTutor)}">Tutor</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-4">Guardar</button>
+        </form>
+    </div>
+</body>
+</html>

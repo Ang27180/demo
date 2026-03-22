@@ -2,6 +2,7 @@ package com.proyectojpa.demo.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,8 +19,9 @@ public class Estudiante {
     @Column(name = "id_estudiante")
     private Integer idEstudiante;
 
-    @Column(name = "id_estado_estudiante")
-    private Integer estadoEstudiante; // 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_estado_estudiante", referencedColumnName = "id")
+    private EstadoInscripcion estadoEstudiante;
 
     @Column(name = "progreso", nullable = false, length = 45)
     private String progreso;
@@ -46,11 +48,11 @@ public class Estudiante {
         this.idEstudiante = idEstudiante;
     }
 
-    public Integer getEstadoEstudiante() {
+    public EstadoInscripcion getEstadoEstudiante() {
         return estadoEstudiante;
     }
 
-    public void setEstadoEstudiante(Integer estadoEstudiante) {
+    public void setEstadoEstudiante(EstadoInscripcion estadoEstudiante) {
         this.estadoEstudiante = estadoEstudiante;
     }
     

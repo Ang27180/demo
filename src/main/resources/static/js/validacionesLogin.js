@@ -1,8 +1,13 @@
 // Espera a que se cargue la página
 document.addEventListener("DOMContentLoaded", function () {
     const form = document.querySelector("form");
-    const emailInput = document.querySelector("#email");
-    const passwordInput = document.querySelector("#contrasena");
+    // Debe coincidir con login.html: name/username y name/password (Spring Security)
+    const emailInput = document.querySelector("#username");
+    const passwordInput = document.querySelector("#password");
+
+    if (!form || !emailInput || !passwordInput) {
+        return;
+    }
 
     form.addEventListener("submit", function (e) {
         let errores = [];

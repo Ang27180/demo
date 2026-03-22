@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+<head>
+    <title layout:fragment="titulo" th:text="${tutor.idTutor != null} ? 'Editar tutor' : 'Nuevo tutor'">Tutor</title>
+</head>
+<body>
+    <div layout:fragment="contenido" class="container mt-5 pt-5 pb-5">
+        <a th:href="@{/admin/tutores}" class="btn btn-outline-secondary btn-sm mb-3">← Lista de tutores</a>
+        <h2 class="mb-4" th:text="${tutor.idTutor != null} ? 'Editar tutor' : 'Nuevo tutor'">Tutor</h2>
+        <p class="text-muted small">La persona debe existir con <strong>rol Tutor (3)</strong>. Si no aparece en el listado, créela desde «Añadir usuario».</p>
+        <form th:action="@{/admin/tutores/guardar}" method="post" class="card p-4">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <input type="hidden" name="idTutor" th:value="${tutor.idTutor}" th:if="${tutor.idTutor != null}">
+            <div class="mb-3">
+                <label class="form-label">Persona (rol tutor)</label>
+                <select name="idPersona" class="form-select" required>
+                    <option th:each="p : ${personasDisponibles}" th:value="${p.id}"
+                        th:selected="${tutor.persona != null and tutor.persona.id == p.id}"
+                        th:text="${p.nombre + ' — ' + p.email}">Persona</option>
+                </select>
+            </div>
+            <div class="mb-3" th:if="${#lists.isEmpty(personasDisponibles)}">
+                <p class="text-warning">No hay personas disponibles. Cree un usuario con rol Tutor o libere una persona existente.</p>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Experiencia</label>
+                <textarea name="experiencia" class="form-control" rows="3" th:text="${tutor.experiencia}"></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Observaciones</label>
+                <textarea name="observaciones" class="form-control" rows="2" th:text="${tutor.observaciones}"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" th:disabled="${#lists.isEmpty(personasDisponibles)}">Guardar</button>
+        </form>
+    </div>
+</body>
+</html>

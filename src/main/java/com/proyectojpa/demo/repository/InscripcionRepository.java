@@ -1,5 +1,6 @@
 package com.proyectojpa.demo.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,4 +35,26 @@ public interface InscripcionRepository extends JpaRepository<Inscripcion, Intege
             + "JOIN FETCH i.curso "
             + "WHERE i.id = :id")
     Optional<Inscripcion> findByIdWithEstudiantePersonaAndCurso(@Param("id") Integer id);
+
+    @Query("SELECT i FROM Inscripcion i "
+            + "JOIN FETCH i.estudiante e "
+            + "JOIN FETCH e.persona "
+            + "JOIN FETCH i.curso "
+            + "JOIN FETCH i.estado "
+            + "WHERE i.id = :id")
+    Optional<Inscripcion> findByIdForCertificado(@Param("id") Integer id);
+
+    @Query("SELECT DISTINCT i FROM Inscripcion i JOIN FETCH i.estado JOIN FETCH i.estudiante e "
+            + "WHERE i.estado.codigo = :codigo "
+            + "AND i.fechaLimitePago IS NOT NULL AND i.fechaLimitePago < :hoy")
+    List<Inscripcion> findByEstadoCodigoAndFechaLimitePagoBefore(@Param("codigo") String codigo,
+            @Param("hoy") LocalDate hoy);
+
+    @Query("SELECT DISTINCT i FROM Inscripcion i "
+            + "JOIN FETCH i.estudiante e "
+            + "JOIN FETCH e.persona "
+            + "JOIN FETCH i.curso c "
+            + "JOIN FETCH i.estado "
+            + "WHERE c.id = :idCurso")
+    List<Inscripcion> findByCursoIdWithEstudianteAndEstado(@Param("idCurso") Integer idCurso);
 }

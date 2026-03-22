@@ -49,6 +49,8 @@ public class EstadoInscripcionSeeder implements CommandLineRunner {
 
         asegurar(InscripcionEstados.ACTIVO, "Activo (acceso al curso)");
         asegurar(InscripcionEstados.PENDIENTE_PAGO, "Pendiente de pago");
+        asegurar(InscripcionEstados.CANCELADA, "Cancelada / vencida");
+        asegurar(InscripcionEstados.INACTIVO, "Cuenta estudiante inactiva");
     }
 
     /** Heurística para bases antiguas: id=2 o nombre con "pendiente". */

@@ -10,9 +10,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.proyectojpa.demo.domain.InscripcionEstados;
 import com.proyectojpa.demo.models.Estudiante;
 import com.proyectojpa.demo.models.Inscripcion;
 import com.proyectojpa.demo.models.Persona;
+import com.proyectojpa.demo.repository.EstadoInscripcionRepository;
 import com.proyectojpa.demo.repository.EstudianteRepository;
 import com.proyectojpa.demo.repository.InscripcionRepository;
 import com.proyectojpa.demo.security.CustomUserDetails;
@@ -28,6 +30,9 @@ public class MisCursosController {
 
     @Autowired
     private com.proyectojpa.demo.repository.ReciboRepository reciboRepository;
+
+    @Autowired
+    private EstadoInscripcionRepository estadoInscripcionRepository;
 
     @GetMapping("/mis-cursos")
     public String misCursos(Model model) {
@@ -46,7 +51,8 @@ public class MisCursosController {
                     Estudiante nuevoEstudiante = new Estudiante();
                     nuevoEstudiante.setPersona(persona);
                     nuevoEstudiante.setProgreso("0%");
-                    nuevoEstudiante.setEstadoEstudiante(1);
+                    estadoInscripcionRepository.findByCodigo(InscripcionEstados.ACTIVO)
+                            .ifPresent(nuevoEstudiante::setEstadoEstudiante);
                     return estudianteRepository.save(nuevoEstudiante);
                 });
 

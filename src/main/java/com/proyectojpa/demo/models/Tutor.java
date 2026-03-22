@@ -24,10 +24,14 @@ public class Tutor {
     @Column(name = "Observaciones", length = 255)
     private String observaciones;
 
-    // Relación con Persona
+    /**
+     * La BD legacy tiene {@code persona_id_persona} (FK) e {@code id_persona} NOT NULL.
+     * Hibernate debe escribir en {@code id_persona}; si solo se mapea {@code persona_id_persona},
+     * el insert deja {@code id_persona} vacío y MySQL lanza error 1364.
+     */
     @ManyToOne
-@JoinColumn(name = "persona_id_persona", referencedColumnName = "id_persona")
-private Persona persona;
+    @JoinColumn(name = "id_persona", referencedColumnName = "id_persona")
+    private Persona persona;
 
 
     // Getters y Setters

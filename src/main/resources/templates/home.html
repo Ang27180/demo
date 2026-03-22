@@ -4,12 +4,16 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>Home | Sabor MasterClass</title>
+  <title layout:fragment="titulo">Home | Sabor MasterClass</title>
   <link rel="stylesheet" th:href="@{/css/Home.css}" />
 </head>
 
 <body>
   <section layout:fragment="contenido">
+
+    <div th:if="${param.logout}" class="alert alert-success text-center mb-0 rounded-0">
+      Has cerrado sesión correctamente.
+    </div>
 
     <!-- Hero Section -->
     <section class="hero-img-section">
@@ -121,7 +125,8 @@
                   <p class="fw-bold" th:text="${#numbers.formatCurrency(curso.costo)}">$0.00</p>
                   <div class="d-flex justify-content-between align-items-center">
                     <span class="badge bg-info text-dark" th:text="${curso.aprendizaje}">Nivel</span>
-                    <a th:href="@{/login}" class="btn btn-purple"><i class="fas fa-plus"></i></a>
+                    <a th:href="@{/inscripciones/catalogo(idCurso=${curso.id})}" class="btn btn-purple"
+                      title="Inscribirse"><i class="fas fa-plus"></i></a>
                   </div>
                 </div>
               </div>

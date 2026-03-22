@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.proyectojpa.demo.dto.EstudianteDTO;
 import com.proyectojpa.demo.models.Estudiante;
 import com.proyectojpa.demo.models.Persona;
+import com.proyectojpa.demo.repository.EstadoInscripcionRepository;
 import com.proyectojpa.demo.repository.EstudianteRepository;
 import com.proyectojpa.demo.repository.PersonaRepository;
 
@@ -16,11 +17,14 @@ public class EstudianteService {
 
     private final EstudianteRepository estudianteRepository;
     private final PersonaRepository PersonaRepository;
+    private final EstadoInscripcionRepository estadoInscripcionRepository;
 
     public EstudianteService(EstudianteRepository estudianteRepository,
-                             PersonaRepository PersonaRepository) {
+                             PersonaRepository PersonaRepository,
+                             EstadoInscripcionRepository estadoInscripcionRepository) {
         this.estudianteRepository = estudianteRepository;
         this.PersonaRepository = PersonaRepository;
+        this.estadoInscripcionRepository = estadoInscripcionRepository;
     }
 
   // =============================================
@@ -32,7 +36,7 @@ public class EstudianteService {
             dto.setIdEstudiante(e.getIdEstudiante());
             //dto.setContraseña(e.getContraseña());
             dto.setProgreso(e.getProgreso());
-            dto.setIdEstadoEstudiante(e.getEstadoEstudiante());
+            dto.setIdEstadoEstudiante(e.getEstadoEstudiante() != null ? e.getEstadoEstudiante().getId() : null);
             dto.setIdPersona(e.getPersona() != null ? e.getPersona().getId() : null);
             dto.setTutorNombre(e.getTutorNombre());
             dto.setTutorTelefono(e.getTutorTelefono());
@@ -48,7 +52,9 @@ public class EstudianteService {
         Estudiante e = new Estudiante();
         //e.setContraseña(dto.getContraseña());
         e.setProgreso(dto.getProgreso());
-        e.setEstadoEstudiante(dto.getIdEstadoEstudiante());
+        if (dto.getIdEstadoEstudiante() != null) {
+            estadoInscripcionRepository.findById(dto.getIdEstadoEstudiante()).ifPresent(e::setEstadoEstudiante);
+        }
         e.setTutorNombre(dto.getTutorNombre());
         e.setTutorTelefono(dto.getTutorTelefono());
         e.setTutorEmail(dto.getTutorEmail());

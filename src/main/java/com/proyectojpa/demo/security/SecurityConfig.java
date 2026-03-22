@@ -30,34 +30,34 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
 
-                        //  PERMITIR TODO LO DE CORREO
-                        .requestMatchers("/correo/**").permitAll()
-                        .requestMatchers("/correo/formulario", "/correo/enviar-desde-vista").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/", "/home", "/nosotros", "/nuestros-tutores").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/cursos", "/cursos/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/cursos/*/lecciones/*/completar").hasRole("ESTUDIANTE")
 
-                        // Certificados y recibos PDF: autenticados (autorización fina en controlador/servicio)
+                        .requestMatchers("/correo/**").permitAll()
+
                         .requestMatchers(HttpMethod.GET, "/reportes/certificado/pdf/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/reportes/recibo/pdf/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/reportes/estadistico/pdf").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/reportes", "/reportes/").hasRole("ADMIN")
 
-                        .requestMatchers("/reportes/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/inscripciones/catalogo").permitAll()
+                        .requestMatchers("/inscripciones/**").hasRole("ESTUDIANTE")
 
-                        // API Tutor: listado público; mutaciones solo administrador
                         .requestMatchers(HttpMethod.GET, "/tutor").permitAll()
                         .requestMatchers(HttpMethod.POST, "/tutor").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/tutor/**").hasRole("ADMIN")
+                        .requestMatchers("/tutor/panel/**").hasRole("TUTOR")
 
-                        //  PÚBLICOS
-                        .requestMatchers("/home", "/nosotros", "/contacto", "/registro", "/login",
-                                "/forgot-password", "/css/**", "/imagenes/**", "/files/medios-pago/**").permitAll()
+                        .requestMatchers("/contacto", "/registro", "/login", "/forgot-password", "/css/**", "/js/**",
+                                "/imagenes/**", "/files/medios-pago/**", "/favicon.ico", "/error").permitAll()
 
-                        // ADMIN
                         .requestMatchers("/admin/**", "/personas/**", "/personas/exportarExcel", "/correo/formulario")
                                 .hasRole("ADMIN")
 
-                        //  ADMIN + ESTUDIANTE
-                        .requestMatchers("/cursos", "/cursos/**", "/estudiante/**", "/mis-cursos/**")
+                        .requestMatchers("/estudiante/**", "/mis-cursos/**")
                                 .hasAnyRole("ADMIN", "ESTUDIANTE")
 
-                        // Todo lo demás requiere login
                         .anyRequest().authenticated())
 
                 // LOGIN
@@ -65,15 +65,32 @@ public class SecurityConfig {
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
                         .successHandler((request, response, authentication) -> {
+                            String curso = request.getParameter("curso");
+                            if (curso != null && !curso.isBlank()) {
+                                try {
+                                    int idCurso = Integer.parseInt(curso.trim());
+                                    if (authentication.getAuthorities().stream()
+                                            .anyMatch(a -> "ROLE_ESTUDIANTE".equals(a.getAuthority()))) {
+                                        response.sendRedirect(request.getContextPath()
+                                                + "/inscripciones/nueva?idCurso=" + idCurso);
+                                        return;
+                                    }
+                                } catch (NumberFormatException ignored) {
+                                    // sigue flujo por rol
+                                }
+                            }
                             var authorities = authentication.getAuthorities();
-                            String redirectUrl = "/home"; // por defecto
+                            String redirectUrl = "/home";
                             if (authorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
                                 redirectUrl = "/admin";
                             } else if (authorities.stream()
                                     .anyMatch(a -> a.getAuthority().equals("ROLE_ESTUDIANTE"))) {
                                 redirectUrl = "/estudiante";
+                            } else if (authorities.stream()
+                                    .anyMatch(a -> a.getAuthority().equals("ROLE_TUTOR"))) {
+                                redirectUrl = "/tutor/panel/cursos";
                             }
-                            response.sendRedirect(redirectUrl);
+                            response.sendRedirect(request.getContextPath() + redirectUrl);
                         })
                         .failureUrl("/login?error=true")
                         .permitAll())
@@ -81,7 +98,7 @@ public class SecurityConfig {
                 // LOGOUT
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout=true")
+                        .logoutSuccessUrl("/home?logout=true")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .permitAll());
