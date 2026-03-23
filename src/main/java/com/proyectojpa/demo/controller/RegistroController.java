@@ -2,6 +2,7 @@ package com.proyectojpa.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Locale;
+import java.util.Objects;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +17,7 @@ import com.proyectojpa.demo.models.Persona;
 import com.proyectojpa.demo.repository.PersonaRepository;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 @Controller
 public class RegistroController {
@@ -44,6 +46,7 @@ public class RegistroController {
     }
 
     @PostMapping("/registro")
+    @Transactional
     public String procesarFormulario(
             @ModelAttribute("persona") Persona persona,
             BindingResult result,
@@ -59,6 +62,10 @@ public class RegistroController {
             return "registro";
         }
 
+        // Texto plano tal como llegó del formulario (misma referencia para comparar y para BCrypt)
+        final String contrasenaPlana = persona.getContrasena();
+        final String confirmarPlana = persona.getConfirmarContrasena();
+
         // Validar si el correo ya existe
         if (PersonaRepository.findByEmail(persona.getEmail()) != null) {
             model.addAttribute("errorCorreo", "El correo ya está registrado");
@@ -66,7 +73,7 @@ public class RegistroController {
         }
 
         // Validar confirmación de contraseña
-        if (!persona.getContrasena().equals(persona.getConfirmarContrasena())) {
+        if (!Objects.equals(contrasenaPlana, confirmarPlana)) {
             model.addAttribute("errorContrasena", "Las contraseñas no coinciden");
             return "registro";
         }
@@ -77,8 +84,8 @@ public class RegistroController {
             return "registro";
         }
 
-        // Cifrar la contraseña antes de guardar
-        persona.setContrasena(passwordEncoder.encode(persona.getContrasena()));
+        // Cifrar exactamente la contraseña ingresada (BCrypt); mismo PasswordEncoder que el login
+        persona.setContrasena(passwordEncoder.encode(contrasenaPlana));
 
         // Guardar persona en la base de datos
         Persona guardada = PersonaRepository.save(persona);

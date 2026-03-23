@@ -120,6 +120,20 @@
           icono.classList.replace("fa-eye-slash", "fa-eye");
         }
       }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        var tipoDoc = document.querySelector('select[name="persona.tipoDocumento"]')
+          || document.querySelector('select[name="tipoDocumento"]');
+        var seccionAcudiente = document.getElementById('seccionTutor');
+        if (!tipoDoc || !seccionAcudiente) return;
+
+        function actualizarSeccionAcudiente() {
+          seccionAcudiente.style.display = tipoDoc.value === 'TI' ? '' : 'none';
+        }
+
+        tipoDoc.addEventListener('change', actualizarSeccionAcudiente);
+        actualizarSeccionAcudiente();
+      });
     </script>
   </section>
 </body>
