@@ -55,7 +55,7 @@ public class SecurityConfig {
                         .requestMatchers("/admin/**", "/personas/**", "/personas/exportarExcel", "/correo/formulario")
                                 .hasRole("ADMIN")
 
-                        .requestMatchers("/estudiante/**", "/mis-cursos/**")
+                        .requestMatchers("/estudiante/**", "/mis-cursos/**", "/acudiente")
                                 .hasAnyRole("ADMIN", "ESTUDIANTE")
 
                         .anyRequest().authenticated())

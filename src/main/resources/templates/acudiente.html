@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout}">
+
+<head>
+  <meta charset="UTF-8">
+  <title layout:fragment="titulo">Acudiente | Sabor MasterClass</title>
+</head>
+
+<body>
+  <section layout:fragment="contenido">
+    <!-- Mismo estilo de cabecera que perfil y otras vistas con hero global -->
+    <section class="hero-img-section">
+      <div class="hero-content">
+        <h1>Panel del acudiente</h1>
+        <p>
+          <i class="fa-solid fa-user-shield me-2"></i>
+          Seguimiento del estudiante y autorizaciones (vista de demostración).
+        </p>
+      </div>
+    </section>
+
+    <div class="container py-5">
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+        <h2 class="h4 fw-bold mb-0">Resumen</h2>
+        <a th:href="@{/estudiante}" class="btn btn-outline-secondary btn-sm">
+          Volver al panel estudiante
+        </a>
+      </div>
+
+      <div th:if="${estudiante == null}" class="alert alert-warning shadow-sm mb-4">
+        No hay un perfil de estudiante asociado a esta sesión. El nombre y correo corresponden a la cuenta actual;
+        el progreso y las inscripciones requieren registro de estudiante.
+      </div>
+
+      <!-- Mismo lenguaje visual que la tarjeta de acudiente en Estudiante.html -->
+      <div class="card shadow-sm border-0 border-start border-4 border-success mb-4">
+        <div class="card-body p-4">
+          <h5 class="fw-bold text-success mb-3">
+            <i class="fa-solid fa-id-card me-2"></i>Datos del estudiante
+          </h5>
+          <div class="row g-4">
+            <div class="col-md-4">
+              <p class="mb-1 fw-bold">Nombre</p>
+              <p class="card-text mb-0" th:text="${personaSesion != null} ? ${personaSesion.nombre} : '—'">Nombre</p>
+            </div>
+            <div class="col-md-4">
+              <p class="mb-1 fw-bold">Correo</p>
+              <p class="card-text mb-0 text-break" th:text="${personaSesion != null} ? ${personaSesion.email} : '—'">correo</p>
+            </div>
+            <div class="col-md-4">
+              <p class="mb-1 fw-bold">Progreso</p>
+              <p class="card-text mb-0" th:text="${estudiante != null} ? ${estudiante.progreso} : '—'">—</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body border-bottom">
+          <h5 class="fw-bold text-success mb-0">
+            <i class="fa-solid fa-book-open me-2"></i>Cursos inscritos
+          </h5>
+        </div>
+        <div class="card-body p-0">
+          <div th:if="${inscripciones == null or #lists.isEmpty(inscripciones)}"
+            class="alert alert-info m-3 mb-0">
+            No hay inscripciones registradas.
+          </div>
+          <div th:if="${inscripciones != null and !#lists.isEmpty(inscripciones)}" class="table-responsive">
+            <table class="table table-hover align-middle mb-0 text-center">
+              <thead class="table-secondary">
+                <tr>
+                  <th scope="col" class="py-3 px-3 fw-semibold text-secondary text-uppercase small">Curso</th>
+                  <th scope="col" class="py-3 px-3 fw-semibold text-secondary text-uppercase small">Estado</th>
+                  <th scope="col" class="py-3 px-3 fw-semibold text-secondary text-uppercase small">Fecha de inscripción</th>
+                  <th scope="col" class="py-3 px-3 fw-semibold text-secondary text-uppercase small">Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="insc : ${inscripciones}" class="border-light">
+                  <td class="py-3 px-3 fw-semibold" th:text="${insc.curso != null} ? ${insc.curso.nombre} : '—'">Curso</td>
+                  <td class="py-3 px-3">
+                    <span class="badge rounded-pill bg-secondary bg-opacity-75 px-3 py-2"
+                      th:text="${insc.estado != null and insc.estado.nombre != null} ? ${insc.estado.nombre} : '—'">Estado</span>
+                  </td>
+                  <td class="py-3 px-3 text-muted" th:text="${insc.fechaInscripcion != null} ? ${#temporals.format(insc.fechaInscripcion, 'dd/MM/yyyy')} : '—'">—</td>
+                  <td class="py-3 px-3">
+                    <button type="button" class="btn btn-success btn-sm shadow-sm fw-semibold"
+                      title="Solo interfaz — sin lógica en servidor">
+                      <i class="fa-solid fa-file-signature me-1"></i>Autorizar certificado
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <p class="small text-muted mb-0">
+        <i class="fa-solid fa-circle-info text-success me-1"></i>
+        El botón «Autorizar certificado» es solo visual; no ejecuta ninguna acción en el servidor.
+      </p>
+    </div>
+  </section>
+</body>
+
+</html>

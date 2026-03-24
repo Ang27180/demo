@@ -43,6 +43,9 @@
             Mis Cursos
           </a>
         </li>
+        <li class="nav-item" sec:authorize="hasRole('ESTUDIANTE')">
+          <a th:href="@{/acudiente}" class="nav-link">Acudiente</a>
+        </li>
         <li class="nav-item"><a th:href="@{/contacto}" class="nav-link">Contacto</a></li>
         <!-- Solo visible para ADMIN -->
         <li class="nav-item" sec:authorize="hasRole('ADMIN')">

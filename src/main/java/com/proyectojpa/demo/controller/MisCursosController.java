@@ -1,5 +1,6 @@
 package com.proyectojpa.demo.controller;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +75,27 @@ public class MisCursosController {
         model.addAttribute("idReciboPorInscripcion", idReciboPorInscripcion);
 
         return "misCursos";
+    }
+
+    /**
+     * Simulación de panel del acudiente (mismos datos del estudiante en sesión que «Mis cursos»).
+     */
+    @GetMapping("/acudiente")
+    public String vistaAcudiente(Model model) {
+        Persona persona = getPersonaActual();
+        if (persona == null) {
+            return "redirect:/login";
+        }
+        Estudiante estudiante = estudianteRepository.findByPersona(persona).orElse(null);
+        model.addAttribute("personaSesion", persona);
+        model.addAttribute("estudiante", estudiante);
+        if (estudiante != null) {
+            model.addAttribute("inscripciones",
+                    inscripcionRepo.findByEstudianteIdWithCursoAndEstado(estudiante.getIdEstudiante()));
+        } else {
+            model.addAttribute("inscripciones", Collections.emptyList());
+        }
+        return "acudiente";
     }
 
     private Persona getPersonaActual() {
