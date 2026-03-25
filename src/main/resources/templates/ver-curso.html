@@ -3,156 +3,83 @@
     layout:decorate="~{layout}">
 
 <head>
+    <meta charset="UTF-8" />
     <title layout:fragment="titulo" th:text="${curso.nombre} + ' - Contenido'"></title>
-    <style>
-        :root {
-            --primary-gradient: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
-            --accent-color: #28a745;
-        }
-
-        .course-header {
-            background: var(--primary-gradient);
-            color: white;
-            padding: 4rem 0;
-            margin-bottom: 2rem;
-            border-bottom: 4px solid var(--accent-color);
-        }
-
-        .module-card {
-            border: none;
-            border-radius: 15px;
-            margin-bottom: 1rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        }
-
-        .module-header {
-            background: white !important;
-            padding: 1.5rem;
-            cursor: pointer;
-            border-radius: 15px !important;
-        }
-
-        .module-header:hover {
-            background: #f8f9fa !important;
-        }
-
-        .lesson-item {
-            padding: 1rem 1.5rem;
-            border-left: 3px solid transparent;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .lesson-item:hover {
-            border-left-color: var(--accent-color);
-            background: #f1f8f4;
-        }
-
-        .content-badge {
-            font-size: 0.75rem;
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
-        }
-
-        .badge-video {
-            background: #fee2e2;
-            color: #dc2626;
-        }
-
-        .badge-text {
-            background: #e0f2fe;
-            color: #0284c7;
-        }
-
-        .badge-pdf {
-            background: #fef3c7;
-            color: #d97706;
-        }
-
-        .sidebar-info {
-            position: sticky;
-            top: 100px;
-        }
-    </style>
+    <!-- CSS Detalle Curso Premium -->
+    <link rel="stylesheet" th:href="@{/css/ver-curso.css}">
 </head>
 
 <body>
-    <main layout:fragment="contenido">
-        <!-- AJUSTE: Header del Curso que ocupa todo el ancho de lado a lado -->
-        <header class="course-header mt-5 pt-5">
-            <div class="container text-center py-4">
-                <span class="badge bg-success mb-2" th:text="${curso.aprendizaje}">Nivel</span>
-                <h1 class="display-4 fw-bold mb-3 text-white" th:text="${curso.nombre}">Nombre del Curso</h1>
-                <p class="lead opacity-75 mx-auto text-white" style="max-width: 700px;" th:text="${curso.detalle}">
-                    Detalle breve.</p>
+    <main layout:fragment="contenido" class="course-detail-section pb-5">
+        
+        <!-- Header del Curso (Cinematic Hero) -->
+        <header class="premium-header">
+            <div class="container py-4 relative z-10">
+                <span class="level-badge" th:text="${curso.aprendizaje}">Nivel</span>
+                <h1 th:text="${curso.nombre}">Nombre del Curso</h1>
+                <p class="lead opacity-75 mx-auto text-white" style="max-width: 700px;" th:text="${curso.detalle}">Detalle breve.</p>
             </div>
         </header>
-        <!-- Fin del ajuste -->
 
-        <!-- AJUSTE: Sección de certificado a lo largo (full width) con fondo de lado a lado -->
-        <div class="w-100 py-3" th:if="${inscripcionActual != null && puedeDescargarCertificado}"
-            style="background: #f8f9fa; border-bottom: 2px solid #e9ecef;">
-            <div class="container">
-                <div class="alert alert-success d-flex flex-wrap align-items-center justify-content-between p-4 rounded-4 shadow-sm border-0"
-                    style="background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);">
-                    <div>
-                        <h4 class="fw-bold mb-1 text-success"><i class="fas fa-award me-2"></i> ¡Certificación
-                            Disponible!</h4>
-                        <p class="mb-0 text-dark opacity-75">Has completado el 100% del curso. Puedes descargar tu
-                            certificado oficial.</p>
+        <div class="container">
+            <!-- Box de Certificación Premium (Sticky Top under header) -->
+            <div th:if="${inscripcion != null}" class="cert-box-premium d-flex flex-wrap align-items-center justify-content-between mb-5">
+                <div class="d-flex align-items-center gap-4">
+                    <div class="cert-icon shadow-lg">
+                        <i class="fas fa-award"></i>
                     </div>
-                    <a th:href="@{'/reportes/certificado/pdf/' + ${inscripcionActual.id}}"
-                        class="btn btn-success btn-lg rounded-pill px-4 shadow-sm mt-2 mt-md-0">
+                    <div>
+                        <h4 class="fw-bold text-white mb-1">¡Certificación Disponible!</h4>
+                        <p class="mb-0 text-white-50 opacity-75">Has completado los requisitos para obtener tu certificado oficial.</p>
+                    </div>
+                </div>
+                <div class="mt-3 mt-md-0">
+                    <a th:href="@{'/reportes/certificado/pdf/' + ${inscripcion.id}}"
+                        class="btn-yellow px-5 py-3 rounded-pill fw-bold d-inline-flex align-items-center shadow-lg text-decoration-none">
                         <i class="fas fa-file-pdf me-2"></i> Descargar Certificado
                     </a>
                 </div>
             </div>
-        </div>
-        <!-- Fin del ajuste -->
 
-        <div class="container mb-5">
-            <div class="row g-4">
-                <!-- Columna Principal: Módulos -->
+            <!-- Contenido del Curso y Sidebar -->
+            <div class="row g-5 mt-4">
+                
+                <!-- Columna Principal: Accordion de Módulos -->
                 <div class="col-lg-8">
-                    <h3 class="fw-bold mb-4">📖 Contenido del Curso</h3>
-
-                    <div th:if="${#lists.isEmpty(curso.modulos)}" class="text-center py-5 bg-light rounded-4">
-                        <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
-                        <p class="text-muted">Próximamente estaremos publicando el contenido detallado de este curso.
-                        </p>
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <div style="width: 4px; height: 32px; background: #f8c325; border-radius: 50px;"></div>
+                        <h3 class="fw-bold text-white mb-0">Contenido del Curso</h3>
                     </div>
 
-                    <div class="accordion" id="accordionModulos">
-                        <div class="card module-card" th:each="modulo, iter : ${curso.modulos}">
-                            <div class="module-header d-flex align-items-center" data-bs-toggle="collapse"
-                                th:data-bs-target="'#collapse' + ${modulo.id}">
-                                <div class="flex-grow-1">
-                                    <h5 class="mb-0 fw-bold"
-                                        th:text="'Módulo ' + ${iter.index + 1} + ': ' + ${modulo.nombre}">Nombre del
-                                        Módulo</h5>
-                                    <small class="text-muted"
-                                        th:text="${#lists.size(modulo.lecciones)} + ' lecciones'"></small>
-                                </div>
-                                <i class="fas fa-chevron-down text-muted"></i>
-                            </div>
+                    <div th:if="${#lists.isEmpty(curso.modulos)}" class="empty-content-box p-5 text-center bg-dark rounded-4 bg-opacity-50 border border-white border-opacity-10">
+                        <i class="fas fa-book-open fa-3x text-white-50 opacity-25 mb-3"></i>
+                        <p class="text-white-50">Próximamente estaremos publicando el contenido detallado de este curso.</p>
+                    </div>
 
-                            <div th:id="'collapse' + ${modulo.id}" class="collapse" data-bs-parent="#accordionModulos">
-                                <div class="card-body p-0 border-top">
-                                    <div class="lesson-item" th:each="leccion : ${modulo.lecciones}">
-                                        <div class="d-flex align-items-center">
-                                            <i class="fas fa-play-circle me-3 text-success"
-                                                th:if="${leccion.contenidoTipo == 'video'}"></i>
-                                            <i class="fas fa-file-alt me-3 text-info"
-                                                th:if="${leccion.contenidoTipo == 'texto'}"></i>
-                                            <i class="fas fa-file-pdf me-3 text-danger"
-                                                th:if="${leccion.contenidoTipo == 'pdf'}"></i>
-                                            <span th:text="${leccion.nombre}">Nombre de la lección</span>
+                    <div class="accordion module-accordion-dark" id="accordionModulos">
+                        <div class="accordion-item" th:each="modulo, iter : ${curso.modulos}">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" 
+                                        th:data-bs-target="'#collapse' + ${modulo.id}" th:aria-expanded="${iter.index == 0}"
+                                        th:text="'Módulo ' + ${iter.index + 1} + ': ' + ${modulo.nombre}">
+                                    Módulo 1
+                                </button>
+                            </h2>
+                            <div th:id="'collapse' + ${modulo.id}" class="accordion-collapse collapse" 
+                                 th:classappend="${iter.index == 0 ? 'show' : ''}"
+                                 data-bs-parent="#accordionModulos">
+                                <div class="accordion-body">
+                                    <div class="lesson-row" th:each="leccion : ${modulo.lecciones}">
+                                        <div class="lesson-info">
+                                            <i th:class="${leccion.contenidoTipo == 'video' ? 'fas fa-play-circle' : (leccion.contenidoTipo == 'pdf' ? 'fas fa-file-pdf' : 'fas fa-file-alt')}"></i>
+                                            <div class="d-flex flex-column">
+                                                <span class="text-white fw-medium" th:text="${leccion.nombre}">Lección</span>
+                                                <small class="text-white-50 opacity-50" th:if="${leccion.cantidad != null}" 
+                                                       th:text="${leccion.cantidad} + ' min'"></small>
+                                            </div>
                                         </div>
-                                        <span th:class="'content-badge badge-' + ${leccion.contenidoTipo}"
-                                            th:text="${leccion.contenidoTipo == 'video' ? 'VIDEO' : (leccion.contenidoTipo == 'pdf' ? 'PDF' : 'LECTURA')}">
+                                        <span th:class="'lesson-badge badge-' + ${leccion.contenidoTipo}"
+                                              th:text="${leccion.contenidoTipo == 'video' ? 'VIDEO' : (leccion.contenidoTipo == 'pdf' ? 'PDF' : 'LEER')}">
                                         </span>
                                     </div>
                                 </div>
@@ -161,28 +88,36 @@
                     </div>
                 </div>
 
-                <!-- Barra Lateral: Info Adicional -->
+                <!-- Barra Lateral: Info Sidebar -->
                 <div class="col-lg-4">
-                    <div class="card shadow-sm border-0 rounded-4 sidebar-info">
-                        <img th:src="${curso.imagen != null and #strings.contains(curso.imagen, 'http') ? curso.imagen : '/imagenes/' + (curso.imagen != null ? curso.imagen : 'default.jpg')}" class="card-img-top rounded-top-4" alt="Curso">
-                        <div class="card-body p-4">
-                            <h5 class="fw-bold mb-3">Sobre este curso</h5>
-                            <ul class="list-unstyled mb-4">
-                                <li class="mb-2"><i class="fas fa-clock text-success me-2"></i> <strong
-                                        th:text="${curso.duracion}">Duración</strong></li>
-                                <li class="mb-2"><i class="fas fa-graduation-cap text-success me-2"></i> Certificado de
-                                    finalización</li>
-                                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Acceso de por
-                                    vida</li>
+                    <div class="sidebar-sticky card-body p-0">
+                        <div class="sidebar-img-wrapper position-relative">
+                            <img th:src="${curso.imagen != null and #strings.contains(curso.imagen, 'http') ? curso.imagen : '/imagenes/' + (curso.imagen != null ? curso.imagen : 'default.jpg')}" 
+                                 class="card-img-top" alt="Vista del Curso">
+                            <div class="position-absolute top-0 start-0 w-100 h-100 bg-gradient-to-t from-dark opacity-50"></div>
+                        </div>
+                        
+                        <div class="p-4">
+                            <h5 class="fw-bold text-white mb-3">Resumen culinario</h5>
+                            <ul class="sidebar-list list-unstyled mb-4">
+                                <li><i class="fas fa-clock"></i> <span th:text="${curso.duracion}">12 Horas</span></li>
+                                <li><i class="fas fa-medal"></i> Certificación oficial</li>
+                                <li><i class="fas fa-infinite"></i> Acceso ilimitado 24/7</li>
+                                <li><i class="fas fa-mobile-alt"></i> Visualización en móvil</li>
                             </ul>
-                            <div class="d-grid gap-2">
-                                <a href="/mis-cursos" class="btn btn-outline-dark rounded-pill">
-                                    <i class="fas fa-arrow-left me-2"></i> Volver a mis cursos
+                            
+                            <div class="d-grid gap-3">
+                                <a th:href="@{/mis-cursos}" class="btn-outline-premium text-center">
+                                    <i class="fas fa-arrow-left me-2"></i> Mis Cursos
+                                </a>
+                                <a href="#" class="btn btn-yellow w-100 py-3 rounded-pill fw-bold">
+                                    Soporte Tutor
                                 </a>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </main>

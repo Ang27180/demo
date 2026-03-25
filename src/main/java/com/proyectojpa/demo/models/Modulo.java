@@ -30,6 +30,9 @@ public class Modulo {
     @OneToMany(mappedBy = "modulo")
     private List<Leccion> lecciones;
 
+    @Column(name = "cantidad")
+    private Integer cantidad; // Nueva cantidad solicitada
+
     public Integer getId() {
         return id;
     }
@@ -60,5 +63,13 @@ public class Modulo {
 
     public void setLecciones(List<Leccion> lecciones) {
         this.lecciones = lecciones;
+    }
+
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
     }
 }

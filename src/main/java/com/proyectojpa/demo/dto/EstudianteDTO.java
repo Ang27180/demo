@@ -1,4 +1,4 @@
-package com.proyectojpa.demo.dto;
+package com.poryectojpa.demo.dto;
 
 public class EstudianteDTO {
 
@@ -6,10 +6,8 @@ public class EstudianteDTO {
     private String contraseña;
     private String progreso;
     private Integer idEstadoEstudiante;
-    private String tutorNombre;
-    private String tutorTelefono;
-    private String tutorEmail;
     private Integer idPersona;
+    private Integer cantidad;
 
     // Getters & Setters
     public Integer getIdEstudiante() { return idEstudiante; }
@@ -27,13 +25,6 @@ public class EstudianteDTO {
     public Integer getIdPersona() { return idPersona; }
     public void setIdPersona(Integer idPersona) { this.idPersona = idPersona; }
 
-    public String getTutorNombre() { return tutorNombre; }
-    public void setTutorNombre(String tutorNombre) { this.tutorNombre = tutorNombre; }
-
-    public String getTutorTelefono() { return tutorTelefono; }
-    public void setTutorTelefono(String tutorTelefono) { this.tutorTelefono = tutorTelefono; }
-
-    public String getTutorEmail() { return tutorEmail; }
-    public void setTutorEmail(String tutorEmail) { this.tutorEmail = tutorEmail; }
+    public Integer getCantidad() { return cantidad; }
+    public void setCantidad(Integer cantidad) { this.cantidad = cantidad; }
 }
-

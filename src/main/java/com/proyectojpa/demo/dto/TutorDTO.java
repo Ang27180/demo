@@ -6,6 +6,7 @@ public class TutorDTO {
     private String experiencia;
     private String observaciones;
     private Integer idPersona;
+    private Integer cantidad;
 
     public Integer getIdTutor() {
         return idTutor;
@@ -37,6 +38,14 @@ public class TutorDTO {
 
     public void setIdPersona(Integer idPersona) {
         this.idPersona = idPersona;
+    }
+
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
     }
 }
 

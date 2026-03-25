@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+
+<head>
+    <meta charset="UTF-8" />
+    <title layout:fragment="titulo">Contáctanos - Sabor MasterClass</title>
+    <!-- CSS Específico de Contacto -->
+    <link rel="stylesheet" th:href="@{/css/contacto.css}">
+</head>
+
+<body>
+    <section layout:fragment="contenido" class="contacto-section pb-5">
+
+        <!-- Hero Section -->
+        <section class="hero-img-section mt-5 pt-5">
+            <div class="overlay"></div>
+            <div class="hero-content">
+                <h1 class="display-3 fw-bold">Contáctanos</h1>
+                <p class="lead opacity-75">
+                    <i class="fas fa-envelope me-2 text-yellow"></i>
+                    Queremos escucharte. Envíanos tus preguntas o sugerencias.
+                </p>
+            </div>
+        </section>
+
+        <!-- Contenido principal -->
+        <main class="container py-5 mt-n5">
+            <div class="row g-4 align-items-stretch">
+
+                <!-- Formulario -->
+                <div class="col-md-7">
+                    <div class="contacto-card p-5 h-100 shadow-lg">
+                        <div class="mb-4">
+                            <h3 class="fw-bold text-white mb-2">Envíanos un mensaje</h3>
+                            <div class="bg-yellow" style="height: 3px; width: 60px;"></div>
+                        </div>
+
+                        <!-- Mensaje de éxito -->
+                        <div th:if="${mensajeExito}" class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <span th:text="${mensajeExito}">Enviado con éxito</span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+
+                        <form th:action="@{/contacto}" th:object="${contacto}" method="post"
+                            class="row g-4 needs-validation" novalidate>
+
+                            <div class="col-6">
+                                <label class="form-label mb-2">Nombre</label>
+                                <input type="text" th:field="*{nombre}" placeholder="Nombre" class="form-control form-control-dark"
+                                    th:classappend="${#fields.hasErrors('nombre')}? 'is-invalid'">
+                                <div class="invalid-feedback" th:errors="*{nombre}"></div>
+                            </div>
+
+                            <div class="col-6">
+                                <label class="form-label mb-2">Apellido</label>
+                                <input type="text" th:field="*{apellido}" placeholder="Apellido" class="form-control form-control-dark"
+                                    th:classappend="${#fields.hasErrors('apellido')}? 'is-invalid'">
+                                <div class="invalid-feedback" th:errors="*{apellido}"></div>
+                            </div>
+
+                            <div class="col-6">
+                                <label class="form-label mb-2">Email</label>
+                                <input type="email" th:field="*{email}" placeholder="Correo electrónico"
+                                    class="form-control form-control-dark" th:classappend="${#fields.hasErrors('email')}? 'is-invalid'">
+                                <div class="invalid-feedback" th:errors="*{email}"></div>
+                            </div>
+
+                            <div class="col-6">
+                                <label class="form-label mb-2">Teléfono</label>
+                                <input type="text" th:field="*{telefono}" placeholder="Número de contacto"
+                                    class="form-control form-control-dark"
+                                    th:classappend="${#fields.hasErrors('telefono')}? 'is-invalid'">
+                                <div class="invalid-feedback" th:errors="*{telefono}"></div>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label mb-3">¿En qué podemos ayudarte?</label>
+                                <div class="d-flex flex-wrap gap-4 radio-group">
+                                    <div class="form-check custom-check">
+                                        <input class="form-check-input" type="radio" th:field="*{tema}" value="Certificados" id="radio1" checked>
+                                        <label class="form-check-label text-white-50" for="radio1">Certificados</label>
+                                    </div>
+                                    <div class="form-check custom-check">
+                                        <input class="form-check-input" type="radio" th:field="*{tema}" value="Cursos" id="radio2">
+                                        <label class="form-check-label text-white-50" for="radio2">Cursos</label>
+                                    </div>
+                                    <div class="form-check custom-check">
+                                        <input class="form-check-input" type="radio" th:field="*{tema}" value="Soporte" id="radio3">
+                                        <label class="form-check-label text-white-50" for="radio3">Soporte</label>
+                                    </div>
+                                </div>
+                                <div class="invalid-feedback d-block" th:errors="*{tema}"></div>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label mb-2">Mensaje</label>
+                                <textarea th:field="*{mensaje}" placeholder="Describe aquí tu consulta..."
+                                    class="form-control form-control-dark" rows="4"
+                                    th:classappend="${#fields.hasErrors('mensaje')}? 'is-invalid'"></textarea>
+                                <div class="invalid-feedback" th:errors="*{mensaje}"></div>
+                            </div>
+
+                            <div class="col-12 text-end pt-3">
+                                <button type="submit" class="btn btn-yellow-action px-5 py-3">
+                                    <i class="fas fa-paper-plane me-2"></i>Enviar mensaje
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Información -->
+                <div class="col-md-5">
+                    <div class="contacto-card info-card p-5 h-100 shadow-lg border-warning border-opacity-10">
+                        <h4 class="fw-bold mb-4 text-white">Información de Contacto</h4>
+                        <div class="mb-5">
+                            <div class="d-flex align-items-center mb-4">
+                                <div class="social-link border-warning border-opacity-25 bg-yellow bg-opacity-10 me-3">
+                                    <i class="fas fa-phone text-yellow"></i>
+                                </div>
+                                <div>
+                                    <p class="text-white-50 x-small mb-0">Llámanos</p>
+                                    <p class="fw-bold mb-0 text-white">+310 245 32XX</p>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center mb-4">
+                                <div class="social-link border-warning border-opacity-25 bg-yellow bg-opacity-10 me-3">
+                                    <i class="fas fa-envelope text-yellow"></i>
+                                </div>
+                                <div>
+                                    <p class="text-white-50 x-small mb-0">Escríbenos</p>
+                                    <p class="fw-bold mb-0 text-white">sabormasterclass@gmail.com</p>
+                                </div>
+                            </div>
+
+                            <div class="d-flex align-items-center mb-4">
+                                <div class="social-link border-warning border-opacity-25 bg-yellow bg-opacity-10 me-3">
+                                    <i class="fas fa-location-dot text-yellow"></i>
+                                </div>
+                                <div>
+                                    <p class="text-white-50 x-small mb-0">Visítanos</p>
+                                    <p class="fw-bold mb-0 text-white">300 Negra Arroyo Lane, NM</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 border-top border-white border-opacity-10">
+                            <p class="text-white-50 small mb-3">Síguenos en nuestras redes sociales</p>
+                            <div class="d-flex gap-3">
+                                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </section>
+</body>
+
+</html>

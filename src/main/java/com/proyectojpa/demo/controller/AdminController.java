@@ -1,4 +1,4 @@
-package com.proyectojpa.demo.controller;
+package com.poryectojpa.demo.controller;
 
 import java.io.IOException;
 import java.util.List;
@@ -14,15 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.proyectojpa.demo.Service.EmailService;
-import com.proyectojpa.demo.models.Curso;
-import com.proyectojpa.demo.models.Persona;
-import com.proyectojpa.demo.repository.cursoRepository;
-import com.proyectojpa.demo.repository.PersonaRepository;
+import com.poryectojpa.demo.models.Curso;
+import com.poryectojpa.demo.models.Persona;
+import com.poryectojpa.demo.repository.cursoRepository;
+import com.poryectojpa.demo.repository.personaRepository;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -30,29 +27,28 @@ import jakarta.servlet.http.HttpServletResponse;
 public class AdminController {
 
     @Autowired
-    private PersonaRepository PersonaRepository;
+    private personaRepository personaRepository;
 
     @Autowired
     private cursoRepository cursoRepository;
 
     @Autowired
-    private com.proyectojpa.demo.repository.InscripcionRepository inscripcionRepository;
-
-    @Autowired
-    private EmailService emailService;
+    private com.poryectojpa.demo.repository.InscripcionRepository inscripcionRepository;
 
     // PANEL ADMIN CON FILTROS
     @GetMapping("/admin")
     public String mostrarPanelAdmin(
+            // CORRECCIÓN: name= explícito requerido en Spring Boot 3.2+ sin flag -parameters
             @RequestParam(name = "filtroNombre", required = false) String filtroNombre,
-            @RequestParam(name = "filtroRol", required = false) String filtroRolParam,
+            @RequestParam(name = "filtroRol", required = false) Integer filtroRol,
             Model model) {
 
+        // inicializar si vienen nulos
         final String filtroNombreFinal = (filtroNombre == null) ? "" : filtroNombre;
-        final Integer filtroRol = parseFiltroRol(filtroRolParam);
+        // filtroRol puede quedarse como null
 
-        // aplicar filtros en memoria (JOIN FETCH estudiante/estado para columnas y toggle)
-        List<Persona> personas = PersonaRepository.findAllWithEstudianteEstado().stream()
+        // aplicar filtros en memoria
+        List<Persona> personas = personaRepository.findAll().stream()
                 .filter(p -> filtroNombreFinal.isEmpty() || p.getNombre().toLowerCase().contains(filtroNombreFinal.toLowerCase()))
                 .filter(p -> filtroRol == null || p.getRolId() != null && p.getRolId().equals(filtroRol))
                 .toList();
@@ -67,9 +63,9 @@ public class AdminController {
         model.addAttribute("filtroRol", filtroRol);
 
         // Tarjetas resumen dinámicas
-        model.addAttribute("totalUsuarios", PersonaRepository.count());
+        model.addAttribute("totalUsuarios", personaRepository.count());
         model.addAttribute("totalCursos", cursoRepository.count());
-        model.addAttribute("totalTutores", PersonaRepository.countByRolId(3));
+        model.addAttribute("totalTutores", personaRepository.countByRolId(3));
         model.addAttribute("nuevasInscripciones", inscripcionRepository.count());
 
         return "admin";
@@ -80,12 +76,11 @@ public class AdminController {
     public void exportarExcel(
             HttpServletResponse response,
             @RequestParam(name = "filtroNombre", required = false) String filtroNombre,
-            @RequestParam(name = "filtroRol", required = false) String filtroRolParam) throws IOException {
+            @RequestParam(name = "filtroRol", required = false) Integer filtroRol) throws IOException {
 
         final String filtroNombreFinal = (filtroNombre == null) ? "" : filtroNombre;
-        final Integer filtroRol = parseFiltroRol(filtroRolParam);
 
-        List<Persona> personas = PersonaRepository.findAllWithEstudianteEstado().stream()
+        List<Persona> personas = personaRepository.findAll().stream()
                 .filter(p -> filtroNombreFinal.isEmpty() || p.getNombre().toLowerCase().contains(filtroNombreFinal.toLowerCase()))
                 .filter(p -> filtroRol == null || p.getRolId() != null && p.getRolId().equals(filtroRol))
                 .toList();
@@ -167,44 +162,5 @@ public class AdminController {
 
         workbook.write(response.getOutputStream());
         workbook.close();
-    }
-
-    @GetMapping("/admin/correo-curso")
-    public String formCorreoPorCurso(Model model) {
-        model.addAttribute("cursos", cursoRepository.findAll());
-        return "admin-correo-curso";
-    }
-
-    @PostMapping("/admin/correo-curso/enviar")
-    public String enviarCorreoPorCurso(@RequestParam Integer idCurso, @RequestParam String asunto,
-            @RequestParam String cuerpo, RedirectAttributes redirectAttributes) {
-        var list = inscripcionRepository.findByCursoIdWithEstudianteAndEstado(idCurso);
-        int enviados = 0;
-        for (var i : list) {
-            String email = i.getEstudiante().getPersona().getEmail();
-            if (email != null && !email.isBlank()) {
-                try {
-                    String html = "<p>" + cuerpo.replace("\n", "<br>") + "</p>";
-                    emailService.enviarHtml(email, asunto, html);
-                    enviados++;
-                } catch (Exception ex) {
-                    redirectAttributes.addFlashAttribute("errorCorreo", ex.getMessage());
-                    return "redirect:/admin/correo-curso";
-                }
-            }
-        }
-        redirectAttributes.addFlashAttribute("okCorreo", "Correos enviados a estudiantes del curso: " + enviados);
-        return "redirect:/admin";
-    }
-
-    private static Integer parseFiltroRol(String filtroRolParam) {
-        if (filtroRolParam == null || filtroRolParam.isBlank()) {
-            return null;
-        }
-        try {
-            return Integer.parseInt(filtroRolParam.trim());
-        } catch (NumberFormatException e) {
-            return null;
-        }
     }
 }

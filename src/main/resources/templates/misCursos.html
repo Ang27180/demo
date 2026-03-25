@@ -3,43 +3,70 @@
     xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{layout}">
 
 <head>
+    <meta charset="UTF-8" />
     <title layout:fragment="titulo">Mis Cursos - Sabor MasterClass</title>
+    <!-- CSS Específico de Mis Cursos -->
+    <link rel="stylesheet" th:href="@{/css/misCursos.css}">
 </head>
 
 <body>
-    <main class="container mt-5 pt-5" layout:fragment="contenido">
-        <h2 class="mb-4">📚 Mis Cursos Inscritos</h2>
+    <main layout:fragment="contenido" class="mis-cursos-section pt-5 pb-5">
+        <div class="container mt-5">
+            
+            <!-- Header Sección -->
+            <div class="section-header">
+                <h1 class="display-4 fw-bold text-white mb-2" 
+                    th:text="${esTutor != null and esTutor ? 'Mis Cursos como Tutor' : 'Mis Cursos Inscritos'}">
+                    Mis Cursos
+                </h1>
+                <p class="text-white-50 lead">Explora tus lecciones, materiales y progreso culinario.</p>
+            </div>
 
-        <div th:if="${#lists.isEmpty(inscripciones)}" class="alert alert-info">
-            No estás inscrito en ningún curso todavía.
-        </div>
+            <!-- Empty State -->
+            <div th:if="${#lists.isEmpty(inscripciones)}" class="empty-state shadow-lg">
+                <div class="mb-4">
+                    <i class="fas fa-book-reader fa-5x text-yellow opacity-50"></i>
+                </div>
+                <h3 class="fw-bold text-white mb-3">¡Vaya! Aún no hay cursos aquí</h3>
+                <p class="text-white-50 mb-4 mx-auto" style="max-width: 500px;"
+                   th:text="${esTutor != null and esTutor ? 'No tienes cursos asociados para impartir. Contacta con el equipo administrativo.' : 'No estás inscrito en ningún curso todavía. ¡Descubre nuestro catálogo y comienza a aprender hoy mismo!'}">
+                   Explora el catálogo y empieza tu viaje.
+                </p>
+                <a th:href="@{/cursos}" class="btn btn-yellow px-5 py-3 rounded-pill fw-bold" th:if="${esTutor == null or !esTutor}">
+                    <i class="fas fa-search me-2"></i>Explorar Cursos
+                </a>
+            </div>
 
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" th:if="${!#lists.isEmpty(inscripciones)}">
-            <div class="col" th:each="inscripcion : ${inscripciones}">
-                <div class="card h-100 shadow-sm">
-                    <img th:src="${inscripcion.curso.imagen != null 
-                        ? inscripcion.curso.imagen 
-                        : '/imagenes/reposteria_francesa.jpg'}" class="card-img-top" alt="Imagen del curso">
-                    <div class="card-body">
-                        <h5 class="card-title" th:text="${inscripcion.curso.nombre}">Nombre del Curso</h5>
-                        <p class="card-text" th:text="${inscripcion.curso.detalle}">Descripción breve del curso...
-                        </p>
-                    </div>
-                    <div class="card-footer d-flex flex-column gap-2">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-muted" th:text="'Estado: ' + ${inscripcion.estado.nombre}">Estado</small>
-                            <a th:href="@{'/cursos/' + ${inscripcion.curso.id}}" class="btn btn-sm btn-primary">
-                                Ver Curso
-                            </a>
+            <!-- Grid de Cursos -->
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-5" th:if="${!#lists.isEmpty(inscripciones)}">
+                <div class="col" th:each="inscripcion : ${inscripciones}">
+                    <div class="course-card-premium h-100 shadow-lg">
+                        
+                        <!-- Imagen y Badge -->
+                        <div class="course-img-wrapper">
+                            <span class="course-status-badge" th:text="${inscripcion.estado.nombre}">Estado</span>
+                            <img th:src="${inscripcion.curso.imagen != null 
+                                ? inscripcion.curso.imagen 
+                                : '/imagenes/reposteria_francesa.jpg'}" class="course-img" alt="Imagen del curso">
                         </div>
-                        <!-- AJUSTE: El botón de certificado se ha movido a la vista de "Ver Curso" según lo solicitado -->
-                        <!-- <a th:href="@{'/reportes/certificado/pdf/' + ${inscripcion.id}}"
-                            class="btn btn-sm btn-outline-success w-100">
-                            <i class="fas fa-file-pdf me-1"></i> Descargar Certificado
-                        </a> -->
+
+                        <!-- Info del Curso -->
+                        <div class="course-body">
+                            <h3 class="course-title" th:text="${inscripcion.curso.nombre}">Nombre del Curso</h3>
+                            <p class="course-desc" th:text="${inscripcion.curso.detalle}">Descripción breve del curso...</p>
+                            
+                            <div class="mt-4 pt-4 border-top border-white border-opacity-10">
+                                <a th:href="@{'/cursos/' + ${inscripcion.curso.id}}" class="btn-premium-action">
+                                    <i th:class="${esTutor != null and esTutor ? 'fas fa-tools' : 'fas fa-graduation-cap'}"></i>
+                                    <span th:text="${esTutor != null and esTutor ? 'Gestionar Contenido' : 'Continuar Aprendiendo'}">Ver Curso</span>
+                                </a>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
+
         </div>
     </main>
 </body>

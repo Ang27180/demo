@@ -1,0 +1,317 @@
+/* ================================================================ */
+/* Home.css — Sabor MasterClass                                     */
+/* Hoja de estilos principal para la página de inicio               */
+/* ================================================================ */
+
+/* ============================= */
+/* Variables globales            */
+/* ============================= */
+:root {
+  --yellow-accent: #f8c325;
+  --dark-bg: #121212;
+  --dark-navbar: #0a0a0a;
+  --dark-card: #1f1f22;
+  --text-muted-custom: #a0a0a0;
+}
+
+/* ============================= */
+/* Body base                     */
+/* ============================= */
+body {
+  background-color: #f5f6fa;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  margin: 0;
+  /* Offset para navbar fijo */
+  padding-top: 80px;
+}
+
+/* ============================= */
+/* Tipografía                    */
+/* ============================= */
+.font-serif {
+  font-family: "Georgia", serif;
+}
+
+.font-logo {
+  font-family: 'Segoe UI', sans-serif;
+  letter-spacing: -0.5px;
+}
+
+/* ============================= */
+/* Utilidades de Color/Botón     */
+/* ============================= */
+.text-yellow {
+  color: var(--yellow-accent) !important;
+}
+
+.bg-yellow {
+  background-color: var(--yellow-accent) !important;
+}
+
+.btn-yellow {
+  background-color: var(--yellow-accent);
+  color: #000;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-yellow:hover {
+  background-color: #d8a61c;
+}
+
+.scale-hover {
+  transition: transform 0.2s ease;
+}
+
+.scale-hover:hover {
+  transform: scale(1.05);
+}
+
+/* ============================= */
+/* Navbar                        */
+/* ============================= */
+.navbar-lg {
+  height: 80px;
+}
+
+.bg-dark-navbar {
+  background-color: var(--dark-navbar) !important;
+}
+
+.nav-link {
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.nav-link:hover {
+  color: var(--yellow-accent) !important;
+}
+
+.nav-active {
+  border-bottom: 2px solid var(--yellow-accent);
+  color: var(--yellow-accent) !important;
+}
+
+/* ============================= */
+/* Hero Section                  */
+/* ============================= */
+.hero-section {
+  position: relative;
+  background-image: url('https://images.unsplash.com/photo-1556910103-1c02745aae4d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+  background-size: cover;
+  background-position: center;
+  padding: 100px 0;
+  margin-top: -1px;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.9));
+  z-index: 0;
+}
+
+/* ============================= */
+/* Barra de Características      */
+/* ============================= */
+.features-bar {
+  font-size: 0.95rem;
+  background: white;
+  position: relative;
+  z-index: 10;
+  /* Solapamiento sutil sobre el hero */
+  margin-top: -24px;
+  border-radius: 8px;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ============================= */
+/* Badges de Cursos              */
+/* ============================= */
+.badge-nuevo {
+  background-color: var(--yellow-accent);
+  color: #000;
+  font-weight: 700;
+  font-size: 0.62rem;
+}
+
+.badge-bestseller {
+  background-color: #28a745;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.62rem;
+}
+
+/* ============================= */
+/* Cards de Cursos               */
+/* ============================= */
+.curso-card-dark {
+  background-color: var(--dark-card) !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 1.25rem !important;
+  display: flex;
+  flex-direction: column;
+}
+
+.curso-card-dark .card-body {
+  flex-grow: 1;
+}
+
+.curso-card-dark:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5) !important;
+}
+
+.card-img-custom {
+  height: 160px;
+  object-fit: cover;
+  border-top-left-radius: 1.25rem;
+  border-top-right-radius: 1.25rem;
+}
+
+.price-text {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: white;
+  margin-right: 5px;
+  white-space: nowrap;
+}
+
+.btn-enroll {
+  background-color: var(--yellow-accent);
+  color: #000;
+  font-weight: 700;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.68rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.btn-enroll:hover {
+  background-color: #e0ac10;
+  color: #000;
+}
+
+.card-footer-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ============================= */
+/* Noticias Gastronómicas        */
+/* ============================= */
+.news-item {
+  transition: background-color 0.2s;
+  padding: 5px;
+  border-radius: 8px;
+}
+
+.news-item:hover {
+  background-color: #f8f9fa;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* ============================= */
+/* Banner de Descuento           */
+/* ============================= */
+.discount-banner {
+  background-image: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80');
+  background-size: cover;
+  background-position: center;
+  /* Solo esquinas superiores redondeadas, se une con el social-proof-bar */
+  border-radius: 1rem 1rem 0 0 !important;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: none !important;
+  position: relative;
+}
+
+/* Overlay degradado del banner (una sola definición) */
+.banner-overlay {
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.45) 100%);
+  padding: 30px 40px;
+}
+
+/* ============================= */
+/* Social Proof Bar              */
+/* ============================= */
+.social-proof-bar {
+  /* Esquinas inferiores para continuar el banner */
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  border-top: none !important;
+}
+
+/* ============================= */
+/* Countdown                     */
+/* ============================= */
+.countdown-box {
+  background: rgba(0, 0, 0, 0.85);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.05rem;
+  font-weight: bold;
+  color: white;
+  min-width: 40px;
+  text-align: center;
+  /* Transición suave al cambiar dígitos */
+  transition: color 0.2s;
+}
+
+/* ============================= */
+/* Botón Rojo del Banner         */
+/* ============================= */
+.btn-danger {
+  background-color: #c62828 !important;
+  border: none !important;
+}
+
+.btn-danger:hover {
+  background-color: #8b0000 !important;
+}
+
+/* ============================= */
+/* Sidebar ¿Por qué elegirnos?  */
+/* ============================= */
+/* La card ya usa clases Bootstrap, sin estilos extra necesarios */
+
+/* ============================= */
+/* Footer del Home               */
+/* ============================= */
+.footer-home {
+  background-color: #0a0a0a;
+}
+
+.social-icon {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.social-icon:hover {
+  background-color: white;
+  color: black !important;
+  border-color: white;
+}

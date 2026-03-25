@@ -1,8 +1,7 @@
-package com.proyectojpa.demo.models;
+package com.poryectojpa.demo.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,25 +18,18 @@ public class Estudiante {
     @Column(name = "id_estudiante")
     private Integer idEstudiante;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_estado_estudiante", referencedColumnName = "id")
-    private EstadoInscripcion estadoEstudiante;
+    @Column(name = "id_estado_estudiante")
+    private Integer estadoEstudiante; // 
 
     @Column(name = "progreso", nullable = false, length = 45)
     private String progreso;
 
-    @jakarta.persistence.OneToOne
+    @Column(name = "cantidad")
+    private Integer cantidad; // Nueva cantidad solicitada para el estudiante
+
+    @ManyToOne
     @JoinColumn(name = "persona_id_persona", referencedColumnName = "id_persona")
     private Persona persona;
-
-    @Column(name = "tutor_nombre", length = 100)
-    private String tutorNombre;
-
-    @Column(name = "tutor_telefono", length = 20)
-    private String tutorTelefono;
-
-    @Column(name = "tutor_email", length = 100)
-    private String tutorEmail;
 
     // Getters y Setters
     public Integer getIdEstudiante() {
@@ -48,11 +40,11 @@ public class Estudiante {
         this.idEstudiante = idEstudiante;
     }
 
-    public EstadoInscripcion getEstadoEstudiante() {
+    public Integer getEstadoEstudiante() {
         return estadoEstudiante;
     }
 
-    public void setEstadoEstudiante(EstadoInscripcion estadoEstudiante) {
+    public void setEstadoEstudiante(Integer estadoEstudiante) {
         this.estadoEstudiante = estadoEstudiante;
     }
     
@@ -72,28 +64,11 @@ public class Estudiante {
         this.persona = persona;
     }
 
-    public String getTutorNombre() {
-        return tutorNombre;
+    public Integer getCantidad() {
+        return cantidad;
     }
 
-    public void setTutorNombre(String tutorNombre) {
-        this.tutorNombre = tutorNombre;
-    }
-
-    public String getTutorTelefono() {
-        return tutorTelefono;
-    }
-
-    public void setTutorTelefono(String tutorTelefono) {
-        this.tutorTelefono = tutorTelefono;
-    }
-
-    public String getTutorEmail() {
-        return tutorEmail;
-    }
-
-    public void setTutorEmail(String tutorEmail) {
-        this.tutorEmail = tutorEmail;
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
     }
 }
-

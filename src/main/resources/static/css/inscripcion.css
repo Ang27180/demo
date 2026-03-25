@@ -1,57 +1,97 @@
+:root {
+    --primary-color: #ffc107; /* El amarillo/dorado del proyecto */
+    --primary-hover: #e0ac08;
+    --dark-bg: #0D0D0D;
+    --card-bg: #1A1A1A;
+    --input-bg: #2C2C2E;
+}
+
 body {
     background: #000;
-    font-family: 'Inter', sans-serif;
 }
 
 .inscripcion-card {
-    width: 420px;
-    margin: 50px auto;
-    background: #111;
-    padding: 30px;
-    border-radius: 22px;
+    background: var(--card-bg);
+    border-radius: 30px;
     color: white;
-    box-shadow: 0 0 25px rgba(123, 44, 191, 0.35);
+    border: 1px solid rgba(255, 193, 7, 0.1);
+    backdrop-filter: blur(10px);
 }
 
-.inscripcion-card h2 {
-    text-align: center;
-    margin-bottom: 25px;
-    font-size: 26px;
-    font-weight: 700;
+.text-yellow {
+    color: var(--primary-color) !important;
 }
 
-.inscripcion-card label {
-    font-weight: 600;
-    display: block;
-    margin-bottom: 8px;
-    margin-top: 15px;
+.bg-yellow-light {
+    background-color: rgba(255, 193, 7, 0.1) !important;
 }
 
-.inscripcion-card select {
-    width: 100%;
-    padding: 14px;
-    background: #1c1c1e;
-    color: #e5e5e7;
-    border: 1px solid #2C2C2E;
+.custom-select-dark {
+    background-color: var(--input-bg);
+    border: 1px solid #3A3A3C;
     border-radius: 12px;
+    color: #FFF;
+    padding: 15px 20px;
     font-size: 16px;
-    margin-bottom: 10px;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23ffc107'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1.5rem center;
+    background-size: 1.5em;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-.inscripcion-card button {
-    width: 100%;
-    padding: 16px;
-    background: #7B2CBF;
-    color: white;
+.custom-select-dark:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.2);
+}
+
+.btn-yellow-action {
+    background: var(--primary-color);
+    color: #000 !important;
     border: none;
     border-radius: 12px;
-    font-size: 18px;
-    font-weight: 600;
-    cursor: pointer;
-    margin-top: 20px;
-    transition: 0.2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(0);
 }
 
-.inscripcion-card button:hover {
-    background: #9A42E5;
+.btn-yellow-action:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(255, 193, 7, 0.3);
+}
+
+.shadow-yellow {
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.2);
+}
+
+.btn-dark-outline {
+    background: transparent;
+    border: 1px solid #3A3A3C;
+    color: #8E8E93 !important;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+.btn-dark-outline:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #FFF !important;
+    border-color: #FFF;
+}
+
+.tracking-wider {
+    letter-spacing: 0.1em;
+}
+
+label {
+    letter-spacing: 0.05rem;
+}
+
+@media (max-width: 576px) {
+    .inscripcion-card {
+        padding: 2.5rem !important;
+    }
 }

@@ -1,13 +1,10 @@
-package com.proyectojpa.demo.models;
+package com.poryectojpa.demo.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -43,10 +40,9 @@ public class Curso {
     @Column(name = "imagen")
     private String imagen;
 
-    /** Tutor responsable del curso (panel «Mis cursos a cargo»). */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_tutor")
-    private Tutor tutor;
+    @jakarta.persistence.ManyToOne
+    @jakarta.persistence.JoinColumn(name = "id_tutor")
+    private Tutor tutor; // El tutor responsable de este curso
 
     @jakarta.persistence.OneToMany(mappedBy = "curso")
     private java.util.List<Modulo> modulos;

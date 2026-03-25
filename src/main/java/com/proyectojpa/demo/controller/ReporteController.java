@@ -1,30 +1,19 @@
-package com.proyectojpa.demo.controller;
+package com.poryectojpa.demo.controller;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.imageio.ImageIO;
-
-import com.proyectojpa.demo.dto.DatoEstadisticoDTO;
-import com.proyectojpa.demo.Service.CertificadoAutorizacionService;
-import com.proyectojpa.demo.Service.QrCodeService;
-import com.proyectojpa.demo.Service.ReciboAutorizacionService;
-import com.proyectojpa.demo.Service.ReporteJasperService;
-import com.proyectojpa.demo.models.Recibo;
-import com.proyectojpa.demo.repository.InscripcionRepository;
-import com.proyectojpa.demo.repository.ReciboRepository;
-import com.proyectojpa.demo.security.CustomUserDetails;
+import com.poryectojpa.demo.dto.DatoEstadisticoDTO;
+import com.poryectojpa.demo.Service.ReporteJasperService;
+import com.poryectojpa.demo.repository.personaRepository;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PathVariable; // NUEVO: Para recibir el ID de la inscripción
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -32,27 +21,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ReporteController {
 
     private final ReporteJasperService reporteJasperService;
+    private final personaRepository personaRepository;
     private final JdbcTemplate jdbcTemplate;
-    private final InscripcionRepository inscripcionRepository;
-    private final CertificadoAutorizacionService certificadoAutorizacionService;
-    private final ReciboRepository reciboRepository;
-    private final ReciboAutorizacionService reciboAutorizacionService;
-    private final QrCodeService qrCodeService;
 
     public ReporteController(ReporteJasperService reporteJasperService,
-                             JdbcTemplate jdbcTemplate,
-                             InscripcionRepository inscripcionRepository,
-                             CertificadoAutorizacionService certificadoAutorizacionService,
-                             ReciboRepository reciboRepository,
-                             ReciboAutorizacionService reciboAutorizacionService,
-                             QrCodeService qrCodeService) {
+                             personaRepository personaRepository,
+                             JdbcTemplate jdbcTemplate) {
         this.reporteJasperService = reporteJasperService;
+        this.personaRepository = personaRepository;
         this.jdbcTemplate = jdbcTemplate;
-        this.inscripcionRepository = inscripcionRepository;
-        this.certificadoAutorizacionService = certificadoAutorizacionService;
-        this.reciboRepository = reciboRepository;
-        this.reciboAutorizacionService = reciboAutorizacionService;
-        this.qrCodeService = qrCodeService;
     }
 
     // -------------------------------
@@ -114,99 +91,66 @@ public class ReporteController {
 // --- NUEVA FUNCIONALIDAD: DESCARGAR CERTIFICADO EN PDF ---
     @GetMapping("/certificado/pdf/{idInscripcion}")
     public void descargarCertificado(
-            @PathVariable Integer idInscripcion,
-            @AuthenticationPrincipal CustomUserDetails userDetails,
-            HttpServletResponse response) throws java.io.IOException {
-        if (userDetails == null || userDetails.getPersona() == null) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
-        if (!inscripcionRepository.existsById(idInscripcion)) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        if (!certificadoAutorizacionService.puedeDescargar(userDetails.getPersona(), idInscripcion)) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN);
-            return;
-        }
-
+            @PathVariable("idInscripcion") Integer idInscripcion, 
+            HttpServletResponse response) {
         try {
+            System.out.println("Generando certificado para inscripción ID: " + idInscripcion);
+            
             // 1. Buscamos la inscripción en la base de datos
-            // Usamos una consulta SQL personalizada para obtener los datos necesarios
-            String sql = "SELECT p.nombre_persona, c.Nombre, i.fecha_inscripcion " +
+            String sql = "SELECT p.nombre_persona as nombre_estudiante, c.Nombre as nombre_curso, i.fecha_inscripcion " +
                          "FROM inscripcion i " +
                          "JOIN estudiante e ON i.id_estudiante = e.id_estudiante " +
                          "JOIN persona p ON e.persona_id_persona = p.id_persona " +
                          "JOIN curso c ON i.id_curso = c.id_curso " +
                          "WHERE i.id_inscripcion = ?";
 
-            Map<String, Object> resultado = jdbcTemplate.queryForMap(sql, idInscripcion);
+            List<Map<String, Object>> resultados = jdbcTemplate.queryForList(sql, idInscripcion);
+            
+            if (resultados.isEmpty()) {
+                throw new RuntimeException("No se encontró la inscripción con ID: " + idInscripcion);
+            }
 
-            // 2. Preparamos los parámetros que se enviarán a la plantilla Certificado.jrxml
+            Map<String, Object> resultado = resultados.get(0);
+
+            // 2. Preparamos los parámetros para Jasper
             Map<String, Object> parametros = new HashMap<>();
-            parametros.put("NOMBRE_ESTUDIANTE", resultado.get("nombre_persona"));
-            parametros.put("NOMBRE_CURSO", resultado.get("Nombre"));
-            parametros.put("FECHA", resultado.get("fecha_inscripcion").toString());
+            parametros.put("NOMBRE_ESTUDIANTE", resultado.get("nombre_estudiante"));
+            parametros.put("NOMBRE_CURSO", resultado.get("nombre_curso"));
+            
+            // Formateo de fecha si es necesario (o toString por ahora)
+            Object fecha = resultado.get("fecha_inscripcion");
+            parametros.put("FECHA", fecha != null ? fecha.toString() : "Fecha no disponible");
 
-            // 3. Generamos el arreglo de bytes del PDF usando el servicio de Jasper
+            // 3. Generamos el PDF
             byte[] pdfBytes = reporteJasperService.generarCertificadoPdf(parametros);
 
-            // 4. Configuramos la respuesta HTTP para que el navegador lo descargue como PDF
+            if (pdfBytes == null || pdfBytes.length == 0) {
+                throw new RuntimeException("El archivo PDF generado está vacío.");
+            }
+
+            // 4. Salida
+            String nombreArchivo = "Certificado_" + resultado.get("nombre_curso").toString().replace(" ", "_") + ".pdf";
+            
             response.setContentType("application/pdf");
-            response.setHeader("Content-Disposition", "attachment; filename=Certificado_" + resultado.get("Nombre") + ".pdf");
+            response.setHeader("Content-Disposition", "attachment; filename=" + nombreArchivo);
             response.setContentLength(pdfBytes.length);
+            
             response.getOutputStream().write(pdfBytes);
             response.getOutputStream().flush();
+            response.getOutputStream().close();
+            
+            System.out.println("Certificado generado exitosamente: " + nombreArchivo);
 
         } catch (Exception e) {
+            System.err.println("Error fatal al generar certificado: " + e.getMessage());
             e.printStackTrace();
-            throw new RuntimeException("Error generando el certificado PDF: " + e.getMessage());
-        }
-    }
-
-    @GetMapping("/recibo/pdf/{idRecibo}")
-    public void descargarReciboPdf(@PathVariable Integer idRecibo,
-            @AuthenticationPrincipal CustomUserDetails userDetails,
-            HttpServletResponse response) throws java.io.IOException {
-        if (userDetails == null || userDetails.getPersona() == null) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
-        Recibo recibo = reciboRepository.findByIdWithDetalle(idRecibo).orElse(null);
-        if (recibo == null) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        if (!reciboAutorizacionService.puedeVerRecibo(userDetails.getPersona(), recibo)) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN);
-            return;
-        }
-
-        try {
-            byte[] qrBytes = qrCodeService.generarPngBytes(recibo.getCodigoQrUnico());
-            BufferedImage qrImage = ImageIO.read(new ByteArrayInputStream(qrBytes));
-
-            Map<String, Object> parametros = new HashMap<>();
-            parametros.put("NOMBRE_CURSO", recibo.getInscripcion().getCurso().getNombre());
-            parametros.put("NOMBRE_ESTUDIANTE", recibo.getInscripcion().getEstudiante().getPersona().getNombre());
-            parametros.put("MEDIO_NOMBRE", recibo.getMedioPago().getNombre());
-            parametros.put("MEDIO_TIPO", recibo.getMedioPago().getTipo());
-            parametros.put("FECHA_EMISION", recibo.getFechaEmision().toString());
-            parametros.put("REFERENCIA", recibo.getCodigoQrUnico());
-            parametros.put("ESTADO_RECIBO", recibo.getEstado());
-            parametros.put("QR_IMAGE", qrImage);
-
-            byte[] pdfBytes = reporteJasperService.generarReciboPdf(parametros);
-
-            response.setContentType("application/pdf");
-            response.setHeader("Content-Disposition",
-                    "attachment; filename=Recibo_" + recibo.getId() + ".pdf");
-            response.setContentLength(pdfBytes.length);
-            response.getOutputStream().write(pdfBytes);
-            response.getOutputStream().flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error generando el recibo PDF: " + e.getMessage());
+            try {
+                if (!response.isCommitted()) {
+                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error al generar el PDF: " + e.getMessage());
+                }
+            } catch (Exception ex) {
+                // Ignore
+            }
         }
     }
 }

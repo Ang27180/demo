@@ -1,9 +1,9 @@
-package com.proyectojpa.demo.security;
+package com.poryectojpa.demo.security;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import com.proyectojpa.demo.models.Persona;
+import com.poryectojpa.demo.models.Persona;
 
 import java.util.Collection;
 import java.util.List;
@@ -11,22 +11,19 @@ import java.util.List;
 public class CustomUserDetails implements UserDetails {
 
     private final Persona persona;
-    /** Para ESTUDIANTE: solo true si {@code estado_inscripcion.codigo == ACTIVO}. Otros roles: true. */
-    private final boolean accountEnabled;
 
-    public CustomUserDetails(Persona persona, boolean accountEnabled) {
+    public CustomUserDetails(Persona persona) {
         this.persona = persona;
-        this.accountEnabled = accountEnabled;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Mapeo de roles según id_rol (null-safe: evita NullPointerException en el switch)
-        Integer rid = persona.getRolId();
-        if (rid == null) {
+        // CORRECCIÓN: Protección contra rolId null para evitar NullPointerException
+        if (persona.getRolId() == null) {
             return List.of(new SimpleGrantedAuthority("ROLE_USER"));
         }
-        String roleName = switch (rid) {
+        // Mapeo de id_rol → ROLE_XXX que Spring Security entiende
+        String roleName = switch (persona.getRolId()) {
             case 1 -> "ROLE_ADMIN";
             case 2 -> "ROLE_ESTUDIANTE";
             case 3 -> "ROLE_TUTOR";
@@ -43,6 +40,9 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
+        // CORRECCIÓN: Spring Security usa getUsername() para el lookup.
+        // Debe retornar el email (que es el campo con el que se autentica),
+        // NO el nombre de la persona.
         return persona.getEmail();
     }
 
@@ -56,9 +56,7 @@ public class CustomUserDetails implements UserDetails {
     public boolean isCredentialsNonExpired() { return true; }
 
     @Override
-    public boolean isEnabled() {
-        return accountEnabled;
-    }
+    public boolean isEnabled() { return true; }
 
     public Persona getPersona() {
         return persona;

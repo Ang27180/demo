@@ -1,113 +1,90 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
     layout:decorate="~{layout}">
 
+<head>
+    <meta charset="UTF-8" />
+    <title layout:fragment="titulo">Explorar Cursos - Sabor MasterClass</title>
+    <!-- CSS Específico de Catálogo -->
+    <link rel="stylesheet" th:href="@{/css/cursos.css}">
+</head>
+
 <body>
-    <div class="container mt-5" layout:fragment="contenido">
+    <div layout:fragment="contenido" class="catalog-section">
 
-        <h2 class="text-center fw-bold mb-4">Cursos Disponibles</h2>
-
-        <div th:if="${param.error != null && param.error[0] == 'rol'}" class="alert alert-warning alert-dismissible fade show" role="alert">
-            Solo los estudiantes pueden inscribirse en cursos. Si tienes cuenta de otro rol, usa el panel correspondiente.
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <!-- Encabezado del Catálogo (Hero Style Full Width) -->
+        <div class="catalog-header mb-5">
+            <div class="header-overlay"></div>
+            <div class="content container">
+                <h1>Nuestros Cursos</h1>
+                <div class="accent-line"></div>
+                <p class="lead text-white-50 mx-auto" style="max-width: 650px; font-size: 1.1rem;">
+                    Descubre el arte de la alta cocina con lecciones diseñadas por maestros internacionales.
+                </p>
+            </div>
         </div>
 
-        <div th:if="${param.yaInscrito}" class="alert alert-warning alert-dismissible fade show" role="alert">
-            ⚠️ Ya estás inscrito en este curso.
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
+        <div class="container pb-5">
 
-        <div th:if="${exito}" class="alert alert-success alert-dismissible fade show">
-            <span th:text="${exito}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
+            <!-- Alertas -->
+            <div th:if="${param.yaInscrito}" class="alert alert-warning alert-dismissible border-warning border-opacity-25 bg-warning bg-opacity-10 text-warning fade show mb-5 rounded-4" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i><strong>Aviso:</strong> Ya estás disfrutando de este curso en tu panel.
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+            </div>
 
-        <div class="row">
+            <div th:if="${exito}" class="alert alert-success alert-dismissible border-success border-opacity-25 bg-success bg-opacity-10 text-success fade show mb-5 rounded-4">
+                <i class="fas fa-check-circle me-2"></i><span th:text="${exito}">Éxito</span>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+            </div>
 
-            <!-- 📌 Columna de Cursos (9 columnas) -->
-            <div class="col-lg-9">
-                <div class="row g-4">
+            <div class="row g-5">
 
-                    <!-- Tarjeta dinámica -->
-                    <div class="col-sm-6 col-lg-4 col-xl-3 d-flex" th:each="curso : ${cursos}">
-                        <div class="card curso-card position-relative w-100">
-
-                            <span class="rating">★ 5.0</span>
-                            <!-- Imagen -->
-                            <img th:src="${curso.imagen != null and #strings.contains(curso.imagen, 'http') ? curso.imagen : '/imagenes/' + (curso.imagen != null ? curso.imagen : 'default.jpg')}" class="card-img-top" th:alt="${curso.nombre}">
-                            <div class="card-body d-flex flex-column">
-
-                                <h5 class="card-title" th:text="${curso.nombre}">Nombre curso</h5>
-
-                                <p class="card-text" th:text="${curso.detalle}">
-                                    Descripción del curso
-                                </p>
-
-                                <div class="mt-auto d-flex justify-content-between align-items-center">
-
-                                    <span class="price" th:text="${curso.costo}">$0.00</span>
-
-                                    <a th:href="@{/inscripciones/catalogo(idCurso=${curso.id})}" class="btn btn-purple"
-                                        title="Inscribirse">
-                                        <i class="fas fa-plus"></i>
-                                    </a>
-
+                <!-- Grid de Cursos -->
+                <div class="col-lg-9">
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+                        <div class="col" th:each="curso : ${cursos}">
+                            <div class="catalog-card h-100 flex-column d-flex">
+                                <div class="img-container">
+                                    <span class="rating-badge"><i class="fas fa-star me-1 text-yellow"></i> 5.0</span>
+                                    <img th:src="${curso.imagen != null and #strings.contains(curso.imagen, 'http') ? curso.imagen : '/imagenes/' + (curso.imagen != null ? curso.imagen : 'default.jpg')}" 
+                                         class="card-img-top" th:alt="${curso.nombre}">
                                 </div>
-
+                                <div class="catalog-body flex-grow-1">
+                                    <h5 class="catalog-title" th:text="${curso.nombre}">Nombre curso</h5>
+                                    <p class="catalog-text" th:text="${curso.detalle}">Descripción del curso</p>
+                                </div>
+                                <div class="catalog-footer">
+                                    <div class="catalog-price"><span class="text-white-50 small pe-1 text-uppercase fw-medium" style="font-size: 0.65rem;">Desde</span><span th:text="${curso.costo}">$0.00</span></div>
+                                    <a th:href="@{/inscripciones/nueva(idCurso=${curso.id})}" class="btn-catalog-action" title="Inscribirse ahora"><i class="fas fa-arrow-right"></i></a>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                </div>
-            </div>
-
-            <!-- 📌 Columna de Opiniones (3 columnas) -->
-            <div class="col-lg-3 mt-4 mt-lg-0">
-                <h5 class="mb-3">Opiniones de estudiantes</h5>
-
-                <div class="card testimonial-card mb-3">
-                    <div class="quote-mark">“</div>
-                    <div class="card-body">
-                        <h6 class="card-title">María López</h6>
-                        <small class="text-muted">★ 5.0</small>
-                        <p class="card-text mt-2">El curso de repostería fue increíble. Aprendí muchísimo.</p>
-                    </div>
                 </div>
 
-                <div class="card testimonial-card mb-3">
-                    <div class="quote-mark">“</div>
-                    <div class="card-body">
-                        <h6 class="card-title">Carlos Jiménez</h6>
-                        <small class="text-muted">★ 4.5</small>
-                        <p class="card-text mt-2">La cocina japonesa me encantó. Muy bien explicado.</p>
-                    </div>
-                </div>
-
-                <div class="card testimonial-card mb-3">
-                    <div class="quote-mark">“</div>
-                    <div class="card-body">
-                        <h6 class="card-title">Luis Herrera</h6>
-                        <small class="text-muted">★ 5.0</small>
-                        <p class="card-text mt-2">¡Excelente curso de cocina internacional! Me abrió el apetito por
-                            aprender más sobre otras culturas.</p>
-                    </div>
-                </div>
-
-                <div class="card testimonial-card mb-3">
-                    <div class="quote-mark">“</div>
-                    <div class="card-body">
-                        <h6 class="card-title">Ana Sofía Ríos</h6>
-                        <small class="text-muted">★ 4.7</small>
-                        <p class="card-text mt-2">Muy buenos instructores y recetas fáciles de seguir. ¡Recomiendo el
-                            curso de cocina rápida!</p>
+                <!-- Sidebar Testimonios -->
+                <div class="col-lg-3">
+                    <div class="ps-lg-4">
+                        <h4 class="fw-bold text-white mb-4">Experiencias</h4>
+                        <div class="testimonial-premium shadow-lg">
+                            <i class="fas fa-quote-right quote-icon"></i>
+                            <div class="testimonial-name">María López</div><span class="testimonial-rating">★★★★★</span>
+                            <p class="testimonial-text">"El curso de repostería fue increíble. Aprendí técnicas que pensé eran imposibles."</p>
+                        </div>
+                        <div class="testimonial-premium shadow-lg">
+                            <i class="fas fa-quote-right quote-icon"></i>
+                            <div class="testimonial-name">Carlos Jiménez</div><span class="testimonial-rating">★★★★★</span>
+                            <p class="testimonial-text">"La cocina japonesa cambió mi forma de ver el sushi. Lecciones precisas."</p>
+                        </div>
+                        <div class="bg-yellow p-4 rounded-4 border border-warning border-opacity-10 mt-5 shadow-lg">
+                            <h5 class="fw-bold text-dark mb-2">¿Necesitas ayuda?</h5>
+                            <p class="text-dark opacity-75 small mb-0">Contáctanos vía WhatsApp para asesoría personalizada.</p>
+                        </div>
                     </div>
                 </div>
 
             </div>
-
         </div>
-
     </div>
 </body>
 

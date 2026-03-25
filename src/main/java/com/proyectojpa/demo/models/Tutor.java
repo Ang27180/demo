@@ -1,4 +1,4 @@
-package com.proyectojpa.demo.models;
+package com.poryectojpa.demo.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,14 +24,13 @@ public class Tutor {
     @Column(name = "Observaciones", length = 255)
     private String observaciones;
 
-    /**
-     * La BD legacy tiene {@code persona_id_persona} (FK) e {@code id_persona} NOT NULL.
-     * Hibernate debe escribir en {@code id_persona}; si solo se mapea {@code persona_id_persona},
-     * el insert deja {@code id_persona} vacío y MySQL lanza error 1364.
-     */
+    @Column(name = "cantidad")
+    private Integer cantidad; // Nueva cantidad solicitada para el tutor
+
+    // Relación con Persona
     @ManyToOne
-    @JoinColumn(name = "id_persona", referencedColumnName = "id_persona")
-    private Persona persona;
+@JoinColumn(name = "persona_id_persona", referencedColumnName = "id_persona")
+private Persona persona;
 
 
     // Getters y Setters
@@ -65,5 +64,13 @@ public class Tutor {
 
     public void setPersona(Persona persona) {
         this.persona = persona;
+    }
+
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
     }
 }
