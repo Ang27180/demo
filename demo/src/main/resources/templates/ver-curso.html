@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+
+<head>
+    <meta charset="UTF-8" />
+    <title layout:fragment="titulo" th:text="${curso.nombre} + ' - Contenido'"></title>
+    <!-- CSS Detalle Curso Premium -->
+    <link rel="stylesheet" th:href="@{/css/ver-curso.css}">
+</head>
+
+<body>
+    <main layout:fragment="contenido" class="course-detail-section pb-5">
+        
+        <!-- Header del Curso (Cinematic Hero) -->
+        <header class="premium-header">
+            <div class="container py-4 relative z-10">
+                <span class="level-badge" th:text="${curso.aprendizaje}">Nivel</span>
+                <h1 th:text="${curso.nombre}">Nombre del Curso</h1>
+                <p class="lead opacity-75 mx-auto text-white" style="max-width: 700px;" th:text="${curso.detalle}">Detalle breve.</p>
+            </div>
+        </header>
+
+        <div class="container">
+            <!-- Box de Certificación Premium (Sticky Top under header) -->
+            <div th:if="${inscripcion != null}" class="cert-box-premium d-flex flex-wrap align-items-center justify-content-between mb-5">
+                <div class="d-flex align-items-center gap-4">
+                    <div class="cert-icon shadow-lg">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-bold text-white mb-1">¡Certificación Disponible!</h4>
+                        <p class="mb-0 text-white-50 opacity-75">Has completado los requisitos para obtener tu certificado oficial.</p>
+                    </div>
+                </div>
+                <div class="mt-3 mt-md-0">
+                    <a th:href="@{'/reportes/certificado/pdf/' + ${inscripcion.id}}"
+                        class="btn-yellow px-5 py-3 rounded-pill fw-bold d-inline-flex align-items-center shadow-lg text-decoration-none">
+                        <i class="fas fa-file-pdf me-2"></i> Descargar Certificado
+                    </a>
+                </div>
+            </div>
+
+            <!-- Contenido del Curso y Sidebar -->
+            <div class="row g-5 mt-4">
+                
+                <!-- Columna Principal: Accordion de Módulos -->
+                <div class="col-lg-8">
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <div style="width: 4px; height: 32px; background: #f8c325; border-radius: 50px;"></div>
+                        <h3 class="fw-bold text-white mb-0">Contenido del Curso</h3>
+                    </div>
+
+                    <div th:if="${#lists.isEmpty(curso.modulos)}" class="empty-content-box p-5 text-center bg-dark rounded-4 bg-opacity-50 border border-white border-opacity-10">
+                        <i class="fas fa-book-open fa-3x text-white-50 opacity-25 mb-3"></i>
+                        <p class="text-white-50">Próximamente estaremos publicando el contenido detallado de este curso.</p>
+                    </div>
+
+                    <div class="accordion module-accordion-dark" id="accordionModulos">
+                        <div class="accordion-item" th:each="modulo, iter : ${curso.modulos}">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" 
+                                        th:data-bs-target="'#collapse' + ${modulo.id}" th:aria-expanded="${iter.index == 0}"
+                                        th:text="'Módulo ' + ${iter.index + 1} + ': ' + ${modulo.nombre}">
+                                    Módulo 1
+                                </button>
+                            </h2>
+                            <div th:id="'collapse' + ${modulo.id}" class="accordion-collapse collapse" 
+                                 th:classappend="${iter.index == 0 ? 'show' : ''}"
+                                 data-bs-parent="#accordionModulos">
+                                <div class="accordion-body">
+                                    <div class="lesson-row" th:each="leccion : ${modulo.lecciones}">
+                                        <div class="lesson-info">
+                                            <i th:class="${leccion.contenidoTipo == 'video' ? 'fas fa-play-circle' : (leccion.contenidoTipo == 'pdf' ? 'fas fa-file-pdf' : 'fas fa-file-alt')}"></i>
+                                            <div class="d-flex flex-column">
+                                                <span class="text-white fw-medium" th:text="${leccion.nombre}">Lección</span>
+                                                <small class="text-white-50 opacity-50" th:if="${leccion.cantidad != null}" 
+                                                       th:text="${leccion.cantidad} + ' min'"></small>
+                                            </div>
+                                        </div>
+                                        <span th:class="'lesson-badge badge-' + ${leccion.contenidoTipo}"
+                                              th:text="${leccion.contenidoTipo == 'video' ? 'VIDEO' : (leccion.contenidoTipo == 'pdf' ? 'PDF' : 'LEER')}">
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Barra Lateral: Info Sidebar -->
+                <div class="col-lg-4">
+                    <div class="sidebar-sticky card-body p-0">
+                        <div class="sidebar-img-wrapper position-relative">
+                            <img th:src="${curso.imagen != null and #strings.contains(curso.imagen, 'http') ? curso.imagen : '/imagenes/' + (curso.imagen != null ? curso.imagen : 'default.jpg')}" 
+                                 class="card-img-top" alt="Vista del Curso">
+                            <div class="position-absolute top-0 start-0 w-100 h-100 bg-gradient-to-t from-dark opacity-50"></div>
+                        </div>
+                        
+                        <div class="p-4">
+                            <h5 class="fw-bold text-white mb-3">Resumen culinario</h5>
+                            <ul class="sidebar-list list-unstyled mb-4">
+                                <li><i class="fas fa-clock"></i> <span th:text="${curso.duracion}">12 Horas</span></li>
+                                <li><i class="fas fa-medal"></i> Certificación oficial</li>
+                                <li><i class="fas fa-infinite"></i> Acceso ilimitado 24/7</li>
+                                <li><i class="fas fa-mobile-alt"></i> Visualización en móvil</li>
+                            </ul>
+                            
+                            <div class="d-grid gap-3">
+                                <a th:href="@{/mis-cursos}" class="btn-outline-premium text-center">
+                                    <i class="fas fa-arrow-left me-2"></i> Mis Cursos
+                                </a>
+                                <a href="#" class="btn btn-yellow w-100 py-3 rounded-pill fw-bold">
+                                    Soporte Tutor
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

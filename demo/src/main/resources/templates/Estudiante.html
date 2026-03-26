@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout}">
+
+<head>
+    <meta charset="UTF-8" />
+    <title layout:fragment="titulo">Mi Panel de Estudiante - Sabor MasterClass</title>
+    <!-- CSS Específico de Estudiante -->
+    <link rel="stylesheet" th:href="@{/css/estudiante.css}">
+</head>
+
+<body>
+  <div layout:fragment="contenido" class="estudiante-section pt-5 pb-5">
+    
+    <div class="container mt-5">
+
+        <!-- Bienvenida -->
+        <div class="welcome-box">
+            <h4 class="text-white-50 text-uppercase fw-bold letter-spacing-1 mb-2" style="font-size: 0.8rem;">Área del Estudiante</h4>
+            <h1 class="display-3 fw-bold">
+                ¡Hola, <span sec:authentication="principal.nombre" class="name-highlight">Usuario</span> 👨‍🍳!
+            </h1>
+            <p class="lead text-white-50 mx-auto" style="max-width: 600px;">
+                Continúa tu viaje gastronómico y perfecciona tus habilidades hoy mismo.
+            </p>
+        </div>
+
+        <!-- Opciones -->
+        <div class="row g-5 justify-content-center">
+
+            <!-- Ver Cursos Disponibles -->
+            <div class="col-md-6 col-lg-5">
+                <div class="panel-card h-100 shadow-lg">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                    <div class="card-content flex-grow-1">
+                        <h5>Nuevos Sabores</h5>
+                        <p>
+                            Explora nuestro catálogo completo de cursos premium y encuentra tu próxima inspiración.
+                        </p>
+                    </div>
+                    <div class="mt-auto">
+                        <a th:href="@{/cursos}" class="btn btn-premium d-flex align-items-center justify-content-center">
+                            <i class="fas fa-layer-group me-2"></i> Explorar Catálogo
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mis Cursos -->
+            <div class="col-md-6 col-lg-5">
+                <div class="panel-card h-100 shadow-lg">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-hat-chef"></i>
+                    </div>
+                    <div class="card-content flex-grow-1">
+                        <h5>Mi Aprendizaje</h5>
+                        <p>
+                            Accede a tus lecciones activas, materiales descargables y revisa tu progreso actual.
+                        </p>
+                    </div>
+                    <div class="mt-auto">
+                        <a th:href="@{/mis-cursos}" class="btn btn-outline-premium d-flex align-items-center justify-content-center">
+                            <i class="fas fa-graduation-cap me-2"></i> Mis Cursos Activos
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+  </div>
+</body>
+
+</html>

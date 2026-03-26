@@ -1,0 +1,86 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body, html {
+  height: 100%;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+.form-section {
+  flex: 1;
+  padding: 50px;
+  overflow-y: auto;
+}
+
+.form-section h1 {
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  font-size: 1em;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-group input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 1em;
+  background-color: #1f1f2e;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.image-section {
+  flex: 1;
+  background: url('773a7c1b-bbde-49c5-a716-449cf707e96c.png') no-repeat center center;
+  background-size: cover;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* ← Esto evita scroll */
+}
+
+.image-section {
+  background: url('33eb2350-65de-4614-a2c3-666ec0b30cba.png') no-repeat center center;
+  background-size: cover;
+  height: 100vh; /* ← altura fija de la pantalla */
+}
+
+@media (max-width: 768px) {
+  .image-section {
+    display: none;
+  }
+}
+

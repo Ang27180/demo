@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title layout:fragment="titulo">Sabor MasterClass</title>
+
+  <!-- Bootstrap + FontAwesome -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- AJUSTE: Mantenemos el mismo archivo Home.css pero ha sido modificado internamente para el nuevo diseño -->
+  <link rel="stylesheet" th:href="@{/css/Home.css}" />
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+  <!-- AJUSTE: El body usa d-flex flex-column para que el main empuje el footer hacia abajo (min-vh-100) -->
+
+  <!-- Navbar -->
+  <!-- AJUSTE: Se cambió a fixed-top y estilos personalizados en Home.css para centrar los items y tener logo y botones correctos -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark-navbar px-4 navbar-lg fixed-top border-bottom border-secondary">
+    <a class="navbar-brand d-flex align-items-center" th:href="@{/home}">
+      <img th:src="@{/imagenes/logo-sabor1.jpg}" height="50" class="me-2 rounded-circle" alt="Logo"/>
+      <!-- AJUSTE: Texto SaborMasterClass ajustado al diseño exacto -->
+      <span class="fs-4 fw-bold font-logo text-white">SaborMasterClass</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+      <!-- AJUSTE: Enlaces centrados y renombrados como en el mockup -->
+      <ul class="navbar-nav mx-auto gap-3">
+        <li class="nav-item"><a th:href="@{/home}" class="nav-link text-white nav-active">Inicio</a></li>
+        <li class="nav-item"><a th:href="@{/cursos}" class="nav-link text-white">Cursos</a></li>
+        <li class="nav-item"><a th:href="@{/nosotros}" class="nav-link text-white">Tutores</a></li>
+        <li class="nav-item"><a href="#" class="nav-link text-white">Blog</a></li>
+        <li class="nav-item"><a th:href="@{/contacto}" class="nav-link text-white">Contacto</a></li>
+        
+        <!-- Enlaces restringidos originales: se ocultarán u mostrarán según el rol -->
+        <li class="nav-item" sec:authorize="hasRole('ESTUDIANTE')">
+          <a th:href="@{/mis-cursos}" class="nav-link text-white">Mis Cursos</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasRole('TUTOR')">
+          <a th:href="@{/tutor-panel}" class="nav-link text-white">Panel Tutor</a>
+        </li>
+        <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+          <a th:href="@{/admin}" class="nav-link text-warning fw-bold">
+            <i class="fa-solid fa-gear"></i> Admin
+          </a>
+        </li>
+      </ul>
+
+      <div class="d-flex align-items-center gap-3">
+        <!-- AJUSTE: Ícono de búsqueda en la barra de navegación como en el mockup -->
+        <a href="#" class="text-white fs-5 text-decoration-none"><i class="fas fa-search"></i></a>
+
+        <!-- Usuario NO autenticado -->
+        <!-- AJUSTE: Botones Login (borde blanco) y Registrate (fondo amarillo) adaptados al diseño final -->
+        <div sec:authorize="!isAuthenticated()" class="d-flex gap-2">
+          <a th:href="@{/login}" class="btn btn-outline-light rounded-pill px-4">Login</a>
+          <a th:href="@{/registro}" class="btn btn-yellow rounded-pill px-4 fw-bold text-dark">Registrate</a>
+        </div>
+
+        <!-- Usuario autenticado -->
+        <div sec:authorize="isAuthenticated()" class="d-flex align-items-center">
+          <span class="text-white me-3">
+            👋 <a th:href="@{/perfil}"
+                  class="text-white text-decoration-none fw-bold"
+                  title="Ver mi perfil"
+                  th:text="${#authentication != null ? #authentication.name : 'Usuario'}">
+               Usuario
+             </a>
+          </span>
+          <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn btn-outline-light rounded-pill">Salir</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Contenido Principal Dinámico -->
+  <!-- AJUSTE: El main ocupa el espacio vertical restante por si el contenido es corto -->
+  <main class="flex-grow-1" layout:fragment="contenido">
+    <!-- Aquí se inyecta el contenido de cada vista -->
+  </main>
+
+  <!-- Footer -->
+  <!-- AJUSTE: Footer rediseñado. Se divide en dos tramos: logos promocionales "As Seen In" y sección oscura inferior -->
+  <footer class="mt-auto">
+    <!-- Franja As Seen In -->
+    <div class="bg-white py-3 border-top">
+      <div class="container d-flex flex-wrap justify-content-center align-items-center gap-4 text-dark text-center">
+        <div class="fw-bold fs-5">
+          +10,000 <span class="fw-normal">Estudiantes</span>
+          <span class="text-warning"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></span>
+        </div>
+        <div class="border-start border-2 border-dark d-none d-md-block" style="height: 30px;"></div>
+        <div class="text-muted fw-bold">As Seen In</div>
+        <div class="fs-4 fw-bold d-flex align-items-center gap-2" style="font-family: serif;">
+          <i class="fas fa-utensils text-dark"></i> GOURMET <span class="fs-6 text-muted font-monospace fst-italic">magic</span>
+        </div>
+        <div class="fs-4 fw-bold" style="font-family: serif;">EL PAÍS</div>
+        <div class="fs-5 fw-bold bg-dark text-white px-2">BBC FOOD</div>
+        <div class="fs-5 fw-bold d-flex align-items-center gap-1">
+          <span class="border border-dark rounded-circle px-2">m</span> MasterChef
+        </div>
+      </div>
+    </div>
+
+    <!-- Franja Oscura Social / Copyright -->
+    <div class="bg-dark-footer text-center py-4 text-white" style="background-color: #050505;">
+      <div class="container d-flex flex-column align-items-center">
+        <div class="d-flex gap-4 mb-3">
+          <i class="fab fa-instagram fs-4 social-icon"></i>
+          <i class="fab fa-facebook-f fs-4 social-icon"></i>
+          <i class="fab fa-youtube fs-4 social-icon"></i>
+          <i class="fab fa-tiktok fs-4 social-icon"></i>
+        </div>
+        <!-- AJUSTE: Mensaje copyright centrado y estilizado idéntico al mockup -->
+        <p class="mb-0 small text-white-50">
+          <span class="fw-bold text-white">SaborMasterClass</span> &copy; 2024 • Todos los derechos reservados.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

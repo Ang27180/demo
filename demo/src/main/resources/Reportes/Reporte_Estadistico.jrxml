@@ -1,0 +1,45 @@
+<jasperReport name="Blank_A4" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f6268c9e-5b4f-4a46-bd66-3bc4d985adbd">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter"/>
+	<parameter name="TITULO" class="java.lang.String"/>
+	<parameter name="NUMEROPERSONAS" class="java.lang.String"/>
+	<query language="sql"><![CDATA[]]></query>
+	<field name="label" class="java.lang.String"/>
+	<field name="valor" class="java.lang.Double"/>
+	<background splitType="Stretch"/>
+	<title height="79" splitType="Stretch">
+		<element kind="textField" uuid="08ef5c15-220c-4327-ad80-9660a60f2de4" x="227" y="24" width="100" height="30">
+			<expression><![CDATA[$P{TITULO}]]></expression>
+		</element>
+		<element kind="image" uuid="b7019e05-f34c-4b3c-ab05-aa3888834268" x="510" y="-1" width="50" height="50">
+			<expression><![CDATA["https://cdn.prod.website-files.com/5f5a53e153805db840dae2db/64e79ca5aff2fb7295bfddf9_github-que-es.jpg"]]></expression>
+		</element>
+	</title>
+	<pageHeader height="38" splitType="Stretch"/>
+	<columnHeader height="50" splitType="Stretch">
+		<element kind="staticText" uuid="e612a4d0-6294-44d4-8395-5359a35607b3" x="0" y="10" width="170" height="30">
+			<text><![CDATA[Total Personas registradas:]]></text>
+		</element>
+		<element kind="textField" uuid="69a924d5-83c3-42e6-946d-3199852230b5" x="170" y="10" width="100" height="30">
+			<expression><![CDATA[$P{NUMEROPERSONAS}]]></expression>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="1" splitType="Stretch"/>
+	</detail>
+	<columnFooter height="1" splitType="Stretch"/>
+	<pageFooter height="54" splitType="Stretch"/>
+	<summary height="350" splitType="Stretch">
+		<element kind="chart" chartType="bar" uuid="45ed520f-37eb-4500-8b75-0a02b8026844" x="52" y="10" width="450" height="300" evaluationTime="Report">
+			<dataset kind="category">
+				<series>
+					<seriesExpression><![CDATA["Género"]]></seriesExpression>
+					<categoryExpression><![CDATA[$F{label}]]></categoryExpression>
+					<valueExpression><![CDATA[$F{valor}]]></valueExpression>
+				</series>
+			</dataset>
+			<plot categoryAxisLabelColor="#000000" categoryAxisTickLabelColor="#000000" categoryAxisLineColor="#000000" valueAxisLabelColor="#000000" valueAxisTickLabelColor="#000000" valueAxisLineColor="#000000">
+				<itemLabel/>
+			</plot>
+		</element>
+	</summary>
+</jasperReport>

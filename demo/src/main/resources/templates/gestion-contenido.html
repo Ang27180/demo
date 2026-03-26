@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+
+<head>
+    <title layout:fragment="titulo">Gestionar Contenido - Sabor MasterClass</title>
+</head>
+
+<body>
+    <main layout:fragment="contenido" class="container mt-5 pt-5 pb-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold mb-0">🛠️ Gestión de Contenido</h2>
+                <p class="text-muted" th:text="'Curso: ' + ${curso.nombre}"></p>
+            </div>
+            <a href="/admin" class="btn btn-outline-dark rounded-pill">
+                <i class="fas fa-arrow-left me-2"></i> Volver al Panel
+            </a>
+        </div>
+
+        <div class="row">
+            <!-- Columna Izquierda: Formulario Nuevo Módulo (Solo Admin) -->
+            <div class="col-lg-4" sec:authorize="hasRole('ADMIN')">
+                <div class="card shadow-sm border-0 rounded-4 mb-4">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3"><i class="fas fa-folder-plus text-success me-2"></i> Nuevo Módulo</h5>
+                        <form th:action="@{'/admin/cursos/' + ${curso.id} + '/modulos'}" th:object="${nuevoModulo}"
+                            method="post">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Nombre del Módulo</label>
+                                <input type="text" th:field="*{nombre}" class="form-control"
+                                    placeholder="Ej: Introducción a la Repostería" required />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Cantidad (Horas/Clases)</label>
+                                <input type="number" th:field="*{cantidad}" class="form-control"
+                                    placeholder="Ej: 10" />
+                            </div>
+                            <button type="submit" class="btn btn-success w-100 rounded-pill">Crear Módulo</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Lista de Módulos y Lecciones -->
+            <div class="col-lg-8">
+                <div th:if="${#lists.isEmpty(curso.modulos)}" class="text-center py-5 bg-light rounded-4 border-dashed">
+                    <i class="fas fa-layer-group fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">Aún no hay módulos creados para este curso. Empieza creando tu primer módulo a
+                        la izquierda.</p>
+                </div>
+
+                <div class="accordion" id="accordionContent" th:if="${!#lists.isEmpty(curso.modulos)}">
+                    <div class="card border-0 shadow-sm mb-3 rounded-4 overflow-hidden"
+                        th:each="modulo, iter : ${curso.modulos}">
+                        <div
+                            class="card-header bg-white border-0 p-3 d-flex align-items-center justify-content-between">
+                            <button class="btn btn-link text-dark text-decoration-none fw-bold flex-grow-1 text-start"
+                                type="button" data-bs-toggle="collapse"
+                                th:data-bs-target="'#collapseMod' + ${modulo.id}">
+                                <i class="fas fa-chevron-right me-2 small text-muted"></i>
+                                <span th:text="'Módulo ' + ${iter.index + 1} + ': ' + ${modulo.nombre}"></span>
+                                <span class="badge bg-light text-dark ms-2" th:if="${modulo.cantidad != null}" th:text="${modulo.cantidad} + ' Cant.'"></span>
+                            </button>
+                             <div class="d-flex gap-2" sec:authorize="hasRole('ADMIN')">
+                                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
+                                    th:data-bs-target="'#modalLesson' + ${modulo.id}">
+                                    <i class="fas fa-plus"></i> Lección
+                                </button>
+                                <a th:href="@{'/admin/cursos/modulos/eliminar/' + ${modulo.id}}"
+                                    class="btn btn-sm btn-outline-danger"
+                                    onclick="return confirm('¿Eliminar este módulo y todas sus lecciones?')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div th:id="'collapseMod' + ${modulo.id}" class="collapse show"
+                            data-bs-parent="#accordionContent">
+                            <div class="card-body p-0 border-top bg-light">
+                                <ul class="list-group list-group-flush" th:if="${!#lists.isEmpty(modulo.lecciones)}">
+                                    <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center py-2 px-4"
+                                        th:each="leccion : ${modulo.lecciones}">
+                                        <span>
+                                            <i class="fas fa-play-circle text-success me-2"
+                                                th:if="${leccion.contenidoTipo == 'video'}"></i>
+                                            <i class="fas fa-file-alt text-info me-2"
+                                                th:if="${leccion.contenidoTipo == 'texto'}"></i>
+                                            <i class="fas fa-file-pdf text-danger me-2"
+                                                th:if="${leccion.contenidoTipo == 'pdf'}"></i>
+                                            <span th:text="${leccion.nombre}"></span>
+                                            <small class="text-muted ms-2" th:if="${leccion.cantidad != null}" th:text="'(' + ${leccion.cantidad} + ' min)'"></small>
+                                        </span>
+                                        <a th:href="@{'/admin/cursos/lecciones/eliminar/' + ${leccion.id}}"
+                                            class="text-danger opacity-50 hover-opacity-100"
+                                            onclick="return confirm('¿Eliminar esta lección?')"
+                                            sec:authorize="hasRole('ADMIN')">
+                                            <i class="fas fa-times"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="p-4 text-center text-muted small"
+                                    th:if="${#lists.isEmpty(modulo.lecciones)}">
+                                    No hay lecciones en este módulo.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal para nueva lección -->
+                        <div class="modal fade" th:id="'modalLesson' + ${modulo.id}" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content rounded-4 border-0">
+                                    <form th:action="@{'/admin/cursos/modulos/' + ${modulo.id} + '/lecciones'}"
+                                        th:object="${nuevaLeccion}" method="post">
+                                        <div class="modal-header border-0 pb-0">
+                                            <h5 class="modal-title fw-bold">Nueva Lección en <span
+                                                    th:text="${modulo.nombre}"></span></h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label class="form-label fw-semibold">Nombre de la Lección</label>
+                                                <input type="text" th:field="*{nombre}" class="form-control"
+                                                    placeholder="Ej: Historia del Chocolate" required />
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label fw-semibold">Tipo de Contenido</label>
+                                                <select th:field="*{contenidoTipo}" class="form-select">
+                                                    <option value="video">🎥 Video</option>
+                                                    <option value="texto">📝 Lectura</option>
+                                                    <option value="pdf">📄 PDF</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label fw-semibold">URL / Enlace del recurso</label>
+                                                <input type="text" th:field="*{contenidoUrl}" class="form-control"
+                                                    placeholder="https://youtube.com/..." />
+                                            </div>
+                                            <div class="mb-0">
+                                                <label class="form-label fw-semibold">Cantidad (Duración/Puntos)</label>
+                                                <input type="number" th:field="*{cantidad}" class="form-control"
+                                                    placeholder="Ej: 45" />
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer border-0">
+                                            <button type="button" class="btn btn-light rounded-pill px-4"
+                                                data-bs-dismiss="modal">Cerrar</button>
+                                            <button type="submit" class="btn btn-success rounded-pill px-4">Guardar
+                                                Lección</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

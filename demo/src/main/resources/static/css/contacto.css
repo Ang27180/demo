@@ -1,0 +1,119 @@
+:root {
+    --primary-yellow: #f8c325;
+    --primary-hover: #d8a61c;
+    --dark-card: #1A1A1A;
+    --input-bg: #2C2C2E;
+}
+
+.contacto-section {
+    background-color: #000;
+}
+
+.hero-img-section {
+    position: relative;
+    height: 40vh;
+    background-image: url('https://images.unsplash.com/photo-1534536281715-e28d76689b4d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-img-section .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.8));
+    z-index: 0;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    color: white;
+}
+
+.hero-content h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 0.5rem;
+}
+
+.contacto-card {
+    background: var(--dark-card);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: white;
+}
+
+.info-card {
+    background: linear-gradient(135deg, #111 0%, #222 100%);
+}
+
+.form-label {
+    color: #a0a0a0;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05rem;
+}
+
+.form-control-dark {
+    background-color: var(--input-bg);
+    border: 1px solid #3A3A3C;
+    border-radius: 10px;
+    color: white !important;
+    padding: 12px 15px;
+}
+
+.form-control-dark:focus {
+    background-color: #333;
+    border-color: var(--primary-yellow);
+    box-shadow: 0 0 0 3px rgba(248, 195, 37, 0.15);
+    outline: none;
+}
+
+.radio-group .form-check-input:checked {
+    background-color: var(--primary-yellow);
+    border-color: var(--primary-yellow);
+}
+
+.btn-yellow-action {
+    background: var(--primary-yellow);
+    color: #000 !important;
+    font-weight: 700;
+    border: none;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
+
+.btn-yellow-action:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(248, 195, 37, 0.3);
+}
+
+.social-link {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.social-link:hover {
+    background: white;
+    color: black !important;
+    transform: scale(1.1);
+}

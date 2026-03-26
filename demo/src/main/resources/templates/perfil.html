@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+
+<head>
+    <meta charset="UTF-8" />
+    <title layout:fragment="titulo">Mi Perfil - Sabor MasterClass</title>
+    <!-- CSS Perfil Premium -->
+    <link rel="stylesheet" th:href="@{/css/perfil.css}">
+</head>
+
+<body>
+    <div layout:fragment="contenido" class="profile-section pb-5">
+
+        <!-- Perfil Hero Section -->
+        <header class="profile-hero">
+            <div class="container relative z-10">
+                <h1 class="display-3 fw-bold">Gestión de Perfil</h1>
+                <p class="mb-0">Personaliza tu experiencia culinaria y mantén tus datos de contacto al día.</p>
+            </div>
+        </header>
+
+        <!-- Contenido Central -->
+        <div class="container">
+            <div class="row justify-content-center">
+                
+                <div class="col-lg-8">
+                    <div class="profile-card-premium shadow-2xl">
+                        
+                        <!-- Cabecera Perfil (Avatar y Nombres) -->
+                        <div class="text-center mb-5">
+                            <div class="avatar-circle">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <h2 class="profile-name" th:text="${persona.nombre}">Nombre de Usuario</h2>
+                            <p class="profile-email" th:text="${persona.email}">correo@ejemplo.com</p>
+                        </div>
+
+                        <!-- Notificaciones de Sistema -->
+                        <div th:if="${mensaje}" 
+                             th:class="'alert alert-' + (${tipoMensaje == 'success' ? 'success' : 'danger'}) + ' text-center rounded-4 border-0 shadow-sm mb-5'" 
+                             th:text="${mensaje}">
+                        </div>
+
+                        <!-- Formulario de Actualización -->
+                        <form th:action="@{/perfil/actualizar}" th:object="${persona}" method="post">
+                            <input type="hidden" th:field="*{id}">
+
+                            <!-- Sección: Información Personal -->
+                            <div class="mb-5">
+                                <h4 class="section-title">Información Personal</h4>
+                                
+                                <div class="row g-4">
+                                    <div class="col-md-12 input-premium-wrapper">
+                                        <label>Nombre Completo</label>
+                                        <div class="input-premium-group">
+                                            <i class="fas fa-id-card"></i>
+                                            <input type="text" th:field="*{nombre}" placeholder="Ingresa tu nombre completo" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 input-premium-wrapper">
+                                        <label>Teléfono de Contacto</label>
+                                        <div class="input-premium-group">
+                                            <i class="fas fa-phone-alt"></i>
+                                            <input type="text" th:field="*{telefono}" placeholder="Ej: +57 321 000 0000" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 input-premium-wrapper">
+                                        <label>Género</label>
+                                        <div class="input-premium-group">
+                                            <i class="fas fa-venus-mars"></i>
+                                            <input type="text" th:value="${persona.genero}" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 input-premium-wrapper">
+                                        <label>Dirección de Residencia</label>
+                                        <div class="input-premium-group">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            <input type="text" th:field="*{direccion}" placeholder="Dirección completa" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Sección: Datos de Cuenta (Lectura) -->
+                            <div class="mb-5 pt-3">
+                                <h4 class="section-title">Detalles de Seguridad</h4>
+                                <div class="row g-4 opacity-75">
+                                    <div class="col-md-6 input-premium-wrapper">
+                                        <label>Identificación Oficial</label>
+                                        <div class="input-premium-group">
+                                            <i class="fas fa-fingerprint"></i>
+                                            <input type="text" th:value="${persona.tipoDocumento + ' ' + persona.documento}" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 input-premium-wrapper">
+                                        <label>Correo de Acceso</label>
+                                        <div class="input-premium-group">
+                                            <i class="fas fa-lock"></i>
+                                            <input type="email" th:value="${persona.email}" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-white-50 small mt-2"><i class="fas fa-info-circle me-1 opacity-50"></i> Por motivos de seguridad, los campos de identificación y correo no son editables.</p>
+                            </div>
+
+                            <!-- Acciones Finales -->
+                            <div class="text-center pt-4">
+                                <button type="submit" class="btn-update-profile shadow-lg">
+                                    <i class="fas fa-save me-2"></i> Confirmar Cambios
+                                </button>
+                                <div class="mt-4">
+                                    <a th:href="@{/home}" class="text-white-50 text-decoration-none small opacity-50 hover-opacity-100 transition-all">
+                                        <i class="fas fa-arrow-left me-1"></i> Regresar al Inicio
+                                    </a>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
