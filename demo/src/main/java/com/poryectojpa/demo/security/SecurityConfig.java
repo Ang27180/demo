@@ -66,7 +66,9 @@ public class SecurityConfig {
                 // Recursos estáticos y correo
                 .requestMatchers("/css/**", "/imagenes/**", "/js/**", "/webjars/**").permitAll()
                 .requestMatchers("/correo/**").permitAll()
-                .requestMatchers("/reportes/**").permitAll()
+                // CAMBIO A: Solo el reporte estadístico es público.
+                // El endpoint /reportes/certificado/** requiere autenticación para proteger los datos.
+                .requestMatchers("/reportes/estadistico/**", "/reportes").permitAll()
 
                 // Endpoint tutor público
                 .requestMatchers("/tutor").permitAll()
