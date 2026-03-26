@@ -15,12 +15,9 @@ import com.poryectojpa.demo.repository.InscripcionRepository;
 import com.poryectojpa.demo.repository.EstudianteRepository;
 import com.poryectojpa.demo.repository.TutorRepository;
 import com.poryectojpa.demo.models.Curso;
-import com.poryectojpa.demo.models.Inscripcion;
 import com.poryectojpa.demo.models.Persona;
-import com.poryectojpa.demo.models.Estudiante;
 import com.poryectojpa.demo.security.CustomUserDetails;
 import org.springframework.security.core.context.SecurityContextHolder;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/cursos")
@@ -45,23 +42,25 @@ public class CursoController {
         return "cursos";
     }
 
-    // Ver información del curso pública (ya existente)
+    // Ver información del curso — incluye la inscripción del estudiante si existe
     @GetMapping("/{id}")
     public String verInformacionCurso(@PathVariable("id") Integer id, Model model) {
         Curso curso = cursoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Curso no encontrado: " + id));
-        
+
         model.addAttribute("curso", curso);
 
+        // CAMBIO C: Buscamos la inscripción del usuario actual SIN crear estudiantes aquí.
+        // La creación de estudiante es responsabilidad exclusiva de InscripcionController al inscribirse.
         Persona persona = getPersonaActual();
         if (persona != null) {
-            Optional<Estudiante> estudianteOpt = estudianteRepo.findByPersona(persona);
-            if (estudianteOpt.isPresent()) {
-                Optional<Inscripcion> inscripcionOpt = inscripcionRepo.findByEstudianteAndCurso(estudianteOpt.get(), curso);
-                if (inscripcionOpt.isPresent()) {
-                    model.addAttribute("inscripcion", inscripcionOpt.get());
-                }
-            }
+            estudianteRepo.findByPersona(persona).ifPresent(estudiante -> {
+                inscripcionRepo.findByEstudianteAndCurso(estudiante, curso).ifPresent(inscripcion -> {
+                    model.addAttribute("inscripcion", inscripcion);
+                    System.out.println("[CURSO] Inscripcion encontrada ID=" + inscripcion.getId()
+                            + " para persona=" + persona.getId() + " en curso=" + curso.getId());
+                });
+            });
         }
 
         return "ver-curso";
