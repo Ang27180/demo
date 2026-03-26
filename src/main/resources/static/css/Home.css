@@ -1,315 +1,317 @@
-/* ============================= */
-/* Barra de navegación principal */
-/* ============================= */
-.navbar-lg {
-  height: 90px;
-  background-color: rgb(0, 0, 0) !important;
-}
-
-.bg-dark {
-  --bs-bg-opacity: 1;
-  background-color: rgb(0, 0, 0) !important;
-}
-
-.navbar-brand img {
-  margin-right: 10px;
-}
+/* ================================================================ */
+/* Home.css — Sabor MasterClass                                     */
+/* Hoja de estilos principal para la página de inicio               */
+/* ================================================================ */
 
 /* ============================= */
-/* Estructura base del body      */
+/* Variables globales            */
+/* ============================= */
+:root {
+  --yellow-accent: #f8c325;
+  --dark-bg: #121212;
+  --dark-navbar: #0a0a0a;
+  --dark-card: #1f1f22;
+  --text-muted-custom: #a0a0a0;
+}
+
+/* ============================= */
+/* Body base                     */
 /* ============================= */
 body {
-  background-color: #ffffff;
-  font-family: 'Segoe UI', sans-serif;
+  background-color: #f5f6fa;
+  font-family: 'Segoe UI', system-ui, sans-serif;
   margin: 0;
+  /* Offset para navbar fijo */
   padding-top: 80px;
-  /* Espacio para navbar fija */
-  padding-bottom: 60px;
-  /* Espacio para footer fijo */
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
 }
 
 /* ============================= */
-/* Hero section (franja superior) */
+/* Tipografía                    */
 /* ============================= */
-.hero-img-section {
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
-  height: 25vh;
-  background-color: #7a7a7a;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  color: white;
+.font-serif {
+  font-family: "Georgia", serif;
+}
+
+.font-logo {
+  font-family: 'Segoe UI', sans-serif;
+  letter-spacing: -0.5px;
+}
+
+/* ============================= */
+/* Utilidades de Color/Botón     */
+/* ============================= */
+.text-yellow {
+  color: var(--yellow-accent) !important;
+}
+
+.bg-yellow {
+  background-color: var(--yellow-accent) !important;
+}
+
+.btn-yellow {
+  background-color: var(--yellow-accent);
+  color: #000;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.btn-yellow:hover {
+  background-color: #d8a61c;
+}
+
+.scale-hover {
+  transition: transform 0.2s ease;
+}
+
+.scale-hover:hover {
+  transform: scale(1.05);
+}
+
+/* ============================= */
+/* Navbar                        */
+/* ============================= */
+.navbar-lg {
+  height: 80px;
+}
+
+.bg-dark-navbar {
+  background-color: var(--dark-navbar) !important;
+}
+
+.nav-link {
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.nav-link:hover {
+  color: var(--yellow-accent) !important;
+}
+
+.nav-active {
+  border-bottom: 2px solid var(--yellow-accent);
+  color: var(--yellow-accent) !important;
+}
+
+/* ============================= */
+/* Hero Section                  */
+/* ============================= */
+.hero-section {
   position: relative;
+  background-image: url('https://images.unsplash.com/photo-1556910103-1c02745aae4d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+  background-size: cover;
+  background-position: center;
+  padding: 100px 0;
+  margin-top: -1px;
 }
 
-
-.hero-img-section::before {
-  content: "";
+.hero-overlay {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.55);
-  /* oscurece la imagen */
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.9));
   z-index: 0;
 }
 
-.hero-content {
+/* ============================= */
+/* Barra de Características      */
+/* ============================= */
+.features-bar {
+  font-size: 0.95rem;
+  background: white;
   position: relative;
-  z-index: 1;
-  max-width: 900px;
+  z-index: 10;
+  /* Solapamiento sutil sobre el hero */
+  margin-top: -24px;
+  border-radius: 8px;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.hero-content h1 {
-  font-size: 2.4rem;
+/* ============================= */
+/* Badges de Cursos              */
+/* ============================= */
+.badge-nuevo {
+  background-color: var(--yellow-accent);
+  color: #000;
   font-weight: 700;
-  margin-bottom: 0.8rem;
-  color: #ffffff;
+  font-size: 0.62rem;
 }
 
-.hero-content p {
-  font-size: 1.2rem;
-  color: #e4e4e4;
-}
-
-@media (max-width: 768px) {
-  .hero-img-section {
-    padding: 35px 15px;
-  }
-
-  .hero-content h1 {
-    font-size: 1.8rem;
-  }
-
-  .hero-content p {
-    font-size: 1rem;
-  }
-}
-
-
-.curso-card .card-img-top {
-  padding: 0.8rem;
-  border-radius: 12px;
+.badge-bestseller {
+  background-color: #28a745;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.62rem;
 }
 
 /* ============================= */
-/* Tarjetas de cursos            */
+/* Cards de Cursos               */
 /* ============================= */
-.curso-card .card-img-top {
-  padding: 0.8rem;
-  border-radius: 12px;
-}
-
-.curso-card {
-  background-color: #000000;
-  color: white;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+.curso-card-dark {
+  background-color: var(--dark-card) !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 1.25rem !important;
   display: flex;
   flex-direction: column;
 }
 
-.curso-card {
-  background-color: #000000;
-  color: white;
-  border: none;
-  border-radius: 15px;
+.curso-card-dark .card-body {
+  flex-grow: 1;
 }
 
-.curso-img {
+.curso-card-dark:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5) !important;
+}
+
+.card-img-custom {
   height: 160px;
   object-fit: cover;
+  border-top-left-radius: 1.25rem;
+  border-top-right-radius: 1.25rem;
 }
 
-.curso-card .card-body {
-  flex: 1;
-  padding: 0.75rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.curso-card .card-footer {
-  border-top: none;
-  background: none;
-  max-height: 200px;
-  overflow: hidden;
-}
-
-/* ============================= */
-/* Botones                       */
-/* ============================= */
-.btn-purple {
-  background-color: #6619f5;
+.price-text {
+  font-size: 0.95rem;
+  font-weight: 700;
   color: white;
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.3s ease;
+  margin-right: 5px;
+  white-space: nowrap;
 }
 
-.btn-purple:hover {
-  background-color: #6b11f3;
-}
-
-.text-purple {
-  color: #6619f5 !important;
-}
-
-/* ============================= */
-/* Footer fijo                   */
-/* ============================= */
-footer.fixed-bottom {
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1020;
-  border-top: 1px solid #1d1d1d;
-  background-color: rgb(0, 0, 0) !important;
-}
-
-footer i {
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-footer i:hover {
-  transform: scale(1.1);
-}
-
-/* ============================= */
-/* Formularios y búsqueda        */
-/* ============================= */
-input.form-busqueda {
-  border-radius: 50px 0 0 50px;
-  padding-left: 30px;
-}
-
-.input-group-text {
-  border-radius: 0 30px 30px 0;
-}
-
-/* ============================= */
-/* Tarjetas de contenido         */
-/* ============================= */
-.card-title {
-  font-weight: bold;
-  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
-  font-size: 1rem;
-}
-
-.card-text {
-  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
-  font-size: 0.9rem;
-  color: #555;
-}
-
-/* ============================= */
-/* Noticias                      */
-/* ============================= */
-@media (min-width: 768px) {
-  .noticia-row .col:nth-child(odd) {
-    clear: left;
-  }
-
-  .noticia-row .col {
-    margin-bottom: 1.5rem;
-  }
-}
-
-/* ============================= */
-/* Validación de errores         */
-/* ============================= */
-.error {
-  color: red !important;
-  font-size: 0.8rem !important;
-  display: block !important;
-  margin: 4px 0 8px 0 !important;
-}
-
-.campo {
-  margin-bottom: 16px;
-}
-
-/* Quitamos borde rojo por defecto */
-input {
-  border: 1px solid #ccc;
-  padding: 8px;
-  border-radius: 4px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.toggle-password {
-  position: absolute;
-  right: 10px;
-  top: 12px;
-  cursor: pointer;
-}
-
-/* ============================= */
-/* Modal                         */
-/* ============================= */
-.plus {
-  background-color: #9b59b6;
-  color: white;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 10px;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 999;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-}
-
-.modal-content {
-  background: #fff;
+.btn-enroll {
+  background-color: var(--yellow-accent);
   color: #000;
-  padding: 20px;
-  border-radius: 10px;
-  max-width: 600px;
-  margin: 10% auto;
+  font-weight: 700;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.68rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.btn-enroll:hover {
+  background-color: #e0ac10;
+  color: #000;
+}
+
+.card-footer-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ============================= */
+/* Noticias Gastronómicas        */
+/* ============================= */
+.news-item {
+  transition: background-color 0.2s;
+  padding: 5px;
+  border-radius: 8px;
+}
+
+.news-item:hover {
+  background-color: #f8f9fa;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* ============================= */
+/* Banner de Descuento           */
+/* ============================= */
+.discount-banner {
+  background-image: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80');
+  background-size: cover;
+  background-position: center;
+  /* Solo esquinas superiores redondeadas, se une con el social-proof-bar */
+  border-radius: 1rem 1rem 0 0 !important;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: none !important;
   position: relative;
 }
 
-.modal-content h2 {
-  margin-top: 0;
+/* Overlay degradado del banner (una sola definición) */
+.banner-overlay {
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.45) 100%);
+  padding: 30px 40px;
 }
 
-.close {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 20px;
+/* ============================= */
+/* Social Proof Bar              */
+/* ============================= */
+.social-proof-bar {
+  /* Esquinas inferiores para continuar el banner */
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  border-top: none !important;
+}
+
+/* ============================= */
+/* Countdown                     */
+/* ============================= */
+.countdown-box {
+  background: rgba(0, 0, 0, 0.85);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.05rem;
+  font-weight: bold;
+  color: white;
+  min-width: 40px;
+  text-align: center;
+  /* Transición suave al cambiar dígitos */
+  transition: color 0.2s;
+}
+
+/* ============================= */
+/* Botón Rojo del Banner         */
+/* ============================= */
+.btn-danger {
+  background-color: #c62828 !important;
+  border: none !important;
+}
+
+.btn-danger:hover {
+  background-color: #8b0000 !important;
+}
+
+/* ============================= */
+/* Sidebar ¿Por qué elegirnos?  */
+/* ============================= */
+/* La card ya usa clases Bootstrap, sin estilos extra necesarios */
+
+/* ============================= */
+/* Footer del Home               */
+/* ============================= */
+.footer-home {
+  background-color: #0a0a0a;
+}
+
+.social-icon {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
   cursor: pointer;
-  color: #000;
+  text-decoration: none;
 }
 
-.modal-content ul {
-  padding-left: 20px;
+.social-icon:hover {
+  background-color: white;
+  color: black !important;
+  border-color: white;
 }

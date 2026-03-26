@@ -12,7 +12,9 @@ import com.proyectojpa.demo.models.Curso;
 
 public interface cursoRepository extends JpaRepository<Curso, Integer> {
 
-    @EntityGraph(attributePaths = { "modulos", "modulos.lecciones" })
+    // Nota: evitar MultipleBagFetchException. Primero cargamos solo `modulos`
+    // y luego inicializamos `modulos.lecciones` en el controlador con otra carga.
+    @EntityGraph(attributePaths = { "modulos" })
     @Query("SELECT c FROM Curso c WHERE c.id = :id")
     Optional<Curso> findByIdWithContenido(@Param("id") Integer id);
 
@@ -24,4 +26,8 @@ public interface cursoRepository extends JpaRepository<Curso, Integer> {
 
     @Query("SELECT c FROM Curso c LEFT JOIN FETCH c.tutor WHERE c.id = :id")
     Optional<Curso> findByIdWithTutor(@Param("id") Integer id);
+
+    /** Listado admin: tutor y persona para mostrar nombre sin LazyInitializationException. */
+    @Query("SELECT DISTINCT c FROM Curso c LEFT JOIN FETCH c.tutor t LEFT JOIN FETCH t.persona ORDER BY c.id")
+    List<Curso> findAllWithTutorPersonaOrderById();
 }

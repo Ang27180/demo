@@ -1,4 +1,4 @@
-package com.poryectojpa.demo.models;
+package com.proyectojpa.demo.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,7 +42,7 @@ public class Curso {
 
     @jakarta.persistence.ManyToOne
     @jakarta.persistence.JoinColumn(name = "id_tutor")
-    private Tutor tutor; // El tutor responsable de este curso
+    private Tutor tutor;
 
     @jakarta.persistence.OneToMany(mappedBy = "curso")
     private java.util.List<Modulo> modulos;

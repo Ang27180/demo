@@ -47,7 +47,15 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/tutor").permitAll()
                         .requestMatchers(HttpMethod.POST, "/tutor").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/tutor/**").hasRole("ADMIN")
-                        .requestMatchers("/tutor/panel/**").hasRole("TUTOR")
+                        .requestMatchers("/tutor-panel", "/tutor-panel-estudiantes", "/tutor/panel/**")
+                                .hasAnyRole("ADMIN", "TUTOR")
+
+                        // Gestión de contenido del curso: mismo flujo que admin; el tutor solo si el curso es suyo (validado en controlador)
+                        .requestMatchers(HttpMethod.GET, "/admin/cursos/*/contenido").hasAnyRole("ADMIN", "TUTOR")
+                        .requestMatchers(HttpMethod.POST, "/admin/cursos/*/modulos").hasAnyRole("ADMIN", "TUTOR")
+                        .requestMatchers(HttpMethod.POST, "/admin/cursos/modulos/*/lecciones").hasAnyRole("ADMIN", "TUTOR")
+                        .requestMatchers(HttpMethod.GET, "/admin/cursos/modulos/eliminar/*").hasAnyRole("ADMIN", "TUTOR")
+                        .requestMatchers(HttpMethod.GET, "/admin/cursos/lecciones/eliminar/*").hasAnyRole("ADMIN", "TUTOR")
 
                         .requestMatchers("/contacto", "/registro", "/login", "/forgot-password", "/css/**", "/js/**",
                                 "/imagenes/**", "/files/medios-pago/**", "/favicon.ico", "/error").permitAll()
@@ -88,7 +96,7 @@ public class SecurityConfig {
                                 redirectUrl = "/estudiante";
                             } else if (authorities.stream()
                                     .anyMatch(a -> a.getAuthority().equals("ROLE_TUTOR"))) {
-                                redirectUrl = "/tutor/panel/cursos";
+                                redirectUrl = "/tutor-panel";
                             }
                             response.sendRedirect(request.getContextPath() + redirectUrl);
                         })

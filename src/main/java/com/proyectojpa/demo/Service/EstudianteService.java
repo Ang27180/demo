@@ -38,9 +38,11 @@ public class EstudianteService {
             dto.setProgreso(e.getProgreso());
             dto.setIdEstadoEstudiante(e.getEstadoEstudiante() != null ? e.getEstadoEstudiante().getId() : null);
             dto.setIdPersona(e.getPersona() != null ? e.getPersona().getId() : null);
-            dto.setTutorNombre(e.getTutorNombre());
-            dto.setTutorTelefono(e.getTutorTelefono());
-            dto.setTutorEmail(e.getTutorEmail());
+            if (e.getPersona() != null) {
+                dto.setTutorNombre(e.getPersona().getTutorNombre());
+                dto.setTutorTelefono(e.getPersona().getTutorTelefono());
+                dto.setTutorEmail(e.getPersona().getTutorEmail());
+            }
             return dto;
         }).collect(Collectors.toList());
     }
@@ -55,12 +57,19 @@ public class EstudianteService {
         if (dto.getIdEstadoEstudiante() != null) {
             estadoInscripcionRepository.findById(dto.getIdEstadoEstudiante()).ifPresent(e::setEstadoEstudiante);
         }
-        e.setTutorNombre(dto.getTutorNombre());
-        e.setTutorTelefono(dto.getTutorTelefono());
-        e.setTutorEmail(dto.getTutorEmail());
-
         Persona p = PersonaRepository.findById(dto.getIdPersona())
                 .orElseThrow(() -> new RuntimeException("La persona no existe"));
+
+        if (dto.getTutorNombre() != null) {
+            p.setTutorNombre(dto.getTutorNombre());
+        }
+        if (dto.getTutorTelefono() != null) {
+            p.setTutorTelefono(dto.getTutorTelefono());
+        }
+        if (dto.getTutorEmail() != null) {
+            p.setTutorEmail(dto.getTutorEmail());
+        }
+        PersonaRepository.save(p);
 
         e.setPersona(p);
 

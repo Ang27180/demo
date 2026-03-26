@@ -1,7 +1,11 @@
-package com.poryectojpa.demo.controller;
+package com.proyectojpa.demo.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -11,29 +15,43 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.poryectojpa.demo.models.Curso;
-import com.poryectojpa.demo.models.Persona;
-import com.poryectojpa.demo.repository.cursoRepository;
-import com.poryectojpa.demo.repository.personaRepository;
-
+import com.proyectojpa.demo.domain.InscripcionEstados;
+import com.proyectojpa.demo.models.Curso;
+import com.proyectojpa.demo.models.Estudiante;
+import com.proyectojpa.demo.models.Persona;
+import com.proyectojpa.demo.repository.EstadoInscripcionRepository;
+import com.proyectojpa.demo.repository.EstudianteRepository;
+import com.proyectojpa.demo.repository.PersonaRepository;
+import com.proyectojpa.demo.repository.TutorRepository;
+import com.proyectojpa.demo.repository.cursoRepository;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class AdminController {
 
     @Autowired
-    private personaRepository personaRepository;
+    private PersonaRepository personaRepository;
 
     @Autowired
     private cursoRepository cursoRepository;
 
     @Autowired
-    private com.poryectojpa.demo.repository.InscripcionRepository inscripcionRepository;
+    private TutorRepository tutorRepository;
+
+    @Autowired
+    private EstudianteRepository estudianteRepository;
+
+    @Autowired
+    private EstadoInscripcionRepository estadoInscripcionRepository;
 
     // PANEL ADMIN CON FILTROS
     @GetMapping("/admin")
@@ -41,34 +59,100 @@ public class AdminController {
             // CORRECCIÓN: name= explícito requerido en Spring Boot 3.2+ sin flag -parameters
             @RequestParam(name = "filtroNombre", required = false) String filtroNombre,
             @RequestParam(name = "filtroRol", required = false) Integer filtroRol,
+            @RequestParam(name = "filtroNombreCurso", required = false) String filtroNombreCurso,
+            @RequestParam(name = "filtroIdTutor", required = false) Integer filtroIdTutor,
             Model model) {
 
         // inicializar si vienen nulos
         final String filtroNombreFinal = (filtroNombre == null) ? "" : filtroNombre;
-        // filtroRol puede quedarse como null
+        final String filtroNombreCursoFinal = (filtroNombreCurso == null) ? "" : filtroNombreCurso.trim();
 
-        // aplicar filtros en memoria
-        List<Persona> personas = personaRepository.findAll().stream()
+        // Carga con EntityGraph para estudiantes/estado (vista admin con open-in-view=false)
+        List<Persona> personas = personaRepository.findAllByOrderByIdAsc().stream()
                 .filter(p -> filtroNombreFinal.isEmpty() || p.getNombre().toLowerCase().contains(filtroNombreFinal.toLowerCase()))
                 .filter(p -> filtroRol == null || p.getRolId() != null && p.getRolId().equals(filtroRol))
                 .toList();
 
-        List<Curso> cursos = cursoRepository.findAll();
+        List<Curso> cursos = cursoRepository.findAllWithTutorPersonaOrderById().stream()
+                .filter(c -> filtroNombreCursoFinal.isEmpty()
+                        || (c.getNombre() != null
+                                && c.getNombre().toLowerCase().contains(filtroNombreCursoFinal.toLowerCase())))
+                .filter(c -> filtroIdTutor == null
+                        || (c.getTutor() != null && filtroIdTutor.equals(c.getTutor().getIdTutor())))
+                .toList();
 
         model.addAttribute("personas", personas);
+        model.addAttribute("personasPorRol", agruparPersonasPorRol(personas));
         model.addAttribute("cursos", cursos);
 
         // valores para mantener el filtro en la vista
         model.addAttribute("filtroNombre", filtroNombre);
         model.addAttribute("filtroRol", filtroRol);
+        model.addAttribute("filtroNombreCurso", filtroNombreCurso);
+        model.addAttribute("filtroIdTutor", filtroIdTutor);
+        model.addAttribute("tutoresParaFiltro", tutorRepository.findAllWithPersona());
 
         // Tarjetas resumen dinámicas
         model.addAttribute("totalUsuarios", personaRepository.count());
         model.addAttribute("totalCursos", cursoRepository.count());
         model.addAttribute("totalTutores", personaRepository.countByRolId(3));
-        model.addAttribute("nuevasInscripciones", inscripcionRepository.count());
+        model.addAttribute("totalEstudiantes", personaRepository.countByRolId(2));
 
         return "admin";
+    }
+
+    /** Activa/desactiva cuenta de estudiante desde el panel admin (sin redirección). */
+    @PostMapping("/admin/personas/{id}/toggle-estado-cuenta")
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> toggleEstadoCuentaEstudianteAjax(@PathVariable Integer id) {
+        Map<String, String> body = new HashMap<>();
+        Persona p = personaRepository.findById(id).orElse(null);
+        if (p == null) {
+            body.put("error", "Persona no encontrada");
+            return ResponseEntity.status(404).body(body);
+        }
+        if (p.getRolId() == null || p.getRolId() != 2) {
+            body.put("error", "Solo aplica a estudiantes");
+            return ResponseEntity.badRequest().body(body);
+        }
+        Estudiante e = estudianteRepository.findByPersona(p).orElse(null);
+        if (e == null) {
+            body.put("error", "Sin registro de estudiante");
+            return ResponseEntity.badRequest().body(body);
+        }
+        boolean esActivo = e.getEstadoEstudiante() != null
+                && InscripcionEstados.ACTIVO.equals(e.getEstadoEstudiante().getCodigo());
+        String nuevoCodigo = esActivo ? InscripcionEstados.INACTIVO : InscripcionEstados.ACTIVO;
+        estadoInscripcionRepository.findByCodigo(nuevoCodigo).ifPresent(est -> {
+            e.setEstadoEstudiante(est);
+            estudianteRepository.save(e);
+        });
+        body.put("estadoCodigo", nuevoCodigo);
+        return ResponseEntity.ok(body);
+    }
+
+    private static Map<String, List<Persona>> agruparPersonasPorRol(List<Persona> personas) {
+        Map<String, List<Persona>> map = new LinkedHashMap<>();
+        // Nota: LinkedHashMap respeta el orden de inserción; el usuario pidió que
+        // "Estudiantes" quede al final de la tabla.
+        putSiNoVacio(map, "Administradores",
+                personas.stream().filter(p -> p.getRolId() != null && p.getRolId() == 1).collect(Collectors.toList()));
+        putSiNoVacio(map, "Tutores",
+                personas.stream().filter(p -> p.getRolId() != null && p.getRolId() == 3).collect(Collectors.toList()));
+        putSiNoVacio(map, "Proveedores",
+                personas.stream().filter(p -> p.getRolId() != null && p.getRolId() == 4).collect(Collectors.toList()));
+        putSiNoVacio(map, "Otros / sin rol",
+                personas.stream().filter(p -> p.getRolId() == null || p.getRolId() < 1 || p.getRolId() > 4)
+                        .collect(Collectors.toList()));
+        putSiNoVacio(map, "Estudiantes",
+                personas.stream().filter(p -> p.getRolId() != null && p.getRolId() == 2).collect(Collectors.toList()));
+        return map;
+    }
+
+    private static void putSiNoVacio(Map<String, List<Persona>> map, String etiqueta, List<Persona> lista) {
+        if (!lista.isEmpty()) {
+            map.put(etiqueta, lista);
+        }
     }
 
     // EXPORTAR EXCEL CON FILTROS
@@ -76,16 +160,25 @@ public class AdminController {
     public void exportarExcel(
             HttpServletResponse response,
             @RequestParam(name = "filtroNombre", required = false) String filtroNombre,
-            @RequestParam(name = "filtroRol", required = false) Integer filtroRol) throws IOException {
+            @RequestParam(name = "filtroRol", required = false) Integer filtroRol,
+            @RequestParam(name = "filtroNombreCurso", required = false) String filtroNombreCurso,
+            @RequestParam(name = "filtroIdTutor", required = false) Integer filtroIdTutor) throws IOException {
 
         final String filtroNombreFinal = (filtroNombre == null) ? "" : filtroNombre;
+        final String filtroNombreCursoFinal = (filtroNombreCurso == null) ? "" : filtroNombreCurso.trim();
 
-        List<Persona> personas = personaRepository.findAll().stream()
+        List<Persona> personas = personaRepository.findAllByOrderByIdAsc().stream()
                 .filter(p -> filtroNombreFinal.isEmpty() || p.getNombre().toLowerCase().contains(filtroNombreFinal.toLowerCase()))
                 .filter(p -> filtroRol == null || p.getRolId() != null && p.getRolId().equals(filtroRol))
                 .toList();
 
-        List<Curso> cursos = cursoRepository.findAll();
+        List<Curso> cursos = cursoRepository.findAllWithTutorPersonaOrderById().stream()
+                .filter(c -> filtroNombreCursoFinal.isEmpty()
+                        || (c.getNombre() != null
+                                && c.getNombre().toLowerCase().contains(filtroNombreCursoFinal.toLowerCase())))
+                .filter(c -> filtroIdTutor == null
+                        || (c.getTutor() != null && filtroIdTutor.equals(c.getTutor().getIdTutor())))
+                .toList();
 
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setHeader("Content-Disposition", "attachment; filename=admin_report.xlsx");

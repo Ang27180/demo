@@ -51,7 +51,7 @@ public class CertificadoAutorizacionService {
         if (persona.getId() != null && persona.getId().equals(estudiante.getPersona().getId())) {
             return true;
         }
-        String tutorEmail = estudiante.getTutorEmail();
+        String tutorEmail = estudiante.getPersona().getTutorEmail();
         if (tutorEmail == null || tutorEmail.isBlank() || persona.getEmail() == null) {
             return false;
         }

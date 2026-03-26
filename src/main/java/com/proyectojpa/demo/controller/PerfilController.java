@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.proyectojpa.demo.models.Persona;
 import com.proyectojpa.demo.models.Estudiante;
+import com.proyectojpa.demo.models.Persona;
 import com.proyectojpa.demo.repository.PersonaRepository;
 import com.proyectojpa.demo.repository.EstudianteRepository;
 import com.proyectojpa.demo.security.CustomUserDetails;
@@ -32,11 +32,11 @@ public class PerfilController {
         if (userDetails == null) {
             return "redirect:/login";
         }
-        
+
         // Obtenemos la persona actualizada desde la base de datos
         Persona persona = personaRepository.findById(userDetails.getPersona().getId())
                 .orElse(userDetails.getPersona());
-        
+
         // Buscamos si tiene perfil de estudiante para mostrar datos de tutor
         Estudiante estudiante = estudianteRepository.findByPersona(persona).orElse(null);
 
@@ -47,11 +47,11 @@ public class PerfilController {
 
     @PostMapping("/actualizar")
     public String actualizarPerfil(@AuthenticationPrincipal CustomUserDetails userDetails,
-                                   @ModelAttribute Persona personaForm,
-                                   @RequestParam(required = false) String tutorNombre,
-                                   @RequestParam(required = false) String tutorTelefono,
-                                   @RequestParam(required = false) String tutorEmail,
-                                   RedirectAttributes redirectAttributes) {
+            @ModelAttribute Persona personaForm,
+            @RequestParam(required = false) String tutorNombre,
+            @RequestParam(required = false) String tutorTelefono,
+            @RequestParam(required = false) String tutorEmail,
+            RedirectAttributes redirectAttributes) {
         try {
             // Buscamos la persona original
             Persona personaExistente = personaRepository.findById(userDetails.getPersona().getId())
@@ -61,17 +61,13 @@ public class PerfilController {
             personaExistente.setTelefono(personaForm.getTelefono());
             personaExistente.setDireccion(personaForm.getDireccion());
 
-            personaRepository.save(personaExistente);
-
-            // Actualizar tutor si es estudiante
-            Estudiante estudiante = estudianteRepository.findByPersona(personaExistente).orElse(null);
-
-            if (estudiante != null) {
-                estudiante.setTutorNombre(tutorNombre);
-                estudiante.setTutorTelefono(tutorTelefono);
-                estudiante.setTutorEmail(tutorEmail);
-                estudianteRepository.save(estudiante);
+            if (estudianteRepository.findByPersona(personaExistente).isPresent()) {
+                personaExistente.setTutorNombre(tutorNombre);
+                personaExistente.setTutorTelefono(tutorTelefono);
+                personaExistente.setTutorEmail(tutorEmail);
             }
+
+            personaRepository.save(personaExistente);
 
             redirectAttributes.addFlashAttribute("mensaje", "¡Perfil actualizado con éxito!");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");

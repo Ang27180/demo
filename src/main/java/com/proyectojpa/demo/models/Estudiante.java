@@ -1,4 +1,4 @@
-package com.poryectojpa.demo.models;
+package com.proyectojpa.demo.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,8 +18,9 @@ public class Estudiante {
     @Column(name = "id_estudiante")
     private Integer idEstudiante;
 
-    @Column(name = "id_estado_estudiante")
-    private Integer estadoEstudiante; // 
+    @ManyToOne
+    @JoinColumn(name = "id_estado_estudiante", referencedColumnName = "id")
+    private EstadoInscripcion estadoEstudiante;
 
     @Column(name = "progreso", nullable = false, length = 45)
     private String progreso;
@@ -40,12 +41,12 @@ public class Estudiante {
         this.idEstudiante = idEstudiante;
     }
 
-    public Integer getEstadoEstudiante() {
+    public EstadoInscripcion getEstadoEstudiante() {
         return estadoEstudiante;
     }
 
-    public void setEstadoEstudiante(Integer estadoEstudiante) {
-        this.estadoEstudiante = estadoEstudiante;
+    public void setEstadoEstudiante(EstadoInscripcion estado) {
+        this.estadoEstudiante = estado;
     }
     
     public String getProgreso() {

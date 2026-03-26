@@ -34,8 +34,8 @@
         <li class="nav-item">
           <a th:href="@{/cursos}" class="nav-link">Cursos</a>
         </li>
-        <li class="nav-item" sec:authorize="hasRole('TUTOR')">
-          <a th:href="@{/tutor/panel/cursos}" class="nav-link"><i class="fas fa-chalkboard-teacher me-1"></i>Mis cursos (tutor)</a>
+        <li class="nav-item" sec:authorize="hasAnyRole('ADMIN','TUTOR')">
+          <a th:href="@{/tutor-panel}" class="nav-link"><i class="fas fa-chalkboard-teacher me-1"></i>Panel tutor</a>
         </li>
         <!-- Nuevo enlace solo para estudiantes -->
         <li class="nav-item" sec:authorize="hasRole('ESTUDIANTE')">

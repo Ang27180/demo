@@ -91,9 +91,6 @@ public class RegistroController {
             estudiante.setProgreso("0%");
             estadoInscripcionRepository.findByCodigo(InscripcionEstados.ACTIVO)
                     .ifPresent(estudiante::setEstadoEstudiante);
-            estudiante.setTutorNombre(persona.getTutorNombre());
-            estudiante.setTutorTelefono(persona.getTutorTelefono());
-            estudiante.setTutorEmail(persona.getTutorEmail());
             estudianteRepository.save(estudiante);
         }
 

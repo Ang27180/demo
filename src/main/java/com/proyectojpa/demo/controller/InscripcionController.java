@@ -48,7 +48,8 @@ public class InscripcionController {
     private int diasPlazoPagoInscripcion;
 
     /**
-     * Entrada pública desde el catálogo: anónimo → login con curso; estudiante → formulario de inscripción.
+     * Entrada pública desde el catálogo: anónimo → login con curso; estudiante →
+     * formulario de inscripción.
      */
     @GetMapping("/catalogo")
     public String desdeCatalogo(@RequestParam(name = "idCurso") Integer idCurso, Authentication auth) {
@@ -64,14 +65,16 @@ public class InscripcionController {
 
     // ----------- MOSTRAR FORMULARIO -----------------
     @GetMapping({ "/nueva", "/nueva/{idEstudiante}" })
-    public String nuevaInscripcion(@PathVariable(required = false) Integer idEstudiante, 
-                                   @RequestParam(name = "idCurso", required = false) Integer idCurso, // AJUSTE: Corregido nombre a idCurso y añadido @RequestParam
-                                   Model model) {
+    public String nuevaInscripcion(@PathVariable(required = false) Integer idEstudiante,
+            @RequestParam(name = "idCurso", required = false) Integer idCurso, // AJUSTE: Corregido nombre a idCurso y
+                                                                               // añadido @RequestParam
+            Model model) {
 
         model.addAttribute("idEstudiante", idEstudiante);
         model.addAttribute("idCurso", idCurso);
 
-        // --- AJUSTE: Si viene un idCurso, mostramos solo ese curso en la lista para evitar confusiones ---
+        // --- AJUSTE: Si viene un idCurso, mostramos solo ese curso en la lista para
+        // evitar confusiones ---
         if (idCurso != null) {
             cursoRepository.findById(idCurso).ifPresent(curso -> {
                 model.addAttribute("listaCursos", Collections.singletonList(curso));
@@ -89,7 +92,8 @@ public class InscripcionController {
 
     // ------------ GUARDAR INSCRIPCIÓN ----------------
     @PostMapping("/guardar")
-    public String guardarInscripcion(@RequestParam(name = "idCurso") Integer idCurso, RedirectAttributes redirectAttributes) {
+    public String guardarInscripcion(@RequestParam(name = "idCurso") Integer idCurso,
+            RedirectAttributes redirectAttributes) {
 
         // 1. Persona logueada
         Persona personaActual = getPersona();
@@ -107,7 +111,7 @@ public class InscripcionController {
                     Estudiante nuevoEstudiante = new Estudiante();
                     nuevoEstudiante.setPersona(personaActual);
                     nuevoEstudiante.setProgreso("0%");
-                    estadoRepo.findByCodigo(InscripcionEstados.ACTIVO).ifPresent(nuevoEstudiante::setEstadoEstudiante);
+                    estadoRepo.findByCodigo(InscripcionEstados.ACTIVO).ifPresent(estado -> nuevoEstudiante.setEstadoEstudiante(estado));
                     return estudianteRepository.save(nuevoEstudiante);
                 });
 

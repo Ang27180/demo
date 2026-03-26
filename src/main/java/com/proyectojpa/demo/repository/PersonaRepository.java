@@ -3,6 +3,7 @@ package com.proyectojpa.demo.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -19,6 +20,12 @@ public interface PersonaRepository extends JpaRepository<Persona, Integer> {
     Long countByGenero(String genero);
     Long countByRolId(Integer rolId);
 
-    @Query("SELECT DISTINCT p FROM Persona p LEFT JOIN FETCH p.estudiante e LEFT JOIN FETCH e.estadoEstudiante")
+    @Query("SELECT DISTINCT p FROM Persona p LEFT JOIN FETCH p.estudiantes e LEFT JOIN FETCH e.estadoEstudiante")
     List<Persona> findAllWithEstudianteEstado();
+
+    /**
+     * Lista completa para el panel admin con colecciones necesarias para la vista (open-in-view=false).
+     */
+    @EntityGraph(attributePaths = { "estudiantes", "estudiantes.estadoEstudiante" })
+    List<Persona> findAllByOrderByIdAsc();
 }

@@ -1,12 +1,17 @@
 package com.proyectojpa.demo.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -66,8 +71,12 @@ public class Persona implements Serializable {
     @Column(name = "contrasena", nullable = false)
     private String contrasena;
 
-    @jakarta.persistence.OneToOne(mappedBy = "persona", cascade = jakarta.persistence.CascadeType.ALL)
-    private Estudiante estudiante;
+    /**
+     * Históricamente se modeló como 1-1, pero en BD pueden existir varias filas {@code estudiante}
+     * para la misma persona (duplicados). OneToMany evita el fallo de Hibernate al cargar el admin.
+     */
+    @OneToMany(mappedBy = "persona", cascade = CascadeType.ALL)
+    private List<Estudiante> estudiantes = new ArrayList<>();
 
     // ✅ Campos transitorios para validación de formulario
     @Transient
@@ -123,7 +132,33 @@ public class Persona implements Serializable {
     public String getTutorEmail() { return tutorEmail; }
     public void setTutorEmail(String tutorEmail) { this.tutorEmail = tutorEmail; }
 
-    public Estudiante getEstudiante() { return estudiante; }
-    public void setEstudiante(Estudiante estudiante) { this.estudiante = estudiante; }
+    public List<Estudiante> getEstudiantes() {
+        return estudiantes;
+    }
+
+    public void setEstudiantes(List<Estudiante> estudiantes) {
+        this.estudiantes = estudiantes;
+    }
+
+    /** Perfil "principal" si hay varios registros duplicados: el de menor {@code id_estudiante}. */
+    public Estudiante getEstudiante() {
+        if (estudiantes == null || estudiantes.isEmpty()) {
+            return null;
+        }
+        return estudiantes.stream()
+                .min(Comparator.comparing(Estudiante::getIdEstudiante, Comparator.nullsLast(Comparator.naturalOrder())))
+                .orElse(estudiantes.get(0));
+    }
+
+    public void setEstudiante(Estudiante estudiante) {
+        if (estudiantes == null) {
+            estudiantes = new ArrayList<>();
+        }
+        estudiantes.clear();
+        if (estudiante != null) {
+            estudiante.setPersona(this);
+            estudiantes.add(estudiante);
+        }
+    }
 }
 

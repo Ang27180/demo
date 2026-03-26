@@ -1,9 +1,9 @@
-package com.poryectojpa.demo.security;
+package com.proyectojpa.demo.security;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import com.poryectojpa.demo.models.Persona;
+import com.proyectojpa.demo.models.Persona;
 
 import java.util.Collection;
 import java.util.List;
@@ -12,7 +12,7 @@ public class CustomUserDetails implements UserDetails {
 
     private final Persona persona;
 
-    public CustomUserDetails(Persona persona) {
+    public CustomUserDetails(Persona persona, boolean cuentaHabilitada) {
         this.persona = persona;
     }
 

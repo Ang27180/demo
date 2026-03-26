@@ -91,6 +91,29 @@ public class AdminCursoController {
         return "redirect:/admin";
     }
 
+    /**
+     * Asignación rápida de tutor desde la tabla del panel admin.
+     * Permite asignar por idTutor (o dejar sin asignar).
+     */
+    @PostMapping("/{id}/asignar-tutor")
+    public String asignarTutor(@PathVariable("id") Integer id,
+            @RequestParam(required = false) Integer idTutor,
+            RedirectAttributes redirectAttributes) {
+        Curso c = cursoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Curso no encontrado: " + id));
+
+        if (idTutor != null) {
+            Tutor t = tutorRepository.findById(idTutor).orElse(null);
+            c.setTutor(t);
+        } else {
+            c.setTutor(null);
+        }
+
+        cursoRepository.save(c);
+        redirectAttributes.addFlashAttribute("msgAdmin", "Tutor asignado correctamente.");
+        return "redirect:/admin";
+    }
+
     @GetMapping("/eliminar/{id}")
     public String eliminar(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
         try {

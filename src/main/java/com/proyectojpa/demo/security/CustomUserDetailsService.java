@@ -41,8 +41,9 @@ public class CustomUserDetailsService implements UserDetailsService {
         boolean cuentaHabilitada = true;
         if (persona.getRolId() != null && persona.getRolId() == 2) {
             cuentaHabilitada = estudianteRepository.findByPersonaWithEstado(persona)
-                    .map(e -> e.getEstadoEstudiante() != null
-                            && InscripcionEstados.ACTIVO.equals(e.getEstadoEstudiante().getCodigo()))
+                    .map(e -> (Boolean) (e.getEstadoEstudiante() != null
+                            && e.getEstadoEstudiante().getCodigo() != null
+                            && InscripcionEstados.ACTIVO.equals(e.getEstadoEstudiante().getCodigo())))
                     .orElse(false);
         }
 

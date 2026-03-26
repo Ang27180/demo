@@ -35,7 +35,7 @@
                         <a th:href="@{/reportes}" class="btn btn-outline-info btn-sm me-1 mb-1">
                             <i class="fas fa-chart-pie me-1"></i>Reporte web
                         </a>
-                        <a th:href="@{/personas/exportarExcel(filtroNombre=${filtroNombre}, filtroRol=${filtroRol})}"
+                        <a th:href="@{/personas/exportarExcel(filtroNombre=${filtroNombre}, filtroRol=${filtroRol}, filtroNombreCurso=${filtroNombreCurso}, filtroIdTutor=${filtroIdTutor})}"
                             class="btn btn-outline-success btn-sm me-1 mb-1">
                             <i class="fas fa-file-excel me-1"></i>Excel
                         </a>
@@ -84,9 +84,10 @@
             </div>
             <div class="col-md-3">
                 <div class="card p-3 text-center h-100">
-                    <i class="fas fa-user-plus display-5 text-danger mb-2"></i>
-                    <h5 class="fw-bold">Inscripciones</h5>
-                    <p class="fs-3" th:text="${nuevasInscripciones}">0</p>
+                    <i class="fas fa-user-graduate display-5 text-danger mb-2"></i>
+                    <h5 class="fw-bold">Estudiantes</h5>
+                    <p class="fs-3" th:text="${totalEstudiantes}">0</p>
+                    <p class="small text-muted mb-0">Usuarios con rol estudiante</p>
                 </div>
             </div>
         </div>
@@ -101,36 +102,48 @@
                     <a th:href="@{/admin/correo-curso}" class="btn btn-outline-primary btn-sm"><i
                             class="fas fa-users me-1"></i>Correo por curso</a>
                     <a th:href="@{/personas/nueva}" class="btn btn-success btn-sm">➕ Añadir Usuario</a>
-                    <a th:href="@{/personas/exportarExcel(filtroNombre=${filtroNombre}, filtroRol=${filtroRol})}"
+                    <a th:href="@{/personas/exportarExcel(filtroNombre=${filtroNombre}, filtroRol=${filtroRol}, filtroNombreCurso=${filtroNombreCurso}, filtroIdTutor=${filtroIdTutor})}"
                         class="btn btn-outline-success btn-sm">⬇️ Excel</a>
                     <a th:href="@{/reportes/estadistico/pdf}" class="btn btn-success btn-sm" target="_blank">⬇️ PDF</a>
                 </div>
             </div>
 
-            <form th:action="@{/admin}" method="get" class="row g-2 mb-3">
-                <div class="col-md-5">
-                    <input type="text" name="filtroNombre" class="form-control" placeholder="Buscar por nombre..."
-                        th:value="${filtroNombre}">
-                </div>
-                <div class="col-md-4">
-                    <select name="filtroRol" class="form-select">
-                        <option value="" th:selected="${filtroRol == null}">Todos los roles</option>
-                        <option th:value="1" th:selected="${filtroRol != null && filtroRol == 1}">Administrador</option>
-                        <option th:value="2" th:selected="${filtroRol != null && filtroRol == 2}">Estudiante</option>
-                        <option th:value="3" th:selected="${filtroRol != null && filtroRol == 3}">Tutor</option>
-                        <option th:value="4" th:selected="${filtroRol != null && filtroRol == 4}">Proveedor</option>
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-outline-primary w-100">🔍 Buscar</button>
+            <form th:action="@{/admin}" method="get" class="mb-3">
+                <p class="text-muted small text-uppercase fw-bold mb-2">Filtros — usuarios</p>
+                <input type="hidden" name="filtroNombreCurso" th:value="${filtroNombreCurso}" th:if="${filtroNombreCurso != null && !filtroNombreCurso.isEmpty()}">
+                <input type="hidden" name="filtroIdTutor" th:value="${filtroIdTutor}" th:if="${filtroIdTutor != null}">
+                <div class="row g-2 mb-2">
+                    <div class="col-md-5">
+                        <input type="text" name="filtroNombre" class="form-control" placeholder="Buscar por nombre..."
+                            th:value="${filtroNombre}">
+                    </div>
+                    <div class="col-md-4">
+                        <select name="filtroRol" class="form-select">
+                            <option value="" th:selected="${filtroRol == null}">Todos los roles</option>
+                            <option th:value="1" th:selected="${filtroRol != null && filtroRol == 1}">Administrador</option>
+                            <option th:value="2" th:selected="${filtroRol != null && filtroRol == 2}">Estudiante</option>
+                            <option th:value="3" th:selected="${filtroRol != null && filtroRol == 3}">Tutor</option>
+                            <option th:value="4" th:selected="${filtroRol != null && filtroRol == 4}">Proveedor</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 d-flex flex-column gap-2">
+                        <button type="submit" class="btn btn-outline-primary w-100">🔍 Buscar</button>
+                        <a th:if="${(filtroNombreCurso != null && !filtroNombreCurso.isEmpty()) || filtroIdTutor != null}"
+                            th:href="@{/admin(filtroNombreCurso=${filtroNombreCurso}, filtroIdTutor=${filtroIdTutor})}"
+                            class="btn btn-outline-secondary w-100">Limpiar filtros de usuarios</a>
+                        <a th:unless="${(filtroNombreCurso != null && !filtroNombreCurso.isEmpty()) || filtroIdTutor != null}"
+                            th:href="@{/admin}" class="btn btn-outline-secondary w-100">Limpiar filtros de usuarios</a>
+                    </div>
                 </div>
             </form>
 
             <div class="table-responsive">
+                <p class="text-muted small mb-2" th:if="${personas != null}">
+                    Mostrando <strong th:text="${#lists.size(personas)}">0</strong> usuario(s) según filtros.
+                </p>
                 <table class="table table-hover table-bordered table-sm">
                     <thead class="table-dark">
                         <tr>
-                            <th>ID</th>
                             <th>Documento</th>
                             <th>Nombre</th>
                             <th>Email</th>
@@ -140,41 +153,48 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="persona : ${personas}">
-                            <td th:text="${persona.id}"></td>
-                            <td th:text="${persona.documento}"></td>
-                            <td th:text="${persona.nombre}"></td>
-                            <td th:text="${persona.email}"></td>
-                            <td>
-                                <span th:switch="${persona.rolId}">
-                                    <span th:case="1">Administrador</span>
-                                    <span th:case="2">Estudiante</span>
-                                    <span th:case="3">Tutor</span>
-                                    <span th:case="4">Proveedor</span>
-                                    <span th:case="*">Sin rol</span>
-                                </span>
-                            </td>
-                            <td>
-                                <span th:if="${persona.rolId != 2}">—</span>
-                                <span th:if="${persona.rolId == 2 && persona.estudiante != null && persona.estudiante.estadoEstudiante != null}"
-                                    th:text="${persona.estudiante.estadoEstudiante.codigo}">ACTIVO</span>
-                                <span th:if="${persona.rolId == 2 && (persona.estudiante == null || persona.estudiante.estadoEstudiante == null)}">—</span>
-                            </td>
-                            <td class="text-center text-nowrap">
-                                <a th:href="@{/personas/editar/{id}(id=${persona.id})}" class="btn btn-warning btn-sm py-0">Editar</a>
-                                <form th:if="${persona.rolId == 2}" th:action="@{/personas/{id}/toggle-estado-cuenta(id=${persona.id})}" method="post" class="d-inline">
-                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                                    <button type="submit" class="btn btn-sm py-0"
-                                        th:classappend="${persona.estudiante != null && persona.estudiante.estadoEstudiante != null && persona.estudiante.estadoEstudiante.codigo == 'ACTIVO'} ? 'btn-outline-danger' : 'btn-outline-success'"
+                        <tr th:if="${personas == null || #lists.isEmpty(personas)}">
+                            <td colspan="6" class="text-center text-muted">No hay usuarios que coincidan con el filtro.</td>
+                        </tr>
+                        <th:block th:each="grupo : ${personasPorRol}">
+                            <tr class="table-secondary">
+                                <td colspan="6" class="fw-bold small text-uppercase py-2" th:text="${grupo.key}">Grupo</td>
+                            </tr>
+                            <tr th:each="persona : ${grupo.value}"
+                                th:classappend="${persona.rolId == 2 && persona.estudiante != null && persona.estudiante.estadoEstudiante != null && persona.estudiante.estadoEstudiante.codigo == 'INACTIVO'} ? 'table-secondary' : ''">
+                                <td th:text="${persona.documento}"></td>
+                                <td th:text="${persona.nombre}"></td>
+                                <td th:text="${persona.email}"></td>
+                                <td>
+                                    <span th:switch="${persona.rolId}">
+                                        <span th:case="1">Administrador</span>
+                                        <span th:case="2">Estudiante</span>
+                                        <span th:case="3">Tutor</span>
+                                        <span th:case="4">Proveedor</span>
+                                        <span th:case="*">Sin rol</span>
+                                    </span>
+                                </td>
+                                <td class="js-estado-cuenta-cell">
+                                    <span th:if="${persona.rolId != 2}">—</span>
+                                    <span th:if="${persona.rolId == 2 && persona.estudiante != null && persona.estudiante.estadoEstudiante != null}"
+                                        th:text="${persona.estudiante.estadoEstudiante.codigo}">ACTIVO</span>
+                                    <span th:if="${persona.rolId == 2 && (persona.estudiante == null || persona.estudiante.estadoEstudiante == null)}">—</span>
+                                </td>
+                                <td class="text-center text-nowrap">
+                                    <a th:href="@{/personas/editar/{id}(id=${persona.id})}" class="btn btn-warning btn-sm py-0">Editar</a>
+                                    <button type="button" th:if="${persona.rolId == 2}"
+                                        class="btn btn-sm py-0 btn-toggle-estado-admin"
+                                        th:data-persona-id="${persona.id}"
+                                        th:classappend="${persona.estudiante != null && persona.estudiante.estadoEstudiante != null && persona.estudiante.estadoEstudiante.codigo == 'ACTIVO'} ? 'btn-outline-danger' : (${persona.estudiante != null && persona.estudiante.estadoEstudiante != null && persona.estudiante.estadoEstudiante.codigo == 'INACTIVO'} ? 'btn-outline-success opacity-50' : 'btn-outline-success')"
                                         th:title="${persona.estudiante != null && persona.estudiante.estadoEstudiante != null && persona.estudiante.estadoEstudiante.codigo == 'ACTIVO'} ? 'Desactivar cuenta' : 'Activar cuenta'">
                                         <i class="fas fa-power-off"></i>
                                     </button>
-                                </form>
-                                <a th:href="@{/personas/eliminar/{id}(id=${persona.id})}"
-                                    onclick="return confirm('¿Seguro que deseas eliminar esta persona?')"
-                                    class="btn btn-danger btn-sm py-0">Eliminar</a>
-                            </td>
-                        </tr>
+                                    <a th:href="@{/personas/eliminar/{id}(id=${persona.id})}"
+                                        onclick="return confirm('¿Seguro que deseas eliminar esta persona?')"
+                                        class="btn btn-danger btn-sm py-0">Eliminar</a>
+                                </td>
+                            </tr>
+                        </th:block>
                     </tbody>
                 </table>
             </div>
@@ -183,11 +203,46 @@
         <!-- GESTIÓN DE CURSOS -->
         <div class="card p-4 mb-5">
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-                <h4 class="fw-bold">Gestión de Cursos</h4>
+                <div>
+                    <h4 class="fw-bold mb-1">Gestión de Cursos</h4>
+                    <p class="text-muted small mb-0">Alta, edición, eliminación, contenido (módulos/lecciones) y asignación de tutor en el formulario.</p>
+                </div>
                 <a th:href="@{/admin/cursos/form}" class="btn btn-success">➕ Añadir Curso</a>
             </div>
 
+            <form th:action="@{/admin}" method="get" class="mb-3">
+                <p class="text-muted small text-uppercase fw-bold mb-2">Filtros — cursos</p>
+                <input type="hidden" name="filtroNombre" th:value="${filtroNombre}" th:if="${filtroNombre != null && !filtroNombre.isEmpty()}">
+                <input type="hidden" name="filtroRol" th:value="${filtroRol}" th:if="${filtroRol != null}">
+                <div class="row g-2 mb-2">
+                    <div class="col-md-5">
+                        <input type="text" name="filtroNombreCurso" class="form-control"
+                            placeholder="Buscar por nombre de curso..."
+                            th:value="${filtroNombreCurso}">
+                    </div>
+                    <div class="col-md-4">
+                        <select name="filtroIdTutor" class="form-select">
+                            <option value="" th:selected="${filtroIdTutor == null}">Todos los tutores</option>
+                            <option th:each="t : ${tutoresParaFiltro}" th:value="${t.idTutor}"
+                                th:selected="${filtroIdTutor != null && filtroIdTutor == t.idTutor}"
+                                th:text="${t.persona != null ? t.persona.nombre : ('Tutor #' + t.idTutor)}">Tutor</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 d-flex flex-column gap-2">
+                        <button type="submit" class="btn btn-outline-primary w-100">🔍 Buscar</button>
+                        <a th:if="${(filtroNombre != null && !filtroNombre.isEmpty()) || filtroRol != null}"
+                            th:href="@{/admin(filtroNombre=${filtroNombre}, filtroRol=${filtroRol})}"
+                            class="btn btn-outline-secondary w-100">Limpiar filtros de cursos</a>
+                        <a th:unless="${(filtroNombre != null && !filtroNombre.isEmpty()) || filtroRol != null}"
+                            th:href="@{/admin}" class="btn btn-outline-secondary w-100">Limpiar filtros de cursos</a>
+                    </div>
+                </div>
+            </form>
+
             <div class="table-responsive">
+                <p class="text-muted small mb-2" th:if="${cursos != null}">
+                    <strong th:text="${#lists.size(cursos)}">0</strong> curso(s) registrado(s).
+                </p>
                 <table class="table table-hover table-bordered table-sm">
                     <thead class="table-dark">
                         <tr>
@@ -195,18 +250,32 @@
                             <th>Nombre</th>
                             <th>Costo</th>
                             <th>Nivel</th>
+                            <th>Tutor asignado</th>
                             <th class="text-center">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <tr th:if="${cursos == null || #lists.isEmpty(cursos)}">
+                            <td colspan="6" class="text-center text-muted">No hay cursos. Usa «Añadir Curso» y asigna un tutor en el formulario.</td>
+                        </tr>
                         <tr th:each="curso : ${cursos}">
                             <td th:text="${curso.id}"></td>
                             <td th:text="${curso.nombre}"></td>
                             <td th:text="${curso.costo}"></td>
                             <td th:text="${curso.aprendizaje}"></td>
+                            <td>
+                                <span th:if="${curso.tutor != null && curso.tutor.persona != null}"
+                                    th:text="${curso.tutor.persona.nombre}">—</span>
+                                <span th:if="${curso.tutor == null}" class="text-muted">Sin asignar</span>
+                            </td>
                             <td class="text-center text-nowrap">
                                 <a th:href="@{/admin/cursos/{id}/alumnos(id=${curso.id})}" class="btn btn-secondary btn-sm py-0">Alumnos</a>
                                 <a th:href="@{/admin/cursos/{id}/contenido(id=${curso.id})}" class="btn btn-info btn-sm text-white py-0">Contenido</a>
+                                <button type="button" class="btn btn-outline-primary btn-sm py-0"
+                                    data-bs-toggle="modal" data-bs-target="#asignarTutorModal"
+                                    th:attr="data-curso-id=${curso.id}, data-curso-nombre=${curso.nombre}, data-tutor-id=${curso.tutor != null ? curso.tutor.idTutor : ''}">
+                                    <i class="fas fa-user-tie me-1"></i>Asignar tutor
+                                </button>
                                 <a th:href="@{/admin/cursos/form/{id}(id=${curso.id})}" class="btn btn-warning btn-sm py-0">Editar</a>
                                 <a th:href="@{/admin/cursos/eliminar/{id}(id=${curso.id})}"
                                     onclick="return confirm('¿Eliminar este curso?')"
@@ -217,6 +286,108 @@
                 </table>
             </div>
         </div>
+
+        <!-- Modal: Asignar Tutor a Curso -->
+        <div class="modal fade" id="asignarTutorModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <form id="asignarTutorForm" method="post" th:action="@{/admin/cursos/0/asignar-tutor}">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Asignar tutor al curso</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="mb-2">Curso: <strong id="asignarTutorCursoNombre">—</strong></p>
+                            <p class="text-muted small mb-3">ID: <span id="asignarTutorCursoId">—</span></p>
+
+                            <label class="form-label fw-semibold">Tutor</label>
+                            <select name="idTutor" id="idTutorModal" class="form-select">
+                                <option value="">— Sin asignar —</option>
+                                <option th:each="t : ${tutoresParaFiltro}" th:value="${t.idTutor}"
+                                    th:text="${t.persona != null ? t.persona.nombre : ('Tutor #' + t.idTutor)}"></option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script th:inline="javascript">
+            document.addEventListener('DOMContentLoaded', function() {
+                const baseUrl = /*[[@{/}]]*/ '';
+
+                const modalEl = document.getElementById('asignarTutorModal');
+                if (modalEl) {
+                    modalEl.addEventListener('show.bs.modal', function(event) {
+                        const button = event.relatedTarget;
+                        const courseId = button.getAttribute('data-curso-id');
+                        const courseNombre = button.getAttribute('data-curso-nombre');
+                        const tutorId = button.getAttribute('data-tutor-id');
+
+                        document.getElementById('asignarTutorCursoId').textContent = courseId;
+                        document.getElementById('asignarTutorCursoNombre').textContent = courseNombre;
+
+                        const form = document.getElementById('asignarTutorForm');
+                        form.action = baseUrl + 'admin/cursos/' + courseId + '/asignar-tutor';
+
+                        const select = document.getElementById('idTutorModal');
+                        select.value = (tutorId && tutorId !== '') ? tutorId : '';
+                    });
+                }
+
+                const csrfMeta = document.querySelector('meta[name="_csrf"]');
+                const csrfHeaderMeta = document.querySelector('meta[name="_csrf_header"]');
+                if (csrfMeta && csrfHeaderMeta) {
+                    const csrf = csrfMeta.getAttribute('content');
+                    const csrfHeader = csrfHeaderMeta.getAttribute('content');
+                    document.querySelectorAll('.btn-toggle-estado-admin').forEach(function(btn) {
+                        btn.addEventListener('click', async function() {
+                            const id = this.getAttribute('data-persona-id');
+                            if (!id) return;
+                            this.disabled = true;
+                            try {
+                                const res = await fetch(baseUrl + 'admin/personas/' + id + '/toggle-estado-cuenta', {
+                                    method: 'POST',
+                                    headers: (function() {
+                                        var h = { 'Accept': 'application/json' };
+                                        h[csrfHeader] = csrf;
+                                        return h;
+                                    })(),
+                                    credentials: 'same-origin'
+                                });
+                                var data = {};
+                                try {
+                                    data = await res.json();
+                                } catch (e) { /* cuerpo vacío */ }
+                                if (!res.ok) {
+                                    alert(data.error || 'No se pudo cambiar el estado de la cuenta.');
+                                    return;
+                                }
+                                var codigo = data.estadoCodigo || '';
+                                var tr = btn.closest('tr');
+                                var estadoCell = tr.querySelector('.js-estado-cuenta-cell');
+                                if (estadoCell) {
+                                    estadoCell.textContent = (codigo === 'ACTIVO' || codigo === 'INACTIVO') ? codigo : '—';
+                                }
+                                var activo = codigo === 'ACTIVO';
+                                btn.classList.remove('btn-outline-danger', 'btn-outline-success', 'opacity-50');
+                                btn.classList.add(activo ? 'btn-outline-danger' : 'btn-outline-success');
+                                if (!activo) btn.classList.add('opacity-50');
+                                btn.title = activo ? 'Desactivar cuenta' : 'Activar cuenta';
+                                if (tr) tr.classList.toggle('table-secondary', !activo);
+                            } finally {
+                                btn.disabled = false;
+                            }
+                        });
+                    });
+                }
+            });
+        </script>
 
     </div>
 </body>

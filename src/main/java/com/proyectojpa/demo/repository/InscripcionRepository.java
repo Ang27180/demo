@@ -57,4 +57,6 @@ public interface InscripcionRepository extends JpaRepository<Inscripcion, Intege
             + "JOIN FETCH i.estado "
             + "WHERE c.id = :idCurso")
     List<Inscripcion> findByCursoIdWithEstudianteAndEstado(@Param("idCurso") Integer idCurso);
+
+    List<Inscripcion> findByCurso_Tutor_IdTutor(Integer idTutor);
 }
