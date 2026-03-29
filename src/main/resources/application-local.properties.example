@@ -1,0 +1,10 @@
+# =============================================================================
+# Copia este archivo a: src/main/resources/application-local.properties
+# Ese archivo está en .gitignore y NO debe subirse a Git.
+#
+# No pongas aquí MAIL_PASSWORD ni contraseñas: usa variables de entorno.
+# Aquí solo overrides opcionales (p. ej. depuración SMTP en tu máquina).
+# =============================================================================
+
+# Ver diálogo SMTP en consola (errores 535, STARTTLS, etc.)
+spring.mail.properties.mail.debug=true

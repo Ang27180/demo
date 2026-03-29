@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Error | Sabor MasterClass</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body class="bg-light">
+  <div class="container py-5">
+    <div class="alert alert-danger shadow-sm">
+      <h1 class="h4 fw-bold mb-3" th:text="${error != null} ? ${error} : 'Ha ocurrido un error'">Error</h1>
+      <p class="mb-1" th:if="${status != null}">
+        <span class="text-muted">Código HTTP:</span>
+        <span th:text="${status}">500</span>
+      </p>
+      <p class="mb-2" th:if="${message != null and !#strings.isEmpty(message)}" th:text="${message}">Detalle</p>
+      <p class="small text-muted mb-0" th:if="${path != null}" th:text="'Ruta: ' + ${path}"></p>
+    </div>
+    <p class="small text-secondary mb-3">
+      Si ves error de SQL con <code>acudiente</code> y el log muestra <code>com.poryectojpa</code>, estás ejecutando el proyecto equivocado:
+      usa la carpeta <strong>demo1</strong> y <code>mvn clean spring-boot:run</code>.
+    </p>
+    <a th:href="@{/home}" class="btn btn-dark">Volver al inicio</a>
+  </div>
+</body>
+</html>

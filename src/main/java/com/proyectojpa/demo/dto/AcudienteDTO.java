@@ -2,7 +2,7 @@ package com.proyectojpa.demo.dto;
 
 /**
  * Data Transfer Object (DTO) implementado para manejar datos de Acudiente
- * previniendo envíos directos de los objetos persistidos mediante JPA.
+ * previniendo envíos directos de los objetos persistidos, mediante JPA.
  */
 public class AcudienteDTO {
     private Integer idAcudiente;

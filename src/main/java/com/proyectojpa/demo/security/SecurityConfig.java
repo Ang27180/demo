@@ -7,7 +7,6 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.web.SecurityFilterChain;
@@ -57,7 +56,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/admin/cursos/modulos/eliminar/*").hasAnyRole("ADMIN", "TUTOR")
                         .requestMatchers(HttpMethod.GET, "/admin/cursos/lecciones/eliminar/*").hasAnyRole("ADMIN", "TUTOR")
 
-                        .requestMatchers("/contacto", "/registro", "/login", "/forgot-password", "/css/**", "/js/**",
+                        .requestMatchers("/contacto", "/registro", "/login", "/forgot-password", "/reset", "/css/**", "/js/**",
                                 "/imagenes/**", "/files/medios-pago/**", "/favicon.ico", "/error").permitAll()
 
                         .requestMatchers("/admin/**", "/personas/**", "/personas/exportarExcel", "/correo/formulario")
@@ -122,15 +121,10 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
+    public DaoAuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setPasswordEncoder(passwordEncoder);
         return authProvider;
     }
 
