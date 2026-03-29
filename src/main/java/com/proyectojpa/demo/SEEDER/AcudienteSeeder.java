@@ -42,7 +42,6 @@ public class AcudienteSeeder implements CommandLineRunner {
         // ACUDIENTE 1 - Persona ID 8, Estudiante ID 1
         // ==============================
         Acudiente a1 = new Acudiente();
-        a1.setAutorizacion("Autorizado total");
         a1.setPersona(personaRepository.findById(8).orElse(null));   
         a1.setEstudianteDependiente(estudianteRepository.findById(1).orElse(null)); 
         acudienteRepository.save(a1);
@@ -51,7 +50,6 @@ public class AcudienteSeeder implements CommandLineRunner {
         // ACUDIENTE 2 - Persona ID 9, Estudiante ID 2
         // ==============================
         Acudiente a2 = new Acudiente();
-        a2.setAutorizacion("Acceso parcial");
         a2.setPersona(personaRepository.findById(9).orElse(null));   
         a2.setEstudianteDependiente(estudianteRepository.findById(2).orElse(null)); 
         acudienteRepository.save(a2);
@@ -60,7 +58,6 @@ public class AcudienteSeeder implements CommandLineRunner {
         // ACUDIENTE 3 - Persona ID 10, Estudiante ID 3
         // ==============================
         Acudiente a3 = new Acudiente();
-        a3.setAutorizacion("Acceso restringido");
         a3.setPersona(personaRepository.findById(10).orElse(null));  
         a3.setEstudianteDependiente(estudianteRepository.findById(3).orElse(null)); 
         acudienteRepository.save(a3);

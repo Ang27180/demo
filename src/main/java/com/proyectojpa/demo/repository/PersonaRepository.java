@@ -13,6 +13,7 @@ import com.proyectojpa.demo.models.Persona;
 @Repository
 public interface PersonaRepository extends JpaRepository<Persona, Integer> {
     Persona findByEmail(String email);
+    Persona findByDocumento(String documento);
 
     /** Búsqueda insensible a mayúsculas (login / registro). */
     Optional<Persona> findByEmailIgnoreCase(String email);

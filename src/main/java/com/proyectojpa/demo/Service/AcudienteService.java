@@ -35,7 +35,6 @@ public class AcudienteService {
     private AcudienteDTO toDTO(Acudiente entity) {
         AcudienteDTO dto = new AcudienteDTO();
         dto.setIdAcudiente(entity.getIdAcudiente());
-        dto.setAutorizacion(entity.getAutorizacion());
         dto.setIdPersona(entity.getPersona() != null ? entity.getPersona().getId() : null);
         dto.setIdEstudianteDependiente(
                 entity.getEstudianteDependiente() != null ?
@@ -48,7 +47,6 @@ public class AcudienteService {
     private Acudiente toEntity(AcudienteDTO dto) {
         Acudiente acudiente = new Acudiente();
         acudiente.setIdAcudiente(dto.getIdAcudiente());
-        acudiente.setAutorizacion(dto.getAutorizacion());
 
         Persona persona = personaRepository.findById(dto.getIdPersona())
                 .orElseThrow(() -> new RuntimeException("Persona no encontrada"));

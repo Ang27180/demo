@@ -23,7 +23,7 @@ public class Curso {
     @Column(name = "numero_curso")
     private String numcurso;
 
-    @Column(name = "Nombre")
+    @Column(name = "nombre")
     private String nombre;
 
     @Column(name = "Detalle")

@@ -29,44 +29,43 @@ public class SecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
+                        // RECURSOS PÚBLICOS Y ACCESO INICIAL
+                        .requestMatchers("/", "/home", "/nosotros", "/nuestros-tutores", "/registro", "/login", "/forgot-password").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/imagenes/**", "/files/medios-pago/**", "/favicon.ico", "/error").permitAll()
+                        .requestMatchers("/correo/**").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/", "/home", "/nosotros", "/nuestros-tutores").permitAll()
+                        // CURSOS
                         .requestMatchers(HttpMethod.GET, "/cursos", "/cursos/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/cursos/*/lecciones/*/completar").hasRole("ESTUDIANTE")
 
-                        .requestMatchers("/correo/**").permitAll()
-
+                        // REPORTES
                         .requestMatchers(HttpMethod.GET, "/reportes/certificado/pdf/**").hasAnyRole("ESTUDIANTE", "ACUDIENTE")
                         .requestMatchers(HttpMethod.GET, "/reportes/recibo/pdf/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/reportes/estadistico/pdf").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/reportes", "/reportes/").hasRole("ADMIN")
 
+                        // INSCRIPCIONES
                         .requestMatchers(HttpMethod.GET, "/inscripciones/catalogo").permitAll()
                         .requestMatchers("/inscripciones/**").hasRole("ESTUDIANTE")
 
+                        // TUTORES
                         .requestMatchers(HttpMethod.GET, "/tutor").permitAll()
                         .requestMatchers(HttpMethod.POST, "/tutor").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/tutor/**").hasRole("ADMIN")
-                        .requestMatchers("/tutor-panel", "/tutor-panel-estudiantes", "/tutor/panel/**")
-                                .hasAnyRole("ADMIN", "TUTOR")
+                        .requestMatchers("/tutor-panel", "/tutor-panel-estudiantes", "/tutor/panel/**").hasAnyRole("ADMIN", "TUTOR")
 
-                        // Gestión de contenido del curso: mismo flujo que admin; el tutor solo si el curso es suyo (validado en controlador)
+                        // PANEL ADMINISTRATIVO
+                        .requestMatchers("/admin/**", "/personas/**", "/personas/exportarExcel", "/correo/formulario").hasRole("ADMIN")
+
+                        // CONTENIDO DE CURSOS PARA ADMIN Y TUTOR
                         .requestMatchers(HttpMethod.GET, "/admin/cursos/*/contenido").hasAnyRole("ADMIN", "TUTOR")
                         .requestMatchers(HttpMethod.POST, "/admin/cursos/*/modulos").hasAnyRole("ADMIN", "TUTOR")
                         .requestMatchers(HttpMethod.POST, "/admin/cursos/modulos/*/lecciones").hasAnyRole("ADMIN", "TUTOR")
                         .requestMatchers(HttpMethod.GET, "/admin/cursos/modulos/eliminar/*").hasAnyRole("ADMIN", "TUTOR")
                         .requestMatchers(HttpMethod.GET, "/admin/cursos/lecciones/eliminar/*").hasAnyRole("ADMIN", "TUTOR")
 
-                        .requestMatchers("/contacto", "/registro", "/login", "/forgot-password", "/css/**", "/js/**",
-                                "/imagenes/**", "/files/medios-pago/**", "/favicon.ico", "/error").permitAll()
-
-                        .requestMatchers("/admin/**", "/personas/**", "/personas/exportarExcel", "/correo/formulario")
-                                .hasRole("ADMIN")
-
-                        .requestMatchers("/estudiante/**", "/mis-cursos/**")
-                                .hasAnyRole("ADMIN", "ESTUDIANTE")
-
-                        // AJUSTE: Permisos para la nueva vista de Acudiente
+                        // PANELES DE ROL
+                        .requestMatchers("/estudiante/**", "/mis-cursos/**").hasAnyRole("ADMIN", "ESTUDIANTE")
                         .requestMatchers("/acudiente/**").hasAnyRole("ADMIN", "ACUDIENTE")
 
                         .anyRequest().authenticated())

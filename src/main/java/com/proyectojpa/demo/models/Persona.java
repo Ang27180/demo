@@ -32,6 +32,7 @@ public class Persona implements Serializable {
     private Integer id;
 
     @NotBlank(message = "El documento no puede estar vacío")
+    @Pattern(regexp = "\\d+", message = "El documento debe contener solo números")
     @Column(name = "no_documento", nullable = false, unique = true)
     private String documento;
 
@@ -54,7 +55,7 @@ public class Persona implements Serializable {
     private String email;
 
     @NotBlank(message = "La dirección no puede estar vacía")
-    @Column(name = "direccion_persona")
+    @Column(name = "Direccion_Persona")
     private String direccion;
 
     @NotBlank(message = "El teléfono es obligatorio")
@@ -94,6 +95,22 @@ public class Persona implements Serializable {
     @Column(name = "tutor_email")
     private String tutorEmail;
 
+    // ✅ Campos transitorios para el acudiente (Registro TI)
+    @Transient
+    private String tutorTipoDocumento;
+
+    @Transient
+    private String tutorDocumento;
+
+    @Transient
+    private String tutorGenero;
+
+    @Transient
+    private String tutorDireccion;
+
+    @Transient
+    private String tutorAutorizacion;
+
     // Getters y setters existentes
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
@@ -131,6 +148,21 @@ public class Persona implements Serializable {
 
     public String getTutorEmail() { return tutorEmail; }
     public void setTutorEmail(String tutorEmail) { this.tutorEmail = tutorEmail; }
+
+    public String getTutorTipoDocumento() { return tutorTipoDocumento; }
+    public void setTutorTipoDocumento(String tutorTipoDocumento) { this.tutorTipoDocumento = tutorTipoDocumento; }
+
+    public String getTutorDocumento() { return tutorDocumento; }
+    public void setTutorDocumento(String tutorDocumento) { this.tutorDocumento = tutorDocumento; }
+
+    public String getTutorGenero() { return tutorGenero; }
+    public void setTutorGenero(String tutorGenero) { this.tutorGenero = tutorGenero; }
+
+    public String getTutorDireccion() { return tutorDireccion; }
+    public void setTutorDireccion(String tutorDireccion) { this.tutorDireccion = tutorDireccion; }
+
+    public String getTutorAutorizacion() { return tutorAutorizacion; }
+    public void setTutorAutorizacion(String tutorAutorizacion) { this.tutorAutorizacion = tutorAutorizacion; }
 
     public List<Estudiante> getEstudiantes() {
         return estudiantes;
