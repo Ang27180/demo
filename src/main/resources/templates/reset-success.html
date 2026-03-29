@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+
+<head>
+    <title layout:fragment="titulo">Contraseña actualizada</title>
+    <link rel="stylesheet" th:href="@{/css/login.css}" />
+</head>
+
+<body>
+    <section layout:fragment="contenido"
+        class="container-fluid min-vh-100 d-flex align-items-center justify-content-center login-container pt-5 pb-5 mt-2">
+        <div class="card shadow p-5" style="max-width: 520px; width: 90%;">
+            <div class="card-body text-center">
+                <h1 class="h3 mb-3 text-success">Contraseña actualizada</h1>
+                <p class="text-muted mb-4">
+                    Tu contraseña se ha guardado correctamente. Ya puedes iniciar sesión con la nueva clave.
+                </p>
+                <a th:href="@{/login}" class="btn btn-dark">Ir al inicio de sesión</a>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
