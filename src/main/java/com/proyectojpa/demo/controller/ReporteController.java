@@ -1,16 +1,16 @@
-package com.poryectojpa.demo.controller;
+package com.proyectojpa.demo.controller;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.poryectojpa.demo.dto.DatoEstadisticoDTO;
-import com.poryectojpa.demo.Service.ReporteJasperService;
-import com.poryectojpa.demo.models.Inscripcion;
-import com.poryectojpa.demo.models.Persona;
-import com.poryectojpa.demo.repository.personaRepository;
-import com.poryectojpa.demo.repository.InscripcionRepository;
-import com.poryectojpa.demo.security.CustomUserDetails;
+import com.proyectojpa.demo.dto.DatoEstadisticoDTO;
+import com.proyectojpa.demo.Service.ReporteJasperService;
+import com.proyectojpa.demo.models.Inscripcion;
+import com.proyectojpa.demo.models.Persona;
+import com.proyectojpa.demo.repository.PersonaRepository;
+import com.proyectojpa.demo.repository.InscripcionRepository;
+import com.proyectojpa.demo.security.CustomUserDetails;
 import org.springframework.core.io.ClassPathResource;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,13 +27,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ReporteController {
 
     private final ReporteJasperService reporteJasperService;
-    private final personaRepository personaRepository;
+    private final PersonaRepository personaRepository;
     private final JdbcTemplate jdbcTemplate;
     // CAMBIO B: Repositorio de inscripciones para validar seguridad
     private final InscripcionRepository inscripcionRepository;
 
     public ReporteController(ReporteJasperService reporteJasperService,
-                             personaRepository personaRepository,
+                             PersonaRepository personaRepository,
                              JdbcTemplate jdbcTemplate,
                              InscripcionRepository inscripcionRepository) {
         this.reporteJasperService = reporteJasperService;

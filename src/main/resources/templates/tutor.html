@@ -97,7 +97,14 @@
                             </p>
                         </div>
                         <div class="mt-auto">
-                            <a th:href="@{/tutor-panel-estudiantes}" class="btn btn-success-action w-100 py-3 rounded-3 fw-bold">
+                            <a th:if="${cursosTutor != null && !cursosTutor.isEmpty() && cursosTutor.size() == 1}"
+                               th:href="@{/tutor/panel/cursos/{id}/alumnos(id=${cursosTutor[0].id})}"
+                               class="btn btn-success-action w-100 py-3 rounded-3 fw-bold">
+                                <i class="fas fa-user-graduate me-2"></i> Ver Estudiantes
+                            </a>
+                            <a th:if="${cursosTutor == null || cursosTutor.isEmpty() || cursosTutor.size() > 1}"
+                               th:href="@{/tutor/panel/cursos}"
+                               class="btn btn-success-action w-100 py-3 rounded-3 fw-bold">
                                 <i class="fas fa-user-graduate me-2"></i> Ver Estudiantes
                             </a>
                         </div>
