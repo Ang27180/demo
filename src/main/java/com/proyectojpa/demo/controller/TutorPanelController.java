@@ -42,7 +42,12 @@ public class TutorPanelController {
     public String dashboard(Model model) {
         Persona persona = getPersonaActual();
         if (persona == null) return "redirect:/login";
+        Tutor tutor = tutorRepo.findByPersona(persona).orElse(null);
+        List<Curso> cursos = (tutor != null)
+                ? cursoRepo.findByTutor_IdTutorWithTutorPersona(tutor.getIdTutor())
+                : new ArrayList<>();
         model.addAttribute("persona", persona);
+        model.addAttribute("cursosTutor", cursos);
         return "tutor";
     }
 
