@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<!-- Plantilla Thymeleaf con Layout Decorator (layout.html) -->
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout}">
+
+<head>
+  <meta charset="UTF-8">
+  <title layout:fragment="titulo">Acudiente | Sabor MasterClass</title>
+  <!-- Referencia a la hoja de estilos generada para el panel Acudiente -->
+  <link rel="stylesheet" th:href="@{/css/acudiente.css}">
+</head>
+
+<body>
+  <!-- Layout general de la vista -->
+  <div layout:fragment="contenido" class="acudiente-section pt-5 pb-5">
+    
+    <div class="container mt-5">
+      <!-- Sección de Bienvenida -->
+      <div class="welcome-box mb-5">
+        <h4 class="text-white-50 text-uppercase fw-bold letter-spacing-1 mb-2" style="font-size: 0.8rem;">Área del Acudiente</h4>
+        <h1 class="display-3 fw-bold">
+            Panel <span class="name-highlight">Familiar</span> 👨👩👧👦
+        </h1>
+        <p class="lead text-white-50 mx-auto" style="max-width: 600px;">
+            Haciendo el seguimiento de tus estudiantes matriculados, acudientes vinculados y autorizaciones.
+        </p>
+      </div>
+
+      <!-- Header Resumen y Botones -->
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+        <h2 class="h4 fw-bold text-white mb-0">Resumen de la familia</h2>
+        <!-- Si el que está leyendo es un estudiante logueado (rol 2), muestra botón de retorno -->
+        <a th:href="@{/estudiante}" class="btn-outline-light-sm" th:if="${personaSesion != null and personaSesion.rolId == 2}">
+          <i class="fa-solid fa-arrow-left me-2"></i>Volver a Estudiante
+        </a>
+      </div>
+
+      <!-- Alerta en caso de no estar asociado a nadie -->
+      <div th:if="${estudiante == null}" class="alert alert-warning shadow-sm mb-4">
+        <i class="fa-solid fa-triangle-exclamation me-2"></i>
+        No hay un perfil de estudiante asociado a esta cuenta. Las siguientes secciones estarán vacías hasta que el estudiante dependiente inicie su propio progreso.
+      </div>
+
+      <!-- Tarjeta: Datos del Estudiante (Oculta si no hay estudiante o se rinde opacionalmente) -->
+      <div class="acudiente-card accent-border">
+        <div class="acudiente-card-body">
+          <h5 class="fw-bold text-accent mb-4">
+            <i class="fa-solid fa-id-card me-2"></i>Datos del estudiante matriculado
+          </h5>
+          <div class="row g-4">
+            <div class="col-md-4">
+              <p class="mb-1 text-muted small fw-bold text-uppercase">Nombre Completo</p>
+              <!-- Thymeleaf text resolver de Entidad Estudiante y Entidad Persona anidada -->
+              <p class="fs-5 mb-0" th:text="${estudiante != null and estudiante.persona != null} ? ${estudiante.persona.nombre} : '—'"></p>
+            </div>
+            <div class="col-md-4">
+              <p class="mb-1 text-muted small fw-bold text-uppercase">Correo del Estudiante</p>
+              <p class="fs-5 mb-0 text-break" th:text="${estudiante != null and estudiante.persona != null} ? ${estudiante.persona.email} : '—'"></p>
+            </div>
+            <div class="col-md-4">
+              <p class="mb-1 text-muted small fw-bold text-uppercase">Progreso General</p>
+              <p class="fs-5 fw-bold text-accent mb-0" th:text="${estudiante != null} ? ${estudiante.progreso + '%'} : '—'"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta: Acudientes Vinculados (Iteración con la lista cargada por AcudienteController) -->
+      <div class="acudiente-card">
+        <div class="acudiente-card-header">
+          <h5 class="fw-bold text-accent mb-0">
+            <i class="fa-solid fa-users me-2"></i>Acudientes vinculados a este estudiante
+          </h5>
+        </div>
+        <div class="acudiente-card-body p-0">
+          <div th:if="${acudientes == null or #lists.isEmpty(acudientes)}"
+            class="alert alert-info border-0 rounded-0 m-0">
+            El menor todavía no tiene acudientes legales aprobados.
+          </div>
+          <div th:if="${acudientes != null and !#lists.isEmpty(acudientes)}" class="table-responsive">
+            <table class="table table-premium align-middle mb-0 text-center">
+              <thead>
+                <tr>
+                  <th scope="col" class="py-3 px-4 fw-bold text-start">Nombre de Responsable</th>
+                  <th scope="col" class="py-3 px-4 fw-bold">Teléfono de Contacto</th>
+                  <th scope="col" class="py-3 px-4 fw-bold">Correo Electrónico</th>
+                  <th scope="col" class="py-3 px-4 fw-bold">Relación / Parentesco</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="acud : ${acudientes}">
+                  <td class="py-3 px-4 fw-semibold text-start text-white" th:text="${acud.persona != null} ? ${acud.persona.nombre} : '—'"></td>
+                  <td class="py-3 px-4" th:text="${acud.persona != null} ? ${acud.persona.telefono} : '—'"></td>
+                  <td class="py-3 px-4 text-break" th:text="${acud.persona != null} ? ${acud.persona.email} : '—'"></td>
+                  <td class="py-3 px-4">
+                    <span class="badge badge-custom px-3 py-2 rounded-pill" th:text="${acud.autorizacion != null} ? ${acud.autorizacion} : '—'"></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta: Cursos Inscritos (Muestra las inscripciones y el botón de autorizar por formulario POST) -->
+      <div class="acudiente-card">
+        <div class="acudiente-card-header">
+          <h5 class="fw-bold text-accent mb-0">
+            <i class="fa-solid fa-book-open me-2"></i>Cursos Inscritos
+          </h5>
+        </div>
+        <div class="acudiente-card-body p-0">
+          <div th:if="${inscripciones == null or #lists.isEmpty(inscripciones)}"
+            class="alert alert-info border-0 rounded-0 m-0">
+            El menor todavía no se ha matriculado en ningún curso del catálogo.
+          </div>
+          <div th:if="${inscripciones != null and !#lists.isEmpty(inscripciones)}" class="table-responsive">
+            <table class="table table-premium align-middle mb-0 text-center">
+              <thead>
+                <tr>
+                  <th scope="col" class="py-3 px-4 fw-bold text-start">Nombre del Curso</th>
+                  <th scope="col" class="py-3 px-4 fw-bold">Estado de Progreso</th>
+                  <th scope="col" class="py-3 px-4 fw-bold">Fecha de Inscripción</th>
+                  <th scope="col" class="py-3 px-4 fw-bold text-end">Autorizaciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="insc : ${inscripciones}">
+                  <td class="py-3 px-4 fw-semibold text-start text-white" th:text="${insc.curso != null} ? ${insc.curso.nombre} : '—'"></td>
+                  <td class="py-3 px-4">
+                    <span class="badge badge-custom px-3 py-2 rounded-pill" th:text="${insc.estado != null} ? ${insc.estado.nombre} : '—'"></span>
+                  </td>
+                  <td class="py-3 px-4" th:text="${insc.fechaInscripcion != null} ? ${#temporals.format(insc.fechaInscripcion, 'dd/MM/yyyy')} : '—'"></td>
+                  <td class="py-3 px-4 text-end">
+                    <!-- Formulario dinámico a /acudiente/autorizar-certificado/ID -->
+                    <form th:action="@{/acudiente/autorizar-certificado/{id}(id=${insc.id})}" method="post" style="display:inline;">
+                      <button type="submit" class="btn-premium-sm" th:if="${insc.certificadoAutorizado == null or !insc.certificadoAutorizado}" title="Emitir firma parentológica digital">
+                        <i class="fa-solid fa-file-signature me-1"></i>Emitir Firma
+                      </button>
+                      <span class="badge badge-custom px-3 py-2 rounded-pill" th:if="${insc.certificadoAutorizado != null and insc.certificadoAutorizado}">
+                        <i class="fa-solid fa-check-circle me-1"></i>Autorizado ✅
+                      </span>
+                    </form>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center justify-content-center text-muted small mt-4">
+        <i class="fa-solid fa-circle-info text-accent me-2"></i>
+        <span>Los botones actúan como una firma digital inmediata y otorgan derechos de descarga instantáneos al estudiante.</span>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

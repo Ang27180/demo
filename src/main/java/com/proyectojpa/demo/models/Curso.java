@@ -1,5 +1,6 @@
 package com.proyectojpa.demo.models;
 
+import java.util.Set;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,10 +17,10 @@ public class Curso {
     @Column(name = "id_curso")
     private Integer id;
 
-    @Column(name = "Duracion")
+    @Column(name = "duracion")
     private String duracion;
 
-    @Column(name = "Numero_Curso")
+    @Column(name = "numero_curso")
     private String numcurso;
 
     @Column(name = "Nombre")
@@ -28,13 +29,13 @@ public class Curso {
     @Column(name = "Detalle")
     private String detalle;
 
-    @Column(name = "Costo")
+    @Column(name = "costo")
     private Double costo;
 
-    @Column(name = "Nivel_Aprendizaje")
+    @Column(name = "nivel_aprendizaje")
     private String aprendizaje;
 
-    @Column(name = "Categoria")
+    @Column(name = "categoria")
     private Integer categoria;
 
     @Column(name = "imagen")
@@ -45,13 +46,13 @@ public class Curso {
     private Tutor tutor;
 
     @jakarta.persistence.OneToMany(mappedBy = "curso")
-    private java.util.List<Modulo> modulos;
+    private Set<Modulo> modulos;
 
-    public java.util.List<Modulo> getModulos() {
+    public Set<Modulo> getModulos() {
         return modulos;
     }
 
-    public void setModulos(java.util.List<Modulo> modulos) {
+    public void setModulos(Set<Modulo> modulos) {
         this.modulos = modulos;
     }
 

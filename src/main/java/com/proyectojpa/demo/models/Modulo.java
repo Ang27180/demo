@@ -1,6 +1,6 @@
 package com.proyectojpa.demo.models;
 
-import java.util.List;
+import java.util.Set;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,7 +28,7 @@ public class Modulo {
     private Curso curso;
 
     @OneToMany(mappedBy = "modulo")
-    private List<Leccion> lecciones;
+    private Set<Leccion> lecciones;
 
     @Column(name = "cantidad")
     private Integer cantidad; // Nueva cantidad solicitada
@@ -57,11 +57,11 @@ public class Modulo {
         this.curso = curso;
     }
 
-    public List<Leccion> getLecciones() {
+    public Set<Leccion> getLecciones() {
         return lecciones;
     }
 
-    public void setLecciones(List<Leccion> lecciones) {
+    public void setLecciones(Set<Leccion> lecciones) {
         this.lecciones = lecciones;
     }
 

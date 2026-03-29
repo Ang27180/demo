@@ -84,7 +84,7 @@ public class MisCursosController {
                         return estudianteRepository.save(nuevoEstudiante);
                     });
 
-            List<Inscripcion> inscripciones = inscripcionRepo.findByEstudiante_IdEstudiante(estudiante.getIdEstudiante());
+            List<Inscripcion> inscripciones = inscripcionRepo.findByEstudianteIdWithCursoAndEstado(estudiante.getIdEstudiante());
             model.addAttribute("inscripciones", inscripciones);
             model.addAttribute("esTutor", false);
         }

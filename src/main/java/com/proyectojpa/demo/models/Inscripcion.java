@@ -20,7 +20,7 @@ public class Inscripcion {
     @Column(name = "id_inscripcion")
     private Integer id;
 
-    @Column(name = "fecha_inscripcion", nullable = false)
+    @Column(name = "Fecha_Inscripcion", nullable = false)
     private LocalDate fechaInscripcion;
 
     @ManyToOne
@@ -39,7 +39,22 @@ public class Inscripcion {
     @Column(name = "fecha_limite_pago")
     private LocalDate fechaLimitePago;
 
+    /**
+     * Autorización expresa del acudiente/tutor para emitir el certificado final.
+     * Mapeado a la base de datos para funcionar con la vista de Acudiente.
+     */
+    @Column(name = "certificado_autorizado")
+    private Boolean certificadoAutorizado = false;
+
     // getters y setters
+
+    public Boolean getCertificadoAutorizado() {
+        return certificadoAutorizado;
+    }
+
+    public void setCertificadoAutorizado(Boolean certificadoAutorizado) {
+        this.certificadoAutorizado = certificadoAutorizado;
+    }
 
     public Integer getId() {
         return id;

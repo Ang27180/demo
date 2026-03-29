@@ -27,7 +27,7 @@ public class CustomUserDetails implements UserDetails {
             case 1 -> "ROLE_ADMIN";
             case 2 -> "ROLE_ESTUDIANTE";
             case 3 -> "ROLE_TUTOR";
-            case 4 -> "ROLE_PROVEEDOR";
+            case 4 -> "ROLE_ACUDIENTE"; // AJUSTE: Vinculado a la funcionalidad de Acudiente
             default -> "ROLE_USER";
         };
         return List.of(new SimpleGrantedAuthority(roleName));

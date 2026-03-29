@@ -22,7 +22,7 @@ public class Estudiante {
     @JoinColumn(name = "id_estado_estudiante", referencedColumnName = "id")
     private EstadoInscripcion estadoEstudiante;
 
-    @Column(name = "progreso", nullable = false, length = 45)
+    @Column(name = "Progreso", nullable = false, length = 45)
     private String progreso;
 
     @Column(name = "cantidad")

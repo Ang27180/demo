@@ -1,103 +1,123 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CertificadoCurso" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0716c024-5e16-4447-9753-48b456bd84a1">
-	<parameter name="NOMBRE_ESTUDIANTE" class="java.lang.String"/>
-	<parameter name="NOMBRE_CURSO" class="java.lang.String"/>
-	<parameter name="FECHA" class="java.lang.String"/>
-	<!-- AJUSTE: Modificamos el tipo de clase de String a InputStream para que Jasper procese directamente los bytes de la marca de agua -->
-	<parameter name="LOGO_PATH" class="java.io.InputStream"/>
-	<!-- AJUSTE: Parámetro tipo InputStream para recibir la imagen de la firma real -->
-	<parameter name="FIRMA_PATH" class="java.io.InputStream"/>
-	<background>
-		<band splitType="Stretch"/>
-	</background>
-	<title>
-		<band height="555" splitType="Stretch">
-			<!-- AJUSTE: Se movió la imagen del logo a la banda del título, ubicándola antes que todo para actuar como capa de fondo. -->
-			<image hAlign="Center" vAlign="Middle" scaleImage="RetainShape">
-				<!-- AJUSTE: Se revirtió el tamaño a 802x555 (el tamaño de la banda y página) para evitar la validación estricta de JasperReports (Element bottom reaches outside band area) -->
-				<reportElement mode="Transparent" x="0" y="0" width="802" height="555" uuid="e2a3b4c5-d6e8-4f9a-0b1c-2d3e4f5a6b7c">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<graphicElement fill="Solid">
-					<pen lineWidth="0.0"/>
-				</graphicElement>
-				<imageExpression><![CDATA[$P{LOGO_PATH}]]></imageExpression>
-			</image>
-			<!-- AJUSTE: Se agregó mode="Transparent" para que el rectángulo no tape, y se cambió de morado #4B0082 a amarillo #FFC107 (institucional) -->
-			<rectangle>
-				<reportElement mode="Transparent" x="0" y="0" width="802" height="555" forecolor="#FFC107" uuid="e1a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c"/>
-				<graphicElement>
-					<pen lineWidth="10.0" lineStyle="Double"/>
-				</graphicElement>
-			</rectangle>
-			<staticText>
-				<!-- AJUSTE: Color cambiado a negro (#000000), manteniendo la negrita -->
-				<reportElement x="0" y="60" width="802" height="60" forecolor="#000000" uuid="f1a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="40" isBold="true" isItalic="true"/>
-				</textElement>
-				<text><![CDATA[SABOR MASTERCLASS]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="140" width="802" height="30" uuid="01a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="18"/>
-				</textElement>
-				<text><![CDATA[Otorga el presente certificado a:]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="0" y="190" width="802" height="50" forecolor="#000000" uuid="11a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="32" isBold="true" isUnderline="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{NOMBRE_ESTUDIANTE}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="0" y="270" width="802" height="30" uuid="21a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="18"/>
-				</textElement>
-				<text><![CDATA[Por haber completado satisfactoriamente el curso de:]]></text>
-			</staticText>
-			<textField>
-				<!-- AJUSTE: Color cambiado a negro (#000000), se asegura la propiedad isBold="true" -->
-				<reportElement x="0" y="320" width="802" height="50" forecolor="#000000" uuid="31a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="28" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{NOMBRE_CURSO}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="0" y="410" width="802" height="20" uuid="41a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="14"/>
-				</textElement>
-				<!-- AJUSTE: Cambio de frase para mostrar la ciudad explícita Bogotá D.C. -->
-				<text><![CDATA[Dado en la ciudad de Bogotá D.C. el día:]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="0" y="440" width="802" height="30" uuid="51a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="16" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{FECHA}]]></textFieldExpression>
-			</textField>
-			<!-- AJUSTE: Se reemplazó el texto inventado de Carlos Ramírez por la imagen de la firma. -->
-			<image hAlign="Center" vAlign="Middle" scaleImage="RetainShape">
-				<reportElement mode="Transparent" x="301" y="445" width="200" height="70" uuid="91a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5e"/>
-				<imageExpression><![CDATA[$P{FIRMA_PATH}]]></imageExpression>
-			</image>
-			<line>
-				<reportElement x="301" y="515" width="200" height="1" uuid="61a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c"/>
-			</line>
-			<staticText>
-				<reportElement x="301" y="520" width="200" height="20" uuid="71a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c"/>
-				<textElement textAlignment="Center">
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[Director Académico]]></text>
-			</staticText>
-		</band>
-	</title>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
+    name="CertificadoCurso" pageWidth="842" pageHeight="595" orientation="Landscape" 
+    columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+
+    <parameter name="NOMBRE_ESTUDIANTE" class="java.lang.String"/>
+    <parameter name="NOMBRE_CURSO" class="java.lang.String"/>
+    <parameter name="FECHA" class="java.lang.String"/>
+    <parameter name="LOGO_PATH" class="java.io.InputStream"/>
+    <parameter name="FIRMA_PATH" class="java.io.InputStream"/>
+
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+
+    <title>
+        <band height="555" splitType="Stretch">
+
+            <!-- ✅ LOGO COMO MARCA DE AGUA A TAMAÑO COMPLETO (RELLENANDO TODO EL ESPACIO) -->
+            <image scaleImage="FillFrame" hAlign="Center" vAlign="Middle">
+                <reportElement 
+                    x="0" 
+                    y="0" 
+                    width="802" 
+                    height="555"
+                    mode="Transparent"/>
+                <graphicElement>
+                    <pen lineWidth="0.0"/>
+                </graphicElement>
+                <imageExpression><![CDATA[$P{LOGO_PATH}]]></imageExpression>
+            </image>
+
+            <!-- BORDE (MARCADO COMO TRANSPARENTE PARA NO TAPAR EL LOGO) -->
+            <rectangle>
+                <reportElement x="0" y="0" width="802" height="555" forecolor="#FFC107" mode="Transparent"/>
+                <graphicElement>
+                    <pen lineWidth="10.0" lineStyle="Double"/>
+                </graphicElement>
+            </rectangle>
+
+            <!-- TITULO -->
+            <staticText>
+                <reportElement x="0" y="60" width="802" height="60" forecolor="#000000"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="40" isBold="true" isItalic="true"/>
+                </textElement>
+                <text><![CDATA[SABOR MASTERCLASS]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="0" y="140" width="802" height="30"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="18"/>
+                </textElement>
+                <text><![CDATA[Otorga el presente certificado a:]]></text>
+            </staticText>
+
+            <!-- NOMBRE -->
+            <textField>
+                <reportElement x="0" y="190" width="802" height="50" forecolor="#000000"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="32" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{NOMBRE_ESTUDIANTE}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="270" width="802" height="30"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="18"/>
+                </textElement>
+                <text><![CDATA[Por haber completado satisfactoriamente el curso de:]]></text>
+            </staticText>
+
+            <!-- CURSO -->
+            <textField>
+                <reportElement x="0" y="320" width="802" height="50" forecolor="#000000"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="28" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{NOMBRE_CURSO}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="0" y="410" width="802" height="20"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="14"/>
+                </textElement>
+                <text><![CDATA[Dado en la ciudad de Bogotá D.C. el día:]]></text>
+            </staticText>
+
+            <!-- FECHA -->
+            <textField>
+                <reportElement x="0" y="440" width="802" height="30"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="16" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{FECHA}]]></textFieldExpression>
+            </textField>
+
+            <!-- FIRMA -->
+            <image scaleImage="RetainShape">
+                <reportElement x="301" y="445" width="200" height="70"/>
+                <imageExpression><![CDATA[$P{FIRMA_PATH}]]></imageExpression>
+            </image>
+
+            <line>
+                <reportElement x="301" y="515" width="200" height="1"/>
+            </line>
+
+            <staticText>
+                <reportElement x="301" y="520" width="200" height="20"/>
+                <textElement textAlignment="Center">
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Director Académico]]></text>
+            </staticText>
+
+        </band>
+    </title>
 </jasperReport>

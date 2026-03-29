@@ -23,7 +23,7 @@
 
         <div class="container">
             <!-- Box de Certificación Premium (Sticky Top under header) -->
-            <div th:if="${inscripcion != null}" class="cert-box-premium d-flex flex-wrap align-items-center justify-content-between mb-5">
+            <div th:if="${inscripcionActual != null}" class="cert-box-premium d-flex flex-wrap align-items-center justify-content-between mb-5">
                 <div class="d-flex align-items-center gap-4">
                     <div class="cert-icon shadow-lg">
                         <i class="fas fa-award"></i>
@@ -34,7 +34,7 @@
                     </div>
                 </div>
                 <div class="mt-3 mt-md-0">
-                    <a th:href="@{'/reportes/certificado/pdf/' + ${inscripcion.id}}"
+                    <a th:href="@{'/reportes/certificado/pdf/' + ${inscripcionActual.id}}"
                         class="btn-yellow px-5 py-3 rounded-pill fw-bold d-inline-flex align-items-center shadow-lg text-decoration-none">
                         <i class="fas fa-file-pdf me-2"></i> Descargar Certificado
                     </a>

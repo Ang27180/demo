@@ -36,7 +36,7 @@ public class SecurityConfig {
 
                         .requestMatchers("/correo/**").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/reportes/certificado/pdf/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/reportes/certificado/pdf/**").hasAnyRole("ESTUDIANTE", "ACUDIENTE")
                         .requestMatchers(HttpMethod.GET, "/reportes/recibo/pdf/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/reportes/estadistico/pdf").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/reportes", "/reportes/").hasRole("ADMIN")
@@ -65,6 +65,9 @@ public class SecurityConfig {
 
                         .requestMatchers("/estudiante/**", "/mis-cursos/**")
                                 .hasAnyRole("ADMIN", "ESTUDIANTE")
+
+                        // AJUSTE: Permisos para la nueva vista de Acudiente
+                        .requestMatchers("/acudiente/**").hasAnyRole("ADMIN", "ACUDIENTE")
 
                         .anyRequest().authenticated())
 
@@ -97,6 +100,10 @@ public class SecurityConfig {
                             } else if (authorities.stream()
                                     .anyMatch(a -> a.getAuthority().equals("ROLE_TUTOR"))) {
                                 redirectUrl = "/tutor-panel";
+                            } else if (authorities.stream()
+                                    .anyMatch(a -> a.getAuthority().equals("ROLE_ACUDIENTE"))) {
+                                // AJUSTE: Redirección especial para el rol 4
+                                redirectUrl = "/acudiente/panel";
                             }
                             response.sendRedirect(request.getContextPath() + redirectUrl);
                         })

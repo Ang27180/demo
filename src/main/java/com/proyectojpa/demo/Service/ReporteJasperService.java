@@ -1,14 +1,14 @@
 package com.proyectojpa.demo.Service;
-import com.proyectojpa.demo.dto.DatoEstadisticoDTO;
+
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import com.proyectojpa.demo.dto.DatoEstadisticoDTO;
 
 @Service
 public class ReporteJasperService {
@@ -18,8 +18,6 @@ public class ReporteJasperService {
             Map<String, Object> parametros
     ) {
         try {
-            // OJO: sin pasar la ruta desde afuera,
-            // la dejamos fija y bien escrita
             InputStream jrxmlStream = getClass()
                     .getResourceAsStream("/Reportes/Reporte_Estadistico.jrxml");
 
@@ -82,21 +80,6 @@ public class ReporteJasperService {
             System.err.println("[ERROR JASPER] Fallo total: " + e.getMessage());
             e.printStackTrace();
             throw new RuntimeException("Error al generar el certificado: " + e.getMessage(), e);
-        }
-    }
-
-    public byte[] generarReciboPdf(Map<String, Object> parametros) {
-        try {
-            InputStream jrxmlStream = getClass().getResourceAsStream("/Reportes/Recibo.jrxml");
-            if (jrxmlStream == null) {
-                throw new RuntimeException("No se encontró la plantilla: /Reportes/Recibo.jrxml");
-            }
-            JasperReport jasperReport = JasperCompileManager.compileReport(jrxmlStream);
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, new JREmptyDataSource());
-            return JasperExportManager.exportReportToPdf(jasperPrint);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error generando el recibo PDF: " + e.getMessage(), e);
         }
     }
 }

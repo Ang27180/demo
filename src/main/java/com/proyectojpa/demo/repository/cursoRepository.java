@@ -14,7 +14,7 @@ public interface cursoRepository extends JpaRepository<Curso, Integer> {
 
     // Nota: evitar MultipleBagFetchException. Primero cargamos solo `modulos`
     // y luego inicializamos `modulos.lecciones` en el controlador con otra carga.
-    @EntityGraph(attributePaths = { "modulos" })
+    @EntityGraph(attributePaths = { "modulos", "modulos.lecciones" })
     @Query("SELECT c FROM Curso c WHERE c.id = :id")
     Optional<Curso> findByIdWithContenido(@Param("id") Integer id);
 

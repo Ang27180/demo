@@ -54,7 +54,7 @@ public class Persona implements Serializable {
     private String email;
 
     @NotBlank(message = "La dirección no puede estar vacía")
-    @Column(name = "Direccion_Persona")
+    @Column(name = "direccion_persona")
     private String direccion;
 
     @NotBlank(message = "El teléfono es obligatorio")
@@ -85,13 +85,13 @@ public class Persona implements Serializable {
     @Transient
     private Boolean aceptaTerminos;
 
-    @Transient
+    @Column(name = "tutor_nombre")
     private String tutorNombre;
 
-    @Transient
+    @Column(name = "tutor_telefono")
     private String tutorTelefono;
 
-    @Transient
+    @Column(name = "tutor_email")
     private String tutorEmail;
 
     // Getters y setters existentes

@@ -1,0 +1,132 @@
+/* ========================================= */
+/* PANEL ACUDIENTE - PREMIUM DARK            */
+/* ========================================= */
+
+.acudiente-section {
+    background-color: #000;
+    min-height: 100vh;
+    color: #e0e0e0;
+}
+
+.welcome-box {
+    padding: 4rem 0 3rem;
+    text-align: center;
+}
+
+.welcome-box h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: white;
+    letter-spacing: -1px;
+}
+
+.welcome-box .name-highlight {
+    color: #f8c325;
+}
+
+/* Alertas de información personalizadas adaptadas a acudiente */
+.acudiente-section .alert-warning {
+    background-color: rgba(248, 195, 37, 0.1);
+    color: #f8c325;
+    border: 1px solid rgba(248, 195, 37, 0.3);
+}
+
+.acudiente-section .alert-info {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #a0a0a0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Tarjetas (Cards) estilo Dark/Premium */
+.acudiente-card {
+    background: #1A1A1A;
+    border: 1px solid rgba(255, 255, 255, 0.05); /* very subtle border */
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+
+.acudiente-card-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+}
+
+.acudiente-card-body {
+    padding: 1.5rem;
+}
+
+/* Borde izquierdo resaltado (amarillo estilo Sabor MasterClass) */
+.accent-border {
+    border-left: 4px solid #f8c325 !important;
+}
+
+.text-accent {
+    color: #f8c325 !important;
+}
+
+/* Tablas y visualización de Listas */
+.table-premium {
+    color: #e0e0e0;
+    --bs-table-bg: transparent;
+}
+.table-premium thead th {
+    background-color: #222 !important;
+    color: #a0a0a0 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-top: none;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+.table-premium tbody td {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background-color: transparent !important;
+    color: #e0e0e0;
+    vertical-align: middle;
+}
+.table-premium tbody tr:hover td {
+    background-color: rgba(255, 255, 255, 0.03) !important;
+}
+
+/* Badges (Insignias Redondeadas) */
+.badge-custom {
+    background-color: rgba(248, 195, 37, 0.15) !important;
+    color: #f8c325 !important;
+    border: 1px solid rgba(248, 195, 37, 0.4);
+    font-weight: 500;
+}
+
+/* Botones personalizados */
+.btn-premium-sm {
+    background: #f8c325;
+    color: #000;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    padding: 0.4rem 1rem;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+}
+.btn-premium-sm:hover {
+    background: #d8a61c;
+    transform: translateY(-2px);
+    color: #000;
+    box-shadow: 0 4px 12px rgba(248, 195, 37, 0.3);
+}
+
+.btn-outline-light-sm {
+    background: transparent;
+    color: #a0a0a0;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 0.4rem 1rem;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+.btn-outline-light-sm:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
