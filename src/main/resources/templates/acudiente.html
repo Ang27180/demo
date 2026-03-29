@@ -84,7 +84,6 @@
                   <th scope="col" class="py-3 px-4 fw-bold text-start">Nombre de Responsable</th>
                   <th scope="col" class="py-3 px-4 fw-bold">Teléfono de Contacto</th>
                   <th scope="col" class="py-3 px-4 fw-bold">Correo Electrónico</th>
-                  <th scope="col" class="py-3 px-4 fw-bold">Relación / Parentesco</th>
                 </tr>
               </thead>
               <tbody>
@@ -92,9 +91,6 @@
                   <td class="py-3 px-4 fw-semibold text-start text-white" th:text="${acud.persona != null} ? ${acud.persona.nombre} : '—'"></td>
                   <td class="py-3 px-4" th:text="${acud.persona != null} ? ${acud.persona.telefono} : '—'"></td>
                   <td class="py-3 px-4 text-break" th:text="${acud.persona != null} ? ${acud.persona.email} : '—'"></td>
-                  <td class="py-3 px-4">
-                    <span class="badge badge-custom px-3 py-2 rounded-pill" th:text="${acud.autorizacion != null} ? ${acud.autorizacion} : '—'"></span>
-                  </td>
                 </tr>
               </tbody>
             </table>
