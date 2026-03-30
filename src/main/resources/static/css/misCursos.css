@@ -148,6 +148,20 @@ body {
   box-shadow: 0 10px 20px rgba(248, 195, 37, 0.3);
 }
 
+.btn-premium-action--disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+  pointer-events: none;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-premium-action--disabled:hover {
+  background: var(--gold-accent);
+  transform: none;
+  box-shadow: none;
+}
+
 /* Empty State Luxury */
 .empty-state {
   text-align: center;

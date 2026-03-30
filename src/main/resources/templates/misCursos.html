@@ -77,10 +77,23 @@
                                 </div>
                             </div>
                             <div class="mt-4 pt-4 border-top border-white border-opacity-10">
-                                <a th:href="@{'/cursos/' + ${inscripcion.curso.id}}" class="btn-premium-action">
-                                    <i th:class="${esTutor != null and esTutor ? 'fas fa-tools' : 'fas fa-graduation-cap'}"></i>
-                                    <span th:text="${esTutor != null and esTutor ? 'Gestionar Contenido' : 'Continuar Aprendiendo'}">Ver Curso</span>
+                                <a th:if="${esTutor != null and esTutor}"
+                                    th:href="@{'/cursos/' + ${inscripcion.curso.id}}" class="btn-premium-action">
+                                    <i class="fas fa-tools"></i>
+                                    <span>Gestionar Contenido</span>
                                 </a>
+                                <a th:if="${(esTutor == null or !esTutor) and (inscripcion.estado == null or inscripcion.estado.codigo != 'PENDIENTE_PAGO')}"
+                                    th:href="@{'/cursos/' + ${inscripcion.curso.id}}" class="btn-premium-action">
+                                    <i class="fas fa-graduation-cap"></i>
+                                    <span>Continuar Aprendiendo</span>
+                                </a>
+                                <span th:if="${(esTutor == null or !esTutor) and inscripcion.estado != null and inscripcion.estado.codigo == 'PENDIENTE_PAGO'}"
+                                    class="btn-premium-action btn-premium-action--disabled"
+                                    role="button" aria-disabled="true"
+                                    title="Completa el pago para acceder al curso">
+                                    <i class="fas fa-graduation-cap"></i>
+                                    <span>Continuar Aprendiendo</span>
+                                </span>
                             </div>
                         </div>
 
