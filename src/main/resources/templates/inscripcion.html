@@ -1,30 +1,112 @@
-<!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     layout:decorate="~{layout}">
 
 <head>
     <meta charset="UTF-8">
-    <title layout:fragment="titulo">Inscripción a curso</title>
+    <title layout:fragment="titulo">Inscripción a curso - Sabor MasterClass</title>
     <link rel="stylesheet" th:href="@{/css/inscripcion.css}">
+    <style>
+        .inscripcion-section {
+            background-image: url('/imagenes/cooking-2362901_1280.jpg');
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        .inscripcion-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.9));
+            z-index: 1;
+        }
+        .container-relative {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+        }
+        .inscripcion-card {
+            background: rgba(20, 20, 22, 0.85);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 193, 7, 0.2);
+            padding: 3.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+            border-radius: 40px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        }
+        .inscripcion-card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            text-align: center;
+            background: linear-gradient(to right, #fff, #f8c325);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .form-label {
+            color: #f8c325;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            display: block;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+    </style>
 </head>
 
 <body>
-    <section layout:fragment="contenido" class="container py-5 mt-5 mb-5">
-        <form th:action="@{/inscripciones/guardar}" method="post">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-            <div class="inscripcion-card">
-                <h2>Registrar Inscripción</h2>
-                <input type="hidden" name="idEstudiante" th:value="${idEstudiante}">
-                <label>Curso</label>
-                <select name="idCurso" required>
-                    <option value="" th:if="${idCurso == null}">Seleccione un curso</option>
-                    <option th:each="curso : ${listaCursos}" th:value="${curso.id}" th:text="${curso.nombre}"
-                        th:selected="${idCurso == curso.id or #lists.size(listaCursos) == 1}">
-                    </option>
-                </select>
-                <button type="submit" class="mt-3">Guardar Inscripción</button>
+    <section layout:fragment="contenido" class="inscripcion-section">
+        <div class="inscripcion-overlay"></div>
+        
+        <div class="container animate__animated animate__fadeInUp">
+            <div class="card card-elegant-dark mx-auto" style="max-width: 550px;">
+                <div class="card-body">
+                    
+                    <div class="text-center mb-5">
+                        <div class="accent-icon">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <h1 class="title-gold mb-2">Registrar Inscripción</h1>
+                        <p class="text-white-50">Confirma tu elección para iniciar tu formación gastronómica.</p>
+                    </div>
+                    
+                    <form th:action="@{/inscripciones/guardar}" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <input type="hidden" name="idEstudiante" th:value="${idEstudiante}">
+                        
+                        <!-- ID del curso (si viene del catálogo) -->
+                        <div class="mb-5">
+                            <label for="idCurso" class="form-label form-label-gold">Selecciona el Curso</label>
+                            <select id="idCurso" name="idCurso" class="form-select custom-select-dark" required>
+                                <option value="" disabled selected>Escoge una MasterClass...</option>
+                                <option th:each="curso : ${listaCursos}" 
+                                        th:value="${curso.id}" 
+                                        th:text="${curso.nombre}"
+                                        th:selected="${idCurso != null and curso.id == idCurso}">
+                                    Nombre del curso
+                                </option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-gold-action w-100 shadow-sm mb-4">
+                            <i class="fas fa-check-circle me-2 text-dark"></i> Confirmar Inscripción
+                        </button>
+                        
+                        <div class="text-center">
+                            <a th:href="@{/cursos}" class="text-white-50 small text-decoration-none">
+                                <i class="fas fa-arrow-left me-1"></i> Volver al Catálogo
+                            </a>
+                        </div>
+                    </form>
+                    
+                </div>
             </div>
-        </form>
+        </div>
     </section>
 </body>
 

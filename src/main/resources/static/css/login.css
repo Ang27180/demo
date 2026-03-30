@@ -1,118 +1,82 @@
-/* ============================= */
-/* Fondo general para login      */
-/* ============================= */
-body.no-footer {
-  background-color: #ffffff;
-  font-family: 'Segoe UI', sans-serif;
-  margin: 0;
-  padding-top: 80px;   /* espacio navbar */
-  padding-bottom: 60px; /* espacio footer */
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden; /* AJUSTE: Evita el scroll */
-}
+/* ================================================================ */
+/* login.css — Estilos Premium para la vista de Login              */
+/* ================================================================ */
 
-/* ============================= */
-/* Navbar                        */
-/* ============================= */
-.navbar-lg {
-  height: 90px;
-  background-color: rgb(0, 0, 0) !important;
-}
+@import url("auth-pages.css");
 
-.navbar-brand img {
-  margin-right: 10px;
-}
-
-/* ============================= */
-/* Footer fijo                   */
-/* ============================= */
-footer.fixed-bottom {
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1020;
-  border-top: 1px solid #000000;
-  background-color: rgb(0, 0, 0) !important;
-}
-
-footer i {
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-footer i:hover {
-  transform: scale(1.1);
-}
-
-/* ============================= */
-/* Contenedor principal          */
-/* ============================= */
+/* Contenedor con fondo claro (guiado por el home) */
 .login-container {
-  background-color: #f8f9fa; /* gris muy suave */
+  background-color: #f8f9fa;
 }
 
-/* ============================= */
-/* Card de login                 */
-/* ============================= */
-.login-container .card {
-  border-radius: 20px;
-  border: none;
-  box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.2);
-  background-color: #fff;
+/* Tarjeta Premium Oscura (Sobre el fondo claro) */
+.login-container .auth-card {
+  background-color: var(--dark-card) !important;
+  border: 1px solid var(--border-gold) !important;
+  border-radius: 1.75rem !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4) !important;
+  padding: 2.5rem !important;
+  overflow: hidden;
 }
 
-/* Título */
-.login-container h1 {
-  font-weight: bold;
-  font-size: 1.8rem;
-  color: #333;
+/* Inputs Oscuros con acento dorado */
+.login-container .input-group-text {
+  background-color: #000 !important;
+  border-color: #333 !important;
+  color: var(--yellow-accent) !important;
+  border-top-left-radius: 50px !important;
+  border-bottom-left-radius: 50px !important;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
 }
 
-/* ============================= */
-/* Inputs                        */
-/* ============================= */
 .login-container .form-control {
-  border-radius: 10px;
-  padding: 12px;
-  border: 1px solid #ccc;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  background-color: #1a1a1c !important;
+  border-color: #333 !important;
+  color: #fff !important;
+  border-top-right-radius: 50px !important;
+  border-bottom-right-radius: 50px !important;
+  padding: 12px 20px !important;
+  font-size: 0.95rem;
 }
 
 .login-container .form-control:focus {
-  border-color: #000;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.25);
+  border-color: var(--yellow-accent) !important;
+  box-shadow: 0 0 10px rgba(248, 195, 37, 0.2) !important;
 }
 
-/* ============================= */
-/* Botones                       */
-/* ============================= */
-.login-container .btn-dark {
-  border-radius: 10px;
-  padding: 12px;
+/* Etiquetas doradas */
+.login-container .form-label {
+  color: var(--yellow-accent) !important;
   font-weight: 600;
-  transition: background-color 0.3s ease;
+  margin-left: 15px;
+  font-size: 0.85rem;
 }
 
-.login-container .btn-dark:hover {
-  background-color: #000000;
+/* Botón de Inicio Sesión */
+.login-container .btn-yellow {
+  background-color: var(--yellow-accent) !important;
+  color: #000 !important;
+  border: none !important;
+  border-radius: 50px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
 }
 
-.login-container .btn-outline-secondary,
-.login-container .btn-outline-primary {
-  border-radius: 8px;
-  padding: 8px 16px;
-  font-weight: 500;
+.login-container .btn-yellow:hover {
+  background-color: #e0ac10 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(248, 195, 37, 0.3) !important;
 }
 
-/* ============================= */
-/* Errores                       */
-/* ============================= */
-.error {
-  color: red !important;
-  font-size: 0.85rem !important;
-  margin: 4px 0 8px 0 !important;
-  display: block !important;
+/* Typography center icon */
+.login-container .text-gold {
+  color: var(--yellow-accent) !important;
+}
+
+/* Ajustes globales para evitar overrides de Bootstrap */
+.login-container h1, .login-container p {
+  margin: 0;
 }

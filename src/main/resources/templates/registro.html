@@ -6,222 +6,381 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title layout:fragment="titulo">Registro - Sabor MasterClass</title>
-  <link rel="stylesheet" th:href="@{/css/registro.css}">
   <style>
+    body {
+        background-color: #111 !important;
+    }
+
+    .registro-luxury-wrapper {
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-image: url('/imagenes/pasta-794464_1280.jpg');
+        background-size: cover;
+        background-position: center;
+        padding: 4rem 1rem;
+        margin-top: -80px; 
+        /* Break out of container constraints */
+        margin-left: calc(-50vw + 50%);
+        margin-right: calc(-50vw + 50%);
+    }
+
+    .registro-luxury-overlay {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.95));
+        z-index: 0;
+    }
+
+    .registro-card-container {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        max-width: 850px;
+    }
+
+    .card-elegant-dark {
+        background-color: var(--dark-card) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: 2rem !important;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6) !important;
+        color: #fff !important;
+        backdrop-filter: blur(8px);
+    }
+
+    .login-logo-circle {
+        width: 85px;
+        height: 85px;
+        object-fit: cover;
+        border: 3px solid var(--yellow-accent);
+        background-color: #fff;
+        padding: 2px;
+    }
+
+    .form-label-gold {
+        color: var(--yellow-accent);
+        font-weight: 700;
+        font-size: 0.75rem;
+        letter-spacing: 1.2px;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+    }
+
+    .input-dark-field {
+        background-color: #121212 !important;
+        border: 1px solid #333 !important;
+        color: #fff !important;
+        border-radius: 0.75rem !important;
+        padding: 12px 15px !important;
+        font-size: 0.95rem;
+    }
+
+    .input-dark-field:focus {
+        border-color: var(--yellow-accent) !important;
+        box-shadow: 0 0 0 3px rgba(248, 195, 37, 0.15) !important;
+    }
+
+    .input-group-text-dark {
+        background-color: #121212 !important;
+        border: 1px solid #333 !important;
+        color: var(--yellow-accent) !important;
+        border-right: none !important;
+        border-radius: 0.75rem 0 0 0.75rem !important;
+    }
+
+    .input-group > .input-dark-field {
+        border-left: none !important;
+        border-radius: 0 0.75rem 0.75rem 0 !important;
+    }
+
+    .btn-gold-pill {
+        background-color: var(--yellow-accent) !important;
+        color: #000 !important;
+        font-weight: 700 !important;
+        border-radius: 50px !important;
+        padding: 16px !important;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        border: none !important;
+    }
+
+    .btn-gold-pill:hover {
+        background-color: #e0ac10 !important;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(248, 195, 37, 0.4) !important;
+    }
+
+    .helper-link-pill {
+        background-color: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        color: #ffffff !important;
+        border-radius: 50px !important;
+        padding: 10px 20px !important;
+        font-size: 0.85rem !important;
+        transition: all 0.2s;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .helper-link-pill:hover {
+        background-color: rgba(248, 195, 37, 0.1) !important;
+        border-color: var(--yellow-accent) !important;
+        color: var(--yellow-accent) !important;
+    }
+
     .error {
-      color: red;
+      color: #ff4d4d;
       font-size: 0.8rem;
-      margin: 4px 0 8px 0;
+      font-weight: 600;
+      margin-top: 5px;
       display: block;
     }
+
+    #seccionTutor {
+        background-color: rgba(255, 255, 255, 0.02) !important;
+        border: 1px solid rgba(248, 195, 37, 0.3) !important;
+        border-radius: 1.5rem !important;
+        padding: 2.5rem !important;
+        display: none;
+    }
+
+    .font-serif-italic {
+        font-family: 'Times New Roman', serif;
+        font-style: italic;
+        color: var(--yellow-accent);
+    }
+
+    footer.fixed-bottom { 
+        background-color: #212529 !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .cursor-pointer { cursor: pointer; }
+    
+    body { scroll-behavior: smooth; }
   </style>
 </head>
 
 <body>
-  <section layout:fragment="contenido" class="container-fluid px-0 registro-container auth-page-shell">
-    <div class="row g-0 auth-page-row login-container registro-container">
-      <div class="col-12 col-md-6 auth-form-col">
-        <div class="card shadow p-4 auth-card">
-          <div class="card-body">
-            <h1 class="mb-4 text-center">Regístrate</h1>
-            <form th:action="@{/registro}" th:object="${persona}" method="post">
-              <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-              <div class="mb-3">
-                <select class="form-control" th:field="*{tipoDocumento}" required>
-                  <option value="">Seleccione tipo de documento</option>
+  <section layout:fragment="contenido" class="registro-luxury-wrapper">
+    <div class="registro-luxury-overlay"></div>
+
+    <div class="registro-card-container animate__animated animate__fadeInUp">
+      <div class="card card-elegant-dark">
+        <div class="card-body p-4 p-md-5">
+          
+          <div class="text-center mb-5">
+            <img th:src="@{/imagenes/logo-sabor1.jpg}" class="rounded-circle login-logo-circle mb-3" alt="Logo">
+            <h1 class="h2 fw-bold mb-1 font-serif">Únete a Sabor MasterClass</h1>
+            <p class="text-white-50">Regístrate para comenzar tu viaje culinario</p>
+          </div>
+
+          <form th:action="@{/registro}" th:object="${persona}" method="post" id="registroForm">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            
+            <!-- BLOQUE DE ERRORES DEL SERVIDOR -->
+            <div th:if="${errorCorreo != null} or ${errorContrasena != null} or ${errorTerminos != null} or ${errorTutor != null} or ${#fields.hasAnyErrors()}" 
+                 class="alert alert-danger shadow-sm border-0 mb-4" role="alert" 
+                 style="background-color: rgba(255, 77, 77, 0.1); border-left: 4px solid #ff4d4d; color: #ffb3b3;">
+                <ul class="mb-0 ps-3">
+                    <li th:if="${errorCorreo}" th:text="${errorCorreo}"></li>
+                    <li th:if="${errorContrasena}" th:text="${errorContrasena}"></li>
+                    <li th:if="${errorTerminos}" th:text="${errorTerminos}"></li>
+                    <li th:if="${errorTutor}" th:text="${errorTutor}"></li>
+                    <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+                </ul>
+            </div>
+            
+            <div class="row g-4">
+              <div class="col-md-6">
+                <label class="form-label form-label-gold">TIPO DOCUMENTO</label>
+                <select class="form-select input-dark-field" th:field="*{tipoDocumento}" id="tipoDocumento" 
+                        onchange="actualizarTutor(this.value)" required>
+                  <option value="">Seleccione...</option>
                   <option value="CC">Cédula de Ciudadanía</option>
                   <option value="TI">Tarjeta de Identidad</option>
                   <option value="CE">Cédula de Extranjería</option>
                 </select>
-                <span th:if="${#fields.hasErrors('tipoDocumento')}" th:errors="*{tipoDocumento}" class="error"></span>
               </div>
-              <div class="mb-3">
-                <input type="text" th:field="*{documento}" class="form-control" placeholder="Número de documento"
-                  pattern="\d+" title="El documento deben ser solo números" minlength="5" required>
-                <span th:if="${#fields.hasErrors('documento')}" th:errors="*{documento}" class="error"></span>
+
+              <div class="col-md-6">
+                <label class="form-label form-label-gold">NÚMERO DOCUMENTO</label>
+                <input type="text" th:field="*{documento}" class="form-control input-dark-field" placeholder="123456789"
+                  pattern="\d+" title="Solo números" minlength="5" oninput="validarRealTime(this)" required>
               </div>
-              <div class="mb-3">
-                <select class="form-control" th:field="*{genero}" required>
-                  <option value="">Seleccione género</option>
+
+              <div class="col-md-8">
+                <label class="form-label form-label-gold">NOMBRE COMPLETO</label>
+                <input type="text" th:field="*{nombre}" class="form-control input-dark-field" placeholder="Tu nombre"
+                  maxlength="30" pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+" title="Solo letras" oninput="validarRealTime(this)" required />
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label form-label-gold">GÉNERO</label>
+                <select class="form-select input-dark-field" th:field="*{genero}" required>
+                  <option value="">Género...</option>
                   <option value="Femenino">Femenino</option>
                   <option value="Masculino">Masculino</option>
-                  <option value="Otro">Otro</option>
                 </select>
-                <span th:if="${#fields.hasErrors('genero')}" th:errors="*{genero}" class="error"></span>
               </div>
-              <div class="mb-3">
-                <input type="text" th:field="*{nombre}" class="form-control" placeholder="Digite su nombre"
-                  maxlength="30" pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+" title="Solo letras" required />
-                <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="error"></span>
+
+              <div class="col-md-7">
+                <label class="form-label form-label-gold">DIRECCIÓN</label>
+                <input type="text" th:field="*{direccion}" class="form-control input-dark-field" placeholder="Ej: Calle 123" oninput="validarRealTime(this)" required />
               </div>
-              <div class="mb-3">
-                <input type="text" th:field="*{direccion}" class="form-control" placeholder="Dirección" required />
-                <span th:if="${#fields.hasErrors('direccion')}" th:errors="*{direccion}" class="error"></span>
+
+              <div class="col-md-5">
+                <label class="form-label form-label-gold">TELÉFONO</label>
+                <input type="text" th:field="*{telefono}" class="form-control input-dark-field" placeholder="10 dígitos"
+                  pattern="\d{7,10}" title="7 a 10 números" oninput="validarRealTime(this)" required>
               </div>
-              <div class="mb-3">
-                <input type="text" th:field="*{telefono}" class="form-control" placeholder="Teléfono (7 a 10 dígitos)"
-                  pattern="\d{7,10}" required>
-                <span th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}" class="error"></span>
-              </div>
-              <div class="mb-3">
-                <input type="email" th:field="*{email}" class="form-control" placeholder="Ingrese su correo" required>
-                <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error"></span>
-                <span th:if="${errorCorreo}" th:text="${errorCorreo}" class="error"></span>
-              </div>
-              <div class="mb-3 position-relative">
-                <input type="password" th:field="*{contrasena}" class="form-control" id="contrasena"
-                  placeholder="Contraseña" required />
-                <i class="fa fa-eye position-absolute top-50 end-0 translate-middle-y me-3"
-                  onclick="mostrarContrasena('contrasena', this)"></i>
-                <span th:if="${#fields.hasErrors('contrasena')}" th:errors="*{contrasena}" class="error"></span>
-              </div>
-              <div class="mb-3 position-relative">
-                <input type="password" th:field="*{confirmarContrasena}" class="form-control" id="confirmar"
-                  placeholder="Confirme su contraseña" required />
-                <i class="fa fa-eye position-absolute top-50 end-0 translate-middle-y me-3"
-                  onclick="mostrarContrasena('confirmar', this)"></i>
-                <span th:if="${#fields.hasErrors('confirmarContrasena')}" th:errors="*{confirmarContrasena}" class="error"></span>
-                <span th:if="${errorContrasena}" th:text="${errorContrasena}" class="error"></span>
-              </div>
-              <div class="form-check mb-3">
-                <input class="form-check-input" type="checkbox" th:field="*{aceptaTerminos}" required />
-                <label class="form-check-label">Acepto términos y condiciones</label>
-                <span th:if="${errorTerminos}" th:text="${errorTerminos}" class="error"></span>
-              </div>
-               <div id="seccionTutor" class="mt-4 p-3 border rounded bg-light mb-3" style="display: none;">
-                <h6 class="fw-bold mb-3"><i class="fa-solid fa-user-shield me-2"></i>Datos del acudiente (Requerido para TI)</h6>
-                <span th:if="${errorTutor}" th:text="${errorTutor}" class="error mb-2"></span>
-                <div class="row g-2">
-                  <div class="col-md-6 mb-2">
-                    <select class="form-control form-control-sm" th:field="*{tutorTipoDocumento}" id="tutorTipoDoc">
-                      <option value="">Tipo Documento Acudiente</option>
-                      <option value="CC">Cédula de Ciudadanía</option>
-                      <option value="CE">Cédula de Extranjería</option>
-                    </select>
-                  </div>
-                  <div class="col-md-6 mb-2">
-                    <input type="text" th:field="*{tutorDocumento}" class="form-control form-control-sm" 
-                      placeholder="Documento Acudiente" id="tutorDoc" pattern="\d+" title="Solo números" minlength="5">
-                  </div>
-                </div>
-                <div class="row g-2">
-                  <div class="col-md-6 mb-2">
-                    <select class="form-control form-control-sm" th:field="*{tutorGenero}" id="tutorGen">
-                      <option value="">Género Acudiente</option>
-                      <option value="Femenino">Femenino</option>
-                      <option value="Masculino">Masculino</option>
-                    </select>
-                  </div>
-                  <div class="col-md-6 mb-2">
-                    <select class="form-control form-control-sm" th:field="*{tutorAutorizacion}" id="tutorAut">
-                      <option value="">Parentesco / Autorización</option>
-                      <option value="MADRE">MADRE</option>
-                      <option value="PADRE">PADRE</option>
-                      <option value="OTRO">OTRO</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="mb-2">
-                  <input type="text" th:field="*{tutorNombre}" class="form-control form-control-sm" 
-                    placeholder="Nombre completo acudiente" id="tutorNom" pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+" title="Solo letras">
-                </div>
-                <div class="mb-2">
-                  <input type="text" th:field="*{tutorDireccion}" class="form-control form-control-sm" placeholder="Dirección acudiente" id="tutorDir">
-                </div>
-                <div class="row g-2">
-                  <div class="col-md-6 mb-2">
-                    <input type="text" th:field="*{tutorTelefono}" class="form-control form-control-sm" 
-                      placeholder="Teléfono acudiente" id="tutorTel" pattern="\d{7,10}" title="De 7 a 10 números">
-                  </div>
-                  <div class="col-md-6 mb-2">
-                    <input type="email" th:field="*{tutorEmail}" class="form-control form-control-sm" placeholder="Email acudiente" id="tutorEma">
-                  </div>
+
+              <div class="col-12">
+                <label class="form-label form-label-gold">CORREO ELECTRÓNICO</label>
+                <div class="input-group">
+                    <span class="input-group-text input-group-text-dark"><i class="fas fa-envelope"></i></span>
+                    <input type="email" th:field="*{email}" class="form-control input-dark-field" placeholder="correo@ejemplo.com" oninput="validarRealTime(this)" required>
                 </div>
               </div>
 
-              <button type="submit" class="btn btn-dark w-100">Crear Cuenta</button>
-              <div class="mt-3 text-center">
-                <a th:href="@{/login}" class="btn btn-outline-secondary me-2">Volver al Login</a>
-                <a th:href="@{/home}" class="btn btn-outline-primary">Volver al Home</a>
+              <div class="col-md-6">
+                <label class="form-label form-label-gold">CONTRASEÑA</label>
+                <div class="position-relative">
+                  <input type="password" th:field="*{contrasena}" class="form-control input-dark-field" id="contrasena"
+                    placeholder="••••••••" oninput="validarRealTime(this)" required />
+                  <i class="fa fa-eye position-absolute top-50 end-0 translate-middle-y me-3 text-white-50 cursor-pointer"
+                    onclick="mostrarContrasena('contrasena', this)"></i>
+                </div>
               </div>
-            </form>
-          </div>
+
+              <div class="col-md-6">
+                <label class="form-label form-label-gold">CONFIRMAR CONTRASEÑA</label>
+                <div class="position-relative">
+                  <input type="password" th:field="*{confirmarContrasena}" class="form-control input-dark-field" id="confirmar"
+                    placeholder="••••••••" oninput="validarRealTime(this)" required />
+                  <i class="fa fa-eye position-absolute top-50 end-0 translate-middle-y me-3 text-white-50 cursor-pointer"
+                    onclick="mostrarContrasena('confirmar', this)"></i>
+                </div>
+              </div>
+
+              <div class="col-12">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" th:field="*{aceptaTerminos}" id="aceptaTerminos" required />
+                  <label class="form-check-label text-white-50 small" for="aceptaTerminos">
+                    Acepto los términos y condiciones de Sabor MasterClass
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div id="seccionTutor" class="mt-5 mb-4 shadow-sm">
+              <h5 class="text-yellow fw-bold mb-4 font-serif">Datos del Acudiente</h5>
+              <div class="row g-4">
+                <div class="col-md-6">
+                  <label class="form-label form-label-gold">TIPO DOCUMENTO</label>
+                  <select class="form-select input-dark-field" th:field="*{tutorTipoDocumento}">
+                    <option value="">Seleccione...</option>
+                    <option value="CC">Cédula de Ciudadanía</option>
+                    <option value="CE">Cédula de Extranjería</option>
+                  </select>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label form-label-gold">NÚMERO DOCUMENTO</label>
+                  <input type="text" th:field="*{tutorDocumento}" class="form-control input-dark-field" placeholder="123456789"
+                    pattern="\d+" title="Solo números" minlength="5" oninput="validarRealTime(this)">
+                </div>
+
+                <div class="col-md-8">
+                  <label class="form-label form-label-gold">NOMBRE COMPLETO</label>
+                  <input type="text" th:field="*{tutorNombre}" class="form-control input-dark-field" placeholder="Nombre acudiente"
+                    maxlength="30" pattern="[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+" title="Solo letras" oninput="validarRealTime(this)">
+                </div>
+
+                <div class="col-md-4">
+                  <label class="form-label form-label-gold">GÉNERO</label>
+                  <select class="form-select input-dark-field" th:field="*{tutorGenero}">
+                    <option value="">Género...</option>
+                    <option value="Femenino">Femenino</option>
+                    <option value="Masculino">Masculino</option>
+                  </select>
+                </div>
+
+                <div class="col-md-7">
+                  <label class="form-label form-label-gold">DIRECCIÓN</label>
+                  <input type="text" th:field="*{tutorDireccion}" class="form-control input-dark-field" placeholder="Ej: Calle 123" oninput="validarRealTime(this)">
+                </div>
+
+                <div class="col-md-5">
+                  <label class="form-label form-label-gold">TELÉFONO</label>
+                  <input type="text" th:field="*{tutorTelefono}" class="form-control input-dark-field" placeholder="10 dígitos"
+                    pattern="\d{7,10}" title="7 a 10 números" oninput="validarRealTime(this)">
+                </div>
+
+                <div class="col-12">
+                  <label class="form-label form-label-gold">CORREO ELECTRÓNICO</label>
+                  <div class="input-group">
+                      <span class="input-group-text input-group-text-dark"><i class="fas fa-envelope"></i></span>
+                      <input type="email" th:field="*{tutorEmail}" class="form-control input-dark-field" placeholder="correo@ejemplo.com" oninput="validarRealTime(this)">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-gold-pill w-100 mt-4 mb-4">
+              CREAR CUENTA AHORA <i class="fas fa-paper-plane ms-2"></i>
+            </button>
+
+            <div class="text-center pt-3 border-top border-secondary border-opacity-25 d-flex justify-content-center gap-3">
+              <a th:href="@{/login}" class="helper-link-pill">Ya tengo cuenta</a>
+              <a th:href="@{/}" class="helper-link-pill"><i class="fas fa-home me-1"></i>Home</a>
+            </div>
+          </form>
         </div>
-      </div>
-      <div class="col-md-6 d-none d-md-flex auth-image-col">
-        <img th:src="@{/imagenes/pasta-794464_1280.jpg}" alt="">
       </div>
     </div>
     <script>
-      // Control de visibilidad de la sección de acudiente
-      const selectTipoDoc = document.querySelector('select[name="tipoDocumento"]');
-      const seccionTutor = document.getElementById('seccionTutor');
-      const inputsTutor = seccionTutor.querySelectorAll('input, select');
-
-      function toggleTutor() {
-        if (selectTipoDoc.value === "TI") {
-          seccionTutor.style.display = "block";
-          inputsTutor.forEach(input => input.setAttribute('required', 'true'));
-        } else {
-          seccionTutor.style.display = "none";
-          inputsTutor.forEach(input => {
-            input.removeAttribute('required');
-            limpiarErrorRealTime(input);
-          });
-        }
-      }
-
-      selectTipoDoc.addEventListener('change', toggleTutor);
-      window.addEventListener('load', toggleTutor); 
-
-      // --- VALIDACIONES EN TIEMPO REAL ---
-      window.addEventListener('DOMContentLoaded', () => {
-        const formInputs = document.querySelectorAll('.form-control, .form-check-input');
-        formInputs.forEach(input => {
-          input.addEventListener('input', () => validarCampoRealTime(input));
-          input.addEventListener('blur', () => validarCampoRealTime(input));
-        });
-      });
-
-      function validarCampoRealTime(input) {
-        let mensaje = "";
-        if (!input.checkValidity()) {
-          if (input.validity.valueMissing) {
-            mensaje = "Este campo es obligatorio";
-          } else if (input.validity.patternMismatch) {
-            mensaje = input.title || "Formato incorrecto";
-          } else if (input.validity.typeMismatch) {
-            mensaje = "Ingrese un formato válido (ej: correo@ejemplo.com)";
-          } else if (input.validity.tooShort) {
-             mensaje = `Mínimo ${input.minLength} caracteres`;
+      function actualizarTutor(valor) {
+          const seccion = document.getElementById('seccionTutor');
+          if (valor === "TI") {
+              seccion.style.display = "block";
+              seccion.querySelectorAll('input, select').forEach(i => i.required = true);
+          } else {
+              seccion.style.display = "none";
+              seccion.querySelectorAll('input, select').forEach(i => i.required = false);
           }
-        }
-        mostrarErrorRealTime(input, mensaje);
       }
 
-      function mostrarErrorRealTime(input, mensaje) {
-        let spanError = input.parentNode.querySelector('.error-realtime');
-        if (!spanError) {
-          spanError = document.createElement('span');
-          spanError.className = 'error error-realtime';
-          input.parentNode.appendChild(spanError);
-        }
-        spanError.textContent = mensaje;
-        if (mensaje) {
-          input.classList.add('is-invalid');
-          input.style.borderColor = "#ff0000";
-        } else {
-          input.classList.remove('is-invalid');
-          input.style.borderColor = "";
-        }
+      function validarRealTime(input) {
+          let err = input.closest('.col-md-6, .col-md-8, .col-md-7, .col-md-5, .col-12').querySelector('.error-realtime');
+          if (!err) {
+              err = document.createElement('span');
+              err.className = 'error error-realtime';
+              err.style.color = '#ff4d4d'; // Rojo visible
+              input.closest('.col-md-6, .col-md-8, .col-md-7, .col-md-5, .col-12').appendChild(err);
+          }
+          
+          if (!input.checkValidity()) {
+              err.textContent = input.title || "Campo inválido";
+              input.style.borderColor = "#ff4d4d";
+          } else {
+              err.textContent = "";
+              input.style.borderColor = "";
+          }
       }
 
-      function limpiarErrorRealTime(input) {
-        const spanError = input.parentNode.querySelector('.error-realtime');
-        if (spanError) spanError.textContent = "";
-        input.classList.remove('is-invalid');
-        input.style.borderColor = "";
-      }
+      // Inicialización al cargar la página
+      window.onload = function() {
+          const select = document.getElementById('tipoDocumento');
+          if (select) actualizarTutor(select.value);
+      };
 
       function mostrarContrasena(idCampo, icono) {
         const input = document.getElementById(idCampo);
@@ -236,5 +395,6 @@
     </script>
   </section>
 </body>
-
 </html>
+
+

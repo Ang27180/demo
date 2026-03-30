@@ -10,55 +10,55 @@
 </head>
 
 <body>
-    <main layout:fragment="contenido" class="mis-cursos-section pt-5 pb-5">
-        <div class="container mt-5">
+    <main layout:fragment="contenido" class="mis-cursos-section">
+        <div class="container">
             
-            <!-- Header Sección -->
-            <div class="section-header">
-                <h1 class="display-4 fw-bold text-white mb-2" 
-                    th:text="${esTutor != null and esTutor ? 'Mis Cursos como Tutor' : 'Mis Cursos Inscritos'}">
+            <!-- Header Sección Premium -->
+            <div class="section-header animate__animated animate__fadeInDown">
+                <h1 class="display-4 fw-bold mb-2" 
+                    th:text="${esTutor != null and esTutor ? 'Cursos que Impartes' : 'Tu Ruta Culinaria'}">
                     Mis Cursos
                 </h1>
-                <p class="text-white-50 lead">Explora tus lecciones, materiales y progreso culinario.</p>
+                <p class="text-white-50 lead">Explora tus lecciones activas, materiales exclusivos y el progreso hacia tu maestría.</p>
             </div>
 
-            <!-- Empty State -->
-            <div th:if="${#lists.isEmpty(inscripciones)}" class="empty-state shadow-lg">
+            <!-- Empty State Luxury -->
+            <div th:if="${#lists.isEmpty(inscripciones)}" class="empty-state shadow-lg animate__animated animate__zoomIn">
                 <div class="mb-4">
-                    <i class="fas fa-book-reader fa-5x text-yellow opacity-50"></i>
+                    <i class="fas fa-utensils fa-5x text-gold opacity-50"></i>
                 </div>
                 <h3 class="fw-bold text-white mb-3">¡Vaya! Aún no hay cursos aquí</h3>
                 <p class="text-white-50 mb-4 mx-auto" style="max-width: 500px;"
-                   th:text="${esTutor != null and esTutor ? 'No tienes cursos asociados para impartir. Contacta con el equipo administrativo.' : 'No estás inscrito en ningún curso todavía. ¡Descubre nuestro catálogo y comienza a aprender hoy mismo!'}">
+                   th:text="${esTutor != null and esTutor ? 'Aún no tienes cursos asociados como tutor. Contacta a un administrador para asignarte uno.' : 'Parece que aún no has comenzado tu viaje. ¡Descubre nuestro catálogo de alta cocina!'}">
                    Explora el catálogo y empieza tu viaje.
                 </p>
-                <a th:href="@{/cursos}" class="btn btn-yellow px-5 py-3 rounded-pill fw-bold" th:if="${esTutor == null or !esTutor}">
-                    <i class="fas fa-search me-2"></i>Explorar Cursos
+                <a th:href="@{/cursos}" class="btn btn-premium px-5 py-3 rounded-pill fw-bold" th:if="${esTutor == null or !esTutor}">
+                    <i class="fas fa-layer-group me-2"></i>Descubrir Cursos
                 </a>
             </div>
 
-            <!-- Grid de Cursos -->
+            <!-- Grid de Cursos MasterClass -->
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-5" th:if="${!#lists.isEmpty(inscripciones)}">
-                <div class="col" th:each="inscripcion : ${inscripciones}">
-                    <div class="course-card-premium h-100 shadow-lg">
+                <div class="col" th:each="inscripcion, iter : ${inscripciones}">
+                    <div class="course-card-premium h-100 shadow-lg animate__animated animate__fadeInUp" 
+                         th:style="'animation-delay: ' + ${iter.index * 0.1} + 's'">
                         
-                        <!-- Imagen y Badge -->
+                        <!-- Imagen y Estado -->
                         <div class="course-img-wrapper">
                             <span class="course-status-badge" th:text="${inscripcion.estado.nombre}">Estado</span>
-                            <img th:src="${inscripcion.curso.imagen != null 
-                                ? inscripcion.curso.imagen 
-                                : '/imagenes/reposteria_francesa.jpg'}" class="course-img" alt="Imagen del curso">
+                            <img th:src="${inscripcion.curso.imagen != null ? ( #strings.contains(inscripcion.curso.imagen, 'http') ? inscripcion.curso.imagen : '/imagenes/' + inscripcion.curso.imagen ) : '/imagenes/reposteria_francesa.jpg'}" 
+                                class="course-img" alt="Vista del curso">
                         </div>
 
-                        <!-- Info del Curso -->
-                        <div class="course-body">
+                        <!-- Info MasterClass -->
+                        <div class="course-body d-flex flex-column">
                             <h3 class="course-title" th:text="${inscripcion.curso.nombre}">Nombre del Curso</h3>
-                            <p class="course-desc" th:text="${inscripcion.curso.detalle}">Descripción breve del curso...</p>
+                            <p class="course-desc" th:text="${inscripcion.curso.detalle}">Detalle del curso...</p>
                             
-                            <div class="mt-4 pt-4 border-top border-white border-opacity-10">
+                            <div class="mt-auto pt-4 border-top border-white border-opacity-10">
                                 <a th:href="@{'/cursos/' + ${inscripcion.curso.id}}" class="btn-premium-action">
-                                    <i th:class="${esTutor != null and esTutor ? 'fas fa-tools' : 'fas fa-graduation-cap'}"></i>
-                                    <span th:text="${esTutor != null and esTutor ? 'Gestionar Contenido' : 'Continuar Aprendiendo'}">Ver Curso</span>
+                                    <i th:class="${esTutor != null and esTutor ? 'fas fa-tools' : 'fas fa-bolt'}"></i>
+                                    <span th:text="${esTutor != null and esTutor ? 'Gestionar Módulos' : 'Continuar Aprendizaje'}">Ver Curso</span>
                                 </a>
                             </div>
                         </div>
@@ -69,6 +69,6 @@
 
         </div>
     </main>
-</body>
+74: </body>
 
 </html>

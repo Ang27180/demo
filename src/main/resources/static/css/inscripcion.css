@@ -1,97 +1,129 @@
+/* ================================================================ */
+/* INSCRIPCIÓN - LUXURY DARK (LOGIN STYLE)                          */
+/* ================================================================ */
+
 :root {
-    --primary-color: #ffc107; /* El amarillo/dorado del proyecto */
-    --primary-hover: #e0ac08;
-    --dark-bg: #0D0D0D;
-    --card-bg: #1A1A1A;
-    --input-bg: #2C2C2E;
+  --gold-accent: #f8c325;
+  --dark-luxury-bg: #0a0a0b;
+  --dark-card-luxury: rgba(31, 31, 34, 0.9);
+  --border-glass: rgba(255, 255, 255, 0.1);
 }
 
 body {
-    background: #000;
+  background-color: #000 !important;
 }
 
-.inscripcion-card {
-    background: var(--card-bg);
-    border-radius: 30px;
-    color: white;
-    border: 1px solid rgba(255, 193, 7, 0.1);
-    backdrop-filter: blur(10px);
+.inscripcion-section {
+  position: relative;
+  min-height: 100vh;
+  background-image: url('/imagenes/pasta-794464_1280.jpg'); /* Igual que login */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem 1rem;
 }
 
-.text-yellow {
-    color: var(--primary-color) !important;
+/* Luxury Overlay */
+.inscripcion-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.95));
+  z-index: 1;
 }
 
-.bg-yellow-light {
-    background-color: rgba(255, 193, 7, 0.1) !important;
+.container {
+  position: relative;
+  z-index: 10;
 }
 
+/* Card Elegant (Login Style) */
+.card-elegant-dark {
+  background: var(--dark-card-luxury) !important;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid var(--border-glass) !important;
+  border-radius: 2rem !important;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6) !important;
+  color: #fff !important;
+  padding: 3rem 2rem;
+  overflow: hidden;
+}
+
+.title-gold {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -1px;
+}
+
+.accent-icon {
+  width: 70px;
+  height: 70px;
+  background: var(--gold-accent);
+  color: #000;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  margin: 0 auto 1.5rem;
+  box-shadow: 0 10px 20px rgba(248, 195, 37, 0.2);
+}
+
+/* Inputs (Login Style) */
 .custom-select-dark {
-    background-color: var(--input-bg);
-    border: 1px solid #3A3A3C;
-    border-radius: 12px;
-    color: #FFF;
-    padding: 15px 20px;
-    font-size: 16px;
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23ffc107'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 1.5rem center;
-    background-size: 1.5em;
-    cursor: pointer;
-    transition: all 0.2s ease;
+  background-color: #121212 !important;
+  border: 1px solid #333 !important;
+  color: #fff !important;
+  border-radius: 0.75rem !important;
+  padding: 12px 15px !important;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23f8c325' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 16px 12px;
 }
 
 .custom-select-dark:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.2);
+  border-color: var(--gold-accent) !important;
+  box-shadow: none !important;
+  outline: none;
 }
 
-.btn-yellow-action {
-    background: var(--primary-color);
-    color: #000 !important;
-    border: none;
-    border-radius: 12px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    transform: translateY(0);
+.form-label-gold {
+  color: var(--gold-accent);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
 }
 
-.btn-yellow-action:hover {
-    background: var(--primary-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(255, 193, 7, 0.3);
+/* Button (Login Style) */
+.btn-gold-action {
+  background: var(--gold-accent) !important;
+  color: #000 !important;
+  font-weight: 800 !important;
+  border-radius: 50px !important;
+  padding: 14px !important;
+  transition: all 0.3s ease !important;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-size: 0.9rem;
+  border: none;
 }
 
-.shadow-yellow {
-    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.2);
+.btn-gold-action:hover {
+  background: #fff !important;
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(248, 195, 37, 0.3) !important;
 }
 
-.btn-dark-outline {
-    background: transparent;
-    border: 1px solid #3A3A3C;
-    color: #8E8E93 !important;
-    border-radius: 12px;
-    transition: all 0.2s ease;
-}
-
-.btn-dark-outline:hover {
-    background: rgba(255, 255, 255, 0.05);
-    color: #FFF !important;
-    border-color: #FFF;
-}
-
-.tracking-wider {
-    letter-spacing: 0.1em;
-}
-
-label {
-    letter-spacing: 0.05rem;
-}
-
-@media (max-width: 576px) {
-    .inscripcion-card {
-        padding: 2.5rem !important;
-    }
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
 }

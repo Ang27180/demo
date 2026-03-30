@@ -1,317 +1,213 @@
-/* ================================================================ */
-/* Home.css — Sabor MasterClass                                     */
-/* Hoja de estilos principal para la página de inicio               */
-/* ================================================================ */
-
-/* ============================= */
-/* Variables globales            */
-/* ============================= */
 :root {
-  --yellow-accent: #f8c325;
-  --dark-bg: #121212;
-  --dark-navbar: #0a0a0a;
-  --dark-card: #1f1f22;
-  --text-muted-custom: #a0a0a0;
+  --gold-accent: #f8c325;
+  --dark-bg: #000000;
+  --dark-card: rgba(20, 20, 22, 0.95);
+  --border-glass: rgba(255, 255, 255, 0.08);
 }
 
-/* ============================= */
-/* Body base                     */
-/* ============================= */
-body {
-  background-color: #f5f6fa;
-  font-family: 'Segoe UI', system-ui, sans-serif;
-  margin: 0;
-  /* Offset para navbar fijo */
-  padding-top: 80px;
+/* ================================================================ */
+/* BRANDING: Logo Glow                                              */
+/* ================================================================ */
+.logo-glow {
+  border: 1px solid rgba(248, 195, 37, 0.4);
+  box-shadow: 0 0 12px rgba(248, 195, 37, 0.5);
+  transition: all 0.5s ease;
 }
 
-/* ============================= */
-/* Tipografía                    */
-/* ============================= */
-.font-serif {
-  font-family: "Georgia", serif;
-}
-
-.font-logo {
-  font-family: 'Segoe UI', sans-serif;
-  letter-spacing: -0.5px;
-}
-
-/* ============================= */
-/* Utilidades de Color/Botón     */
-/* ============================= */
-.text-yellow {
-  color: var(--yellow-accent) !important;
-}
-
-.bg-yellow {
-  background-color: var(--yellow-accent) !important;
-}
-
-.btn-yellow {
-  background-color: var(--yellow-accent);
-  color: #000;
-  border: none;
-  transition: all 0.3s ease;
-}
-
-.btn-yellow:hover {
-  background-color: #d8a61c;
-}
-
-.scale-hover {
-  transition: transform 0.2s ease;
-}
-
-.scale-hover:hover {
+.logo-glow:hover {
+  box-shadow: 0 0 25px rgba(248, 195, 37, 0.8);
+  border-color: rgba(248, 195, 37, 1);
   transform: scale(1.05);
 }
 
-/* ============================= */
-/* Navbar                        */
-/* ============================= */
-.navbar-lg {
-  height: 80px;
+body {
+  background-color: var(--dark-bg);
+  color: #fff;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  margin: 0;
+  padding-top: 90px;
 }
 
-.bg-dark-navbar {
-  background-color: var(--dark-navbar) !important;
+/* Typography Headings */
+h1, h2, h3, .h1, .h2, .h3, .font-serif {
+  font-family: 'Playfair Display', serif;
+  font-weight: 800;
 }
 
-.nav-link {
-  font-weight: 500;
-  transition: color 0.3s;
+/* Utility: Custom Button Pill */
+.btn-pill-gold {
+  background: var(--gold-accent);
+  color: #000;
+  font-weight: 800;
+  border-radius: 50px;
+  padding: 10px 25px;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  border: none;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.nav-link:hover {
-  color: var(--yellow-accent) !important;
+.btn-pill-gold:hover {
+  background: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(248, 195, 37, 0.3);
 }
 
-.nav-active {
-  border-bottom: 2px solid var(--yellow-accent);
-  color: var(--yellow-accent) !important;
-}
-
-/* ============================= */
-/* Hero Section                  */
-/* ============================= */
+/* ================================================================ */
+/* HERO SECTION                                                     */
+/* ================================================================ */
 .hero-section {
   position: relative;
-  background-image: url('https://images.unsplash.com/photo-1556910103-1c02745aae4d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  background-image: url('/imagenes/pasta-794464_1280.jpg');
   background-size: cover;
   background-position: center;
+  background-attachment: fixed;
   padding: 100px 0;
-  margin-top: -1px;
+  margin-top: -90px;
 }
 
 .hero-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.9));
-  z-index: 0;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle at center, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.95) 100%);
+  z-index: 1;
 }
 
-/* ============================= */
-/* Barra de Características      */
-/* ============================= */
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* ================================================================ */
+/* FEATURES BAR (Elegant Dark)                                      */
+/* ================================================================ */
 .features-bar {
-  font-size: 0.95rem;
-  background: white;
+  background: rgba(10, 10, 12, 0.9);
+  backdrop-filter: blur(15px);
+  border: 1px solid var(--border-glass);
+  padding: 2.5rem 1rem;
+  border-radius: 30px;
+  margin-top: -50px;
   position: relative;
   z-index: 10;
-  /* Solapamiento sutil sobre el hero */
-  margin-top: -24px;
-  border-radius: 8px;
-  max-width: 1100px;
+  max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.6);
 }
 
-/* ============================= */
-/* Badges de Cursos              */
-/* ============================= */
-.badge-nuevo {
-  background-color: var(--yellow-accent);
-  color: #000;
-  font-weight: 700;
-  font-size: 0.62rem;
-}
-
-.badge-bestseller {
-  background-color: #28a745;
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
   color: #fff;
-  font-weight: 700;
-  font-size: 0.62rem;
+  justify-content: center;
 }
 
-/* ============================= */
-/* Cards de Cursos               */
-/* ============================= */
-.curso-card-dark {
-  background-color: var(--dark-card) !important;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border-radius: 1.25rem !important;
+.feature-icon-circle {
+  width: 45px;
+  height: 45px;
+  background: rgba(248, 195, 37, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold-accent);
+}
+
+/* ================================================================ */
+/* CURSO CARDS (Premium Dark & Tidy)                                */
+/* ================================================================ */
+.luxury-card {
+  background: var(--dark-card);
+  border: 1px solid var(--border-glass);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
 
-.curso-card-dark .card-body {
-  flex-grow: 1;
-}
-
-.curso-card-dark:hover {
+.luxury-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5) !important;
+  border-color: var(--gold-accent);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.6);
 }
 
-.card-img-custom {
+.card-img-box {
   height: 160px;
+  overflow: hidden;
+}
+
+.card-img-box img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-top-left-radius: 1.25rem;
-  border-top-right-radius: 1.25rem;
 }
 
-.price-text {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: white;
-  margin-right: 5px;
-  white-space: nowrap;
-}
-
-.btn-enroll {
-  background-color: var(--yellow-accent);
-  color: #000;
-  font-weight: 700;
-  border: none;
-  border-radius: 6px;
-  padding: 4px 10px;
-  font-size: 0.68rem;
-  white-space: nowrap;
-  flex-shrink: 0;
-  transition: all 0.2s ease;
-}
-
-.btn-enroll:hover {
-  background-color: #e0ac10;
-  color: #000;
-}
-
-.card-footer-flex {
+.card-body-luxury {
+  padding: 1.25rem;
+  flex-grow: 1;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
+  flex-direction: column;
 }
 
-/* ============================= */
-/* Noticias Gastronómicas        */
-/* ============================= */
-.news-item {
-  transition: background-color 0.2s;
-  padding: 5px;
-  border-radius: 8px;
+.card-title-luxury {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #fff;
+  min-height: 2.8rem;
+  line-height: 1.3;
 }
 
-.news-item:hover {
-  background-color: #f8f9fa;
+.card-price-luxury {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fff;
+  white-space: nowrap;
 }
 
-.cursor-pointer {
-  cursor: pointer;
-}
-
-/* ============================= */
-/* Banner de Descuento           */
-/* ============================= */
-.discount-banner {
+/* ================================================================ */
+/* BANNER PROMO                                                     */
+/* ================================================================ */
+.promo-luxury-banner {
   background-image: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&auto=format&fit=crop&w=1400&q=80');
   background-size: cover;
   background-position: center;
-  /* Solo esquinas superiores redondeadas, se une con el social-proof-bar */
-  border-radius: 1rem 1rem 0 0 !important;
+  border-radius: 20px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-bottom: none !important;
-  position: relative;
+  border: 1px solid var(--border-glass);
+  margin-bottom: 3rem;
 }
 
-/* Overlay degradado del banner (una sola definición) */
-.banner-overlay {
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.45) 100%);
-  padding: 30px 40px;
+.promo-overlay {
+  background: linear-gradient(90deg, rgba(0,0,0,0.92), rgba(0,0,0,0.6));
+  padding: 1.5rem 3rem;
 }
 
-/* ============================= */
-/* Social Proof Bar              */
-/* ============================= */
-.social-proof-bar {
-  /* Esquinas inferiores para continuar el banner */
-  border-bottom-left-radius: 1rem;
-  border-bottom-right-radius: 1rem;
-  border-top: none !important;
+.countdown-digit {
+  background: rgba(255,255,255,0.05);
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-weight: 900;
+  color: var(--gold-accent);
 }
 
-/* ============================= */
-/* Countdown                     */
-/* ============================= */
-.countdown-box {
-  background: rgba(0, 0, 0, 0.85);
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 1.05rem;
-  font-weight: bold;
-  color: white;
-  min-width: 40px;
-  text-align: center;
-  /* Transición suave al cambiar dígitos */
-  transition: color 0.2s;
-}
-
-/* ============================= */
-/* Botón Rojo del Banner         */
-/* ============================= */
-.btn-danger {
-  background-color: #c62828 !important;
-  border: none !important;
-}
-
-.btn-danger:hover {
-  background-color: #8b0000 !important;
-}
-
-/* ============================= */
-/* Sidebar ¿Por qué elegirnos?  */
-/* ============================= */
-/* La card ya usa clases Bootstrap, sin estilos extra necesarios */
-
-/* ============================= */
-/* Footer del Home               */
-/* ============================= */
-.footer-home {
-  background-color: #0a0a0a;
-}
-
-.social-icon {
-  width: 36px;
-  height: 36px;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.social-icon:hover {
-  background-color: white;
-  color: black !important;
-  border-color: white;
+/* ================================================================ */
+/* SIDEBAR CARDS                                                    */
+/* ================================================================ */
+.sidebar-luxury-box {
+  background: var(--dark-card);
+  border: 1px solid var(--border-glass);
+  border-radius: 30px;
+  padding: 2.5rem;
+  height: 100%;
 }
