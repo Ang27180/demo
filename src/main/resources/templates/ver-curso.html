@@ -51,6 +51,9 @@
                         <h3 class="fw-bold text-white mb-0">Contenido del Curso</h3>
                     </div>
 
+                    <div th:if="${mensajeProgreso}" class="alert alert-success rounded-4 mb-3" th:text="${mensajeProgreso}"></div>
+                    <div th:if="${errorProgreso}" class="alert alert-warning rounded-4 mb-3" th:text="${errorProgreso}"></div>
+
                     <div th:if="${#lists.isEmpty(curso.modulos)}" class="empty-content-box p-5 text-center bg-dark rounded-4 bg-opacity-50 border border-white border-opacity-10">
                         <i class="fas fa-book-open fa-3x text-white-50 opacity-25 mb-3"></i>
                         <p class="text-white-50">Próximamente estaremos publicando el contenido detallado de este curso.</p>
@@ -69,18 +72,53 @@
                                  th:classappend="${iter.index == 0 ? 'show' : ''}"
                                  data-bs-parent="#accordionModulos">
                                 <div class="accordion-body">
-                                    <div class="lesson-row" th:each="leccion : ${modulo.lecciones}">
-                                        <div class="lesson-info">
-                                            <i th:class="${leccion.contenidoTipo == 'video' ? 'fas fa-play-circle' : (leccion.contenidoTipo == 'pdf' ? 'fas fa-file-pdf' : 'fas fa-file-alt')}"></i>
-                                            <div class="d-flex flex-column">
-                                                <span class="text-white fw-medium" th:text="${leccion.nombre}">Lección</span>
-                                                <small class="text-white-50 opacity-50" th:if="${leccion.cantidad != null}" 
-                                                       th:text="${leccion.cantidad} + ' min'"></small>
+                                    <div class="lesson-row-wrap mb-2" th:each="leccion : ${modulo.lecciones}">
+                                        <div class="lesson-row" style="cursor: pointer;" data-bs-toggle="collapse"
+                                            th:data-bs-target="'#collapseLeccion' + ${leccion.id}" aria-expanded="false">
+                                            <div class="lesson-info">
+                                                <i th:class="${leccion.contenidoTipo == 'video' ? 'fas fa-play-circle' : (leccion.contenidoTipo == 'pdf' ? 'fas fa-file-pdf' : 'fas fa-file-alt')}"></i>
+                                                <div class="d-flex flex-column">
+                                                    <span class="text-white fw-medium" th:text="${leccion.nombre}">Lección</span>
+                                                    <small class="text-white-50 opacity-50" th:if="${leccion.cantidad != null}" 
+                                                           th:text="${leccion.cantidad} + ' min'"></small>
+                                                </div>
                                             </div>
+                                            <span th:class="'lesson-badge badge-' + ${leccion.contenidoTipo}"
+                                                  th:text="${leccion.contenidoTipo == 'video' ? 'VIDEO' : (leccion.contenidoTipo == 'pdf' ? 'PDF' : 'LEER')}">
+                                            </span>
                                         </div>
-                                        <span th:class="'lesson-badge badge-' + ${leccion.contenidoTipo}"
-                                              th:text="${leccion.contenidoTipo == 'video' ? 'VIDEO' : (leccion.contenidoTipo == 'pdf' ? 'PDF' : 'LEER')}">
-                                        </span>
+                                        <div th:id="'collapseLeccion' + ${leccion.id}" class="collapse lesson-detail-panel mt-2 p-3 rounded-3 bg-black bg-opacity-50 border border-white border-opacity-10">
+                                            <th:block th:with="embed=${T(com.proyectojpa.demo.util.YoutubeUrlUtil).embedUrl(leccion.contenidoUrl)}">
+                                                <div th:if="${leccion.contenidoTipo == 'video'}">
+                                                    <div class="ratio ratio-16x9 mb-2" th:if="${embed != null}">
+                                                        <iframe th:src="${embed}" title="YouTube" allowfullscreen class="rounded-2"></iframe>
+                                                    </div>
+                                                    <a th:if="${leccion.contenidoUrl != null}" th:href="${leccion.contenidoUrl}" target="_blank" rel="noopener" class="text-warning small text-decoration-none">
+                                                        <i class="fab fa-youtube me-1"></i> Abrir en YouTube
+                                                    </a>
+                                                </div>
+                                                <div th:if="${leccion.contenidoTipo == 'texto'}" class="text-white-50 text-start" style="white-space: pre-wrap;" th:text="${leccion.contenidoTexto}"></div>
+                                                <div th:if="${leccion.contenidoTipo == 'pdf'}">
+                                                    <th:block th:if="${leccion.contenidoUrl != null}">
+                                                        <iframe th:src="@{|${leccion.contenidoUrl}|}" title="PDF" class="w-100 rounded-2 border border-secondary"
+                                                            style="min-height: 420px;" loading="lazy"></iframe>
+                                                        <p class="small text-white-50 mt-2 mb-1">Si no se muestra el visor, usa «Abrir PDF».</p>
+                                                        <a th:href="@{|${leccion.contenidoUrl}|}" target="_blank" rel="noopener" class="btn btn-sm btn-outline-light me-2">
+                                                            <i class="fas fa-external-link-alt me-1"></i> Abrir PDF
+                                                        </a>
+                                                        <a th:href="@{|${leccion.contenidoUrl}|}" th:download="${leccion.nombre + '.pdf'}" class="btn btn-sm btn-outline-light mt-2">
+                                                            <i class="fas fa-download me-1"></i> Descargar PDF
+                                                        </a>
+                                                    </th:block>
+                                                </div>
+                                            </th:block>
+                                            <form th:if="${puedeRegistrarProgreso}" th:action="@{/cursos/{cid}/lecciones/{lid}/completar(cid=${curso.id},lid=${leccion.id})}" method="post" class="mt-3">
+                                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                                <button type="submit" class="btn btn-sm btn-outline-warning rounded-pill">
+                                                    <i class="fas fa-check me-1"></i> Marcar como completada
+                                                </button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

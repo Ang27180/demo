@@ -23,6 +23,8 @@ public class WebConfig implements WebMvcConfigurer {
             Path base = Paths.get(uploadDir).toAbsolutePath().normalize();
             Files.createDirectories(base.resolve("medios-pago"));
             Files.createDirectories(base.resolve("comprobantes"));
+            Files.createDirectories(base.resolve("tutores"));
+            Files.createDirectories(base.resolve("lecciones-pdf"));
         } catch (Exception e) {
             throw new IllegalStateException("No se pudo crear el directorio de subidas: " + uploadDir, e);
         }
@@ -36,5 +38,8 @@ public class WebConfig implements WebMvcConfigurer {
         }
         registry.addResourceHandler("/files/medios-pago/**")
                 .addResourceLocations(location + "medios-pago/");
+        registry.addResourceHandler("/files/tutores/**")
+                .addResourceLocations(location + "tutores/");
+        /* PDFs de lección: servidos por {@link com.proyectojpa.demo.controller.LeccionPdfController} (iframe/embed fiables). */
     }
 }

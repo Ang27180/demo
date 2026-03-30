@@ -9,7 +9,7 @@
         <a th:href="@{/admin/tutores}" class="btn btn-outline-secondary btn-sm mb-3">← Lista de tutores</a>
         <h2 class="mb-4" th:text="${tutor.idTutor != null} ? 'Editar tutor' : 'Nuevo tutor'">Tutor</h2>
         <p class="text-muted small">La persona debe existir con <strong>rol Tutor (3)</strong>. Si no aparece en el listado, créela desde «Añadir usuario».</p>
-        <form th:action="@{/admin/tutores/guardar}" method="post" class="card p-4">
+        <form th:action="@{/admin/tutores/guardar}" method="post" enctype="multipart/form-data" class="card p-4">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
             <input type="hidden" name="idTutor" th:value="${tutor.idTutor}" th:if="${tutor.idTutor != null}">
             <div class="mb-3">
@@ -30,6 +30,15 @@
             <div class="mb-3">
                 <label class="form-label">Observaciones</label>
                 <textarea name="observaciones" class="form-control" rows="2" th:text="${tutor.observaciones}"></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Foto del tutor</label>
+                <input type="file" name="imagenArchivo" class="form-control" accept="image/jpeg,image/png,image/gif,image/webp">
+                <p class="form-text small text-muted">Opcional. JPG, PNG, GIF o WebP. Si no subes archivo, se mantiene la imagen actual (o la predeterminada en la web pública).</p>
+                <div th:if="${tutor.imagen != null && !#strings.isEmpty(tutor.imagen)}" class="mt-2">
+                    <img th:src="${tutor.imagen}" alt="Foto actual" class="img-thumbnail" style="max-height: 140px;">
+                    <p class="small text-muted mb-0 mt-1">Imagen actual.</p>
+                </div>
             </div>
             <button type="submit" class="btn btn-primary" th:disabled="${#lists.isEmpty(personasDisponibles)}">Guardar</button>
         </form>

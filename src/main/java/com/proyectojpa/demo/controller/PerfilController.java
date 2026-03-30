@@ -9,16 +9,19 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
+import com.proyectojpa.demo.Service.TutorService;
 import com.proyectojpa.demo.models.Acudiente;
 import com.proyectojpa.demo.models.Estudiante;
 import com.proyectojpa.demo.models.Persona;
 import com.proyectojpa.demo.repository.AcudienteRepository;
 import com.proyectojpa.demo.repository.EstudianteRepository;
 import com.proyectojpa.demo.repository.PersonaRepository;
+import com.proyectojpa.demo.repository.TutorRepository;
 import com.proyectojpa.demo.security.CustomUserDetails;
 
 @Controller
@@ -33,6 +36,12 @@ public class PerfilController {
 
     @Autowired
     private AcudienteRepository acudienteRepository;
+
+    @Autowired
+    private TutorRepository tutorRepository;
+
+    @Autowired
+    private TutorService tutorService;
 
     @GetMapping
     public String verPerfil(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
@@ -49,6 +58,9 @@ public class PerfilController {
 
         model.addAttribute("persona", persona);
         model.addAttribute("estudiante", estudiante);
+        if (persona.getRolId() != null && persona.getRolId() == 3) {
+            tutorRepository.findByPersona(persona).ifPresent(t -> model.addAttribute("tutor", t));
+        }
         return "perfil";
     }
 
@@ -58,6 +70,7 @@ public class PerfilController {
             @RequestParam(required = false) String tutorNombre,
             @RequestParam(required = false) String tutorTelefono,
             @RequestParam(required = false) String tutorEmail,
+            @RequestParam(required = false) MultipartFile imagenTutorArchivo,
             RedirectAttributes redirectAttributes) {
         try {
             // Buscamos la persona original
@@ -89,6 +102,18 @@ public class PerfilController {
             });
 
             personaRepository.save(personaExistente);
+
+            if (personaExistente.getRolId() != null && personaExistente.getRolId() == 3
+                    && imagenTutorArchivo != null && !imagenTutorArchivo.isEmpty()) {
+                try {
+                    tutorService.aplicarFotoTutorSiEnviada(personaExistente.getId(), imagenTutorArchivo);
+                } catch (Exception ex) {
+                    redirectAttributes.addFlashAttribute("mensaje",
+                            "Datos guardados, pero no se pudo guardar la imagen: " + ex.getMessage());
+                    redirectAttributes.addFlashAttribute("tipoMensaje", "warning");
+                    return "redirect:/perfil";
+                }
+            }
 
             redirectAttributes.addFlashAttribute("mensaje", "¡Perfil actualizado con éxito!");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");

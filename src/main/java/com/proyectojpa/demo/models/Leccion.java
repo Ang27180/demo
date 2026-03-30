@@ -2,6 +2,7 @@ package com.proyectojpa.demo.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,8 +25,13 @@ public class Leccion {
     @Column(name = "contenido_tipo") // video, texto, pdf
     private String contenidoTipo;
 
-    @Column(name = "contenido_url")
+    @Column(name = "contenido_url", length = 2048)
     private String contenidoUrl;
+
+    /** Texto largo para lecciones tipo lectura (HTML escapado en vista). */
+    @Lob
+    @Column(name = "contenido_texto", columnDefinition = "LONGTEXT")
+    private String contenidoTexto;
 
     @ManyToOne
     @JoinColumn(name = "id_modulo", nullable = false)
@@ -64,6 +70,14 @@ public class Leccion {
 
     public void setContenidoUrl(String contenidoUrl) {
         this.contenidoUrl = contenidoUrl;
+    }
+
+    public String getContenidoTexto() {
+        return contenidoTexto;
+    }
+
+    public void setContenidoTexto(String contenidoTexto) {
+        this.contenidoTexto = contenidoTexto;
     }
 
     public Modulo getModulo() {

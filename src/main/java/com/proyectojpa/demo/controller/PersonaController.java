@@ -16,7 +16,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.proyectojpa.demo.Service.TutorService;
 import com.proyectojpa.demo.domain.InscripcionEstados;
 import com.proyectojpa.demo.models.Acudiente;
 import com.proyectojpa.demo.models.Estudiante;
@@ -80,6 +83,9 @@ public class PersonaController {
 
     @Autowired
     private TutorRepository tutorRepository;
+
+    @Autowired
+    private TutorService tutorService;
 
     private void cargarRoles(Model model) {
         List<Rol> roles = rolRepository.findAll(Sort.by(Sort.Direction.ASC, "id"));
@@ -234,6 +240,9 @@ public class PersonaController {
                 .orElseThrow(() -> new IllegalArgumentException("Persona no encontrada: " + id));
         persona.setContrasena("");
         model.addAttribute("persona", persona);
+        if (persona.getRolId() != null && persona.getRolId() == 3) {
+            tutorRepository.findByPersona(persona).ifPresent(t -> model.addAttribute("tutor", t));
+        }
         cargarRoles(model);
         return "formulario";
     }
@@ -243,7 +252,8 @@ public class PersonaController {
             @PathVariable Integer id,
             @ModelAttribute("persona") Persona persona,
             BindingResult result,
-            Model model) {
+            Model model,
+            @RequestParam(required = false) MultipartFile imagenTutorArchivo) {
 
         Persona existente = personaRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Persona no encontrada: " + id));
@@ -270,6 +280,9 @@ public class PersonaController {
 
         if (result.hasErrors()) {
             persona.setContrasena("");
+            if (persona.getRolId() != null && persona.getRolId() == 3) {
+                tutorRepository.findByPersona(persona).ifPresent(t -> model.addAttribute("tutor", t));
+            }
             cargarRoles(model);
             return "formulario";
         }
@@ -281,6 +294,20 @@ public class PersonaController {
         }
 
         personaRepository.save(persona);
+
+        if (persona.getRolId() != null && persona.getRolId() == 3
+                && imagenTutorArchivo != null && !imagenTutorArchivo.isEmpty()) {
+            try {
+                tutorService.aplicarFotoTutorSiEnviada(id, imagenTutorArchivo);
+            } catch (Exception e) {
+                model.addAttribute("errorFotoTutor", e.getMessage());
+                persona.setContrasena("");
+                tutorRepository.findByPersona(persona).ifPresent(t -> model.addAttribute("tutor", t));
+                cargarRoles(model);
+                return "formulario";
+            }
+        }
+
         return "redirect:/admin";
     }
 

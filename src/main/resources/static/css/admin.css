@@ -1,0 +1,154 @@
+/* Panel de administración — mismo look & feel que tutor.html */
+
+.admin-panel-page {
+  background-color: #000;
+  color: #e8e8e8;
+  width: 100%;
+  min-height: calc(100vh - 80px);
+}
+
+.admin-panel-page .text-muted {
+  color: rgba(255, 255, 255, 0.55) !important;
+}
+
+.admin-panel-page h1,
+.admin-panel-page h2,
+.admin-panel-page h3,
+.admin-panel-page h4,
+.admin-panel-page h5,
+.admin-panel-page .admin-panel-title {
+  color: #fff;
+}
+
+/* Mismas tarjetas / botones que el panel tutor */
+.admin-panel-page .tutor-card {
+  background-color: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.admin-panel-page .tutor-card:hover {
+  border-color: #f8c325;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.admin-panel-page .admin-stat-card.tutor-card:hover {
+  transform: none;
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+}
+
+.admin-panel-page .btn-yellow-action {
+  background-color: #f8c325;
+  color: #000;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.admin-panel-page .btn-yellow-action:hover {
+  background-color: #d8a61c;
+  color: #000;
+  box-shadow: 0 5px 15px rgba(248, 195, 37, 0.35);
+}
+
+.admin-panel-page .btn-success-action {
+  background-color: #198754;
+  color: #fff;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.admin-panel-page .btn-success-action:hover {
+  background-color: #157347;
+  color: #fff;
+  box-shadow: 0 5px 15px rgba(25, 135, 84, 0.35);
+}
+
+/* Tarjeta de accesos rápidos */
+.admin-panel-page .admin-quick-card .card-header {
+  background: rgba(0, 0, 0, 0.45);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+/* Tablas en tema oscuro */
+.admin-panel-page .table-admin {
+  --bs-table-bg: transparent;
+  --bs-table-color: #e8e8e8;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.admin-panel-page .table-admin thead th {
+  background-color: #0d0d0d;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.admin-panel-page .table-admin tbody td {
+  border-color: rgba(255, 255, 255, 0.12);
+  vertical-align: middle;
+}
+
+.admin-panel-page .table-admin .table-group-row td {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #f8c325;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.admin-panel-page .form-control,
+.admin-panel-page .form-select {
+  background-color: #0a0a0a;
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.admin-panel-page .form-control::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.admin-panel-page .form-control:focus,
+.admin-panel-page .form-select:focus {
+  background-color: #0a0a0a;
+  border-color: #f8c325;
+  color: #fff;
+  box-shadow: 0 0 0 0.2rem rgba(248, 195, 37, 0.2);
+}
+
+.admin-panel-page .form-select option,
+.modal.admin-modal-dark .form-select option {
+  background-color: #111;
+  color: #fff;
+}
+
+/* Modal oscuro */
+.modal.admin-modal-dark .modal-content {
+  background-color: #1a1a1a;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.modal.admin-modal-dark .modal-header,
+.modal.admin-modal-dark .modal-footer {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.modal.admin-modal-dark .btn-close {
+  filter: invert(1);
+}
+
+.modal.admin-modal-dark .btn-yellow-action {
+  background-color: #f8c325;
+  color: #000;
+  border: none;
+}
+
+.modal.admin-modal-dark .btn-yellow-action:hover {
+  background-color: #d8a61c;
+  color: #000;
+}
+
+.admin-panel-page .table-admin tbody tr.table-secondary td {
+  background-color: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.85);
+}

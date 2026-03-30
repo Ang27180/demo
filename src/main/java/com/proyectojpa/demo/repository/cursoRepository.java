@@ -12,6 +12,8 @@ import com.proyectojpa.demo.models.Curso;
 
 public interface cursoRepository extends JpaRepository<Curso, Integer> {
 
+    long countByTutor_IdTutor(Integer idTutor);
+
     // Nota: evitar MultipleBagFetchException. Primero cargamos solo `modulos`
     // y luego inicializamos `modulos.lecciones` en el controlador con otra carga.
     @EntityGraph(attributePaths = { "modulos", "modulos.lecciones" })

@@ -4,35 +4,40 @@
 
 <head>
     <title layout:fragment="titulo">Panel de Administración</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 
 <body>
-    <div layout:fragment="contenido" class="container mt-5 pt-5 pb-5">
-        <h2 class="mb-4 text-center fw-bold">Panel de Administración</h2>
+    <div layout:fragment="contenido" class="admin-panel-page pt-5">
+        <div class="container pb-5">
+        <div class="text-center mb-4">
+            <h1 class="admin-panel-title fw-bold mb-2">Panel de Administración</h1>
+            <p class="text-muted mb-0">Usuarios, cursos, informes y herramientas de administración.</p>
+        </div>
 
         <div th:if="${msgAdmin}" class="alert alert-success" th:text="${msgAdmin}"></div>
         <div th:if="${errorAdmin}" class="alert alert-danger" th:text="${errorAdmin}"></div>
         <div th:if="${okCorreo}" class="alert alert-success" th:text="${okCorreo}"></div>
 
         <!-- Accesos rápidos: finanzas, informes, comunicación, tutores -->
-        <div class="card mb-4 border-primary">
-            <div class="card-header bg-primary text-white fw-bold">
-                <i class="fas fa-bolt me-2"></i>Accesos rápidos
+        <div class="card tutor-card admin-quick-card mb-4 rounded-3 border-0 shadow-sm">
+            <div class="card-header rounded-top-3 py-3">
+                <i class="fas fa-bolt me-2 text-warning"></i>Accesos rápidos
             </div>
             <div class="card-body">
                 <div class="row g-3">
                     <div class="col-md-4">
                         <h6 class="text-muted text-uppercase small">Finanzas</h6>
-                        <a th:href="@{/admin/medios-pago}" class="btn btn-outline-secondary btn-sm me-1 mb-1">
+                        <a th:href="@{/admin/medios-pago}" class="btn btn-outline-warning btn-sm me-1 mb-1">
                             <i class="fas fa-qrcode me-1"></i>Medios de pago
                         </a>
-                        <a th:href="@{/admin/recibos}" class="btn btn-outline-secondary btn-sm me-1 mb-1">
+                        <a th:href="@{/admin/recibos}" class="btn btn-outline-light btn-sm me-1 mb-1">
                             <i class="fas fa-receipt me-1"></i>Recibos
                         </a>
-                        <a th:href="@{/admin/recibos/generar}" class="btn btn-outline-secondary btn-sm me-1 mb-1">
+                        <a th:href="@{/admin/recibos/generar}" class="btn btn-outline-light btn-sm me-1 mb-1">
                             <i class="fas fa-plus me-1"></i>Generar recibo
                         </a>
-                        <a th:href="@{/admin/pagos/ordenes}" class="btn btn-outline-primary btn-sm me-1 mb-1">
+                        <a th:href="@{/admin/pagos/ordenes}" class="btn btn-outline-info btn-sm me-1 mb-1">
                             <i class="fas fa-mobile-alt me-1"></i>Órdenes Nequi
                         </a>
                     </div>
@@ -48,7 +53,7 @@
                     </div>
                     <div class="col-md-4">
                         <h6 class="text-muted text-uppercase small">Comunicación y tutores</h6>
-                        <a th:href="@{/correo/formulario}" class="btn btn-outline-success btn-sm me-1 mb-1">
+                        <a th:href="@{/correo/formulario}" class="btn btn-outline-warning btn-sm me-1 mb-1">
                             <i class="fas fa-envelope me-1"></i>Correo
                         </a>                                               
                     </div>
@@ -59,46 +64,46 @@
         <!-- TARJETAS DE RESUMEN -->
         <div class="row g-4 mb-5">
             <div class="col-md-3">
-                <div class="card p-3 text-center h-100">
-                    <i class="fas fa-users display-5 text-primary mb-2"></i>
-                    <h5 class="fw-bold">Total Usuarios</h5>
-                    <p class="fs-3" th:text="${totalUsuarios}">0</p>
+                <div class="card tutor-card admin-stat-card border-0 rounded-4 p-3 text-center h-100 text-white shadow-sm">
+                    <i class="fas fa-users display-5 text-warning mb-2"></i>
+                    <h5 class="fw-bold">Total usuarios</h5>
+                    <p class="fs-3 mb-0" th:text="${totalUsuarios}">0</p>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card p-3 text-center h-100">
+                <div class="card tutor-card admin-stat-card border-0 rounded-4 p-3 text-center h-100 text-white shadow-sm">
                     <i class="fas fa-book display-5 text-success mb-2"></i>
                     <h5 class="fw-bold">Cursos</h5>
-                    <p class="fs-3" th:text="${totalCursos}">0</p>
+                    <p class="fs-3 mb-0" th:text="${totalCursos}">0</p>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card p-3 text-center h-100">
+                <div class="card tutor-card admin-stat-card border-0 rounded-4 p-3 text-center h-100 text-white shadow-sm">
                     <i class="fas fa-chalkboard-teacher display-5 text-warning mb-2"></i>
                     <h5 class="fw-bold">Tutores</h5>
-                    <p class="fs-3" th:text="${totalTutores}">0</p>
+                    <p class="fs-3 mb-0" th:text="${totalTutores}">0</p>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card p-3 text-center h-100">
-                    <i class="fas fa-user-graduate display-5 text-danger mb-2"></i>
+                <div class="card tutor-card admin-stat-card border-0 rounded-4 p-3 text-center h-100 text-white shadow-sm">
+                    <i class="fas fa-user-graduate display-5 text-success mb-2"></i>
                     <h5 class="fw-bold">Estudiantes</h5>
-                    <p class="fs-3" th:text="${totalEstudiantes}">0</p>
-                    <p class="small text-muted mb-0">Usuarios con rol estudiante</p>
+                    <p class="fs-3 mb-0" th:text="${totalEstudiantes}">0</p>
+                    <p class="small text-muted mb-0 mt-1">Usuarios con rol estudiante</p>
                 </div>
             </div>
         </div>
 
         <!-- GESTIÓN DE USUARIOS -->
-        <div class="card p-4 mb-5">
+        <div class="card tutor-card border-0 rounded-3 p-4 mb-5 shadow-sm">
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-                <h4 class="fw-bold">Gestión de Usuarios</h4>
+                <h4 class="fw-bold text-white mb-0">Gestión de usuarios</h4>
                 <div class="d-flex flex-wrap gap-2">                    
-                    <a th:href="@{/personas/nueva}" class="btn btn-success btn-sm">➕ Añadir Usuario</a>
+                    <a th:href="@{/personas/nueva}" class="btn btn-success-action btn-sm rounded-3 px-3"><i class="fas fa-user-plus me-1"></i>Añadir usuario</a>
                 </div>
             </div>
 
-            <form th:action="@{/admin}" method="get" class="mb-3">
+            <form th:action="@{/admin}" method="get" class="card bg-black bg-opacity-25 border border-secondary rounded-3 p-3 mb-3">
                 <p class="text-muted small text-uppercase fw-bold mb-2">Filtros — usuarios</p>
                 <input type="hidden" name="filtroNombreCurso" th:value="${filtroNombreCurso}" th:if="${filtroNombreCurso != null && !filtroNombreCurso.isEmpty()}">
                 <input type="hidden" name="filtroIdPersonaTutor" th:value="${filtroIdPersonaTutor}" th:if="${filtroIdPersonaTutor != null}">
@@ -117,12 +122,12 @@
                         </select>
                     </div>
                     <div class="col-md-3 d-flex flex-column gap-2">
-                        <button type="submit" class="btn btn-outline-primary w-100">🔍 Buscar</button>
+                        <button type="submit" class="btn btn-outline-warning w-100"><i class="fas fa-search me-1"></i>Buscar</button>
                         <a th:if="${(filtroNombreCurso != null && !filtroNombreCurso.isEmpty()) || filtroIdPersonaTutor != null}"
                             th:href="@{/admin(filtroNombreCurso=${filtroNombreCurso}, filtroIdPersonaTutor=${filtroIdPersonaTutor})}"
-                            class="btn btn-outline-secondary w-100">Limpiar filtros de usuarios</a>
+                            class="btn btn-outline-light w-100">Limpiar filtros de usuarios</a>
                         <a th:unless="${(filtroNombreCurso != null && !filtroNombreCurso.isEmpty()) || filtroIdPersonaTutor != null}"
-                            th:href="@{/admin}" class="btn btn-outline-secondary w-100">Limpiar filtros de usuarios</a>
+                            th:href="@{/admin}" class="btn btn-outline-light w-100">Limpiar filtros de usuarios</a>
                     </div>
                 </div>
             </form>
@@ -131,8 +136,8 @@
                 <p class="text-muted small mb-2" th:if="${personas != null}">
                     Mostrando <strong th:text="${#lists.size(personas)}">0</strong> usuario(s) según filtros.
                 </p>
-                <table class="table table-hover table-bordered table-sm">
-                    <thead class="table-dark">
+                <table class="table table-hover table-bordered table-sm table-admin">
+                    <thead>
                         <tr>
                             <th>Documento</th>
                             <th>Nombre</th>
@@ -147,7 +152,7 @@
                             <td colspan="6" class="text-center text-muted">No hay usuarios que coincidan con el filtro.</td>
                         </tr>
                         <th:block th:each="grupo : ${personasPorRol}">
-                            <tr class="table-secondary">
+                            <tr class="table-group-row">
                                 <td colspan="6" class="fw-bold small text-uppercase py-2" th:text="${grupo.key}">Grupo</td>
                             </tr>
                             <tr th:each="persona : ${grupo.value}"
@@ -192,16 +197,16 @@
         </div>
 
         <!-- GESTIÓN DE CURSOS -->
-        <div class="card p-4 mb-5">
+        <div class="card tutor-card border-0 rounded-3 p-4 mb-5 shadow-sm">
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
                 <div>
-                    <h4 class="fw-bold mb-1">Gestión de Cursos</h4>
+                    <h4 class="fw-bold text-white mb-1">Gestión de cursos</h4>
                     <p class="text-muted small mb-0">Alta, edición, eliminación, contenido (módulos/lecciones) y asignación de tutor en el formulario.</p>
                 </div>
-                <a th:href="@{/admin/cursos/form}" class="btn btn-success">➕ Añadir Curso</a>
+                <a th:href="@{/admin/cursos/form}" class="btn btn-yellow-action rounded-3 px-4"><i class="fas fa-plus me-1"></i>Añadir curso</a>
             </div>
 
-            <form th:action="@{/admin}" method="get" class="mb-3">
+            <form th:action="@{/admin}" method="get" class="card bg-black bg-opacity-25 border border-secondary rounded-3 p-3 mb-3">
                 <p class="text-muted small text-uppercase fw-bold mb-2">Filtros — cursos</p>
                 <input type="hidden" name="filtroNombre" th:value="${filtroNombre}" th:if="${filtroNombre != null && !filtroNombre.isEmpty()}">
                 <input type="hidden" name="filtroRol" th:value="${filtroRol}" th:if="${filtroRol != null}">
@@ -220,12 +225,12 @@
                         </select>
                     </div>
                     <div class="col-md-3 d-flex flex-column gap-2">
-                        <button type="submit" class="btn btn-outline-primary w-100">🔍 Buscar</button>
+                        <button type="submit" class="btn btn-outline-warning w-100"><i class="fas fa-search me-1"></i>Buscar</button>
                         <a th:if="${(filtroNombre != null && !filtroNombre.isEmpty()) || filtroRol != null}"
                             th:href="@{/admin(filtroNombre=${filtroNombre}, filtroRol=${filtroRol})}"
-                            class="btn btn-outline-secondary w-100">Limpiar filtros de cursos</a>
+                            class="btn btn-outline-light w-100">Limpiar filtros de cursos</a>
                         <a th:unless="${(filtroNombre != null && !filtroNombre.isEmpty()) || filtroRol != null}"
-                            th:href="@{/admin}" class="btn btn-outline-secondary w-100">Limpiar filtros de cursos</a>
+                            th:href="@{/admin}" class="btn btn-outline-light w-100">Limpiar filtros de cursos</a>
                     </div>
                 </div>
             </form>
@@ -234,8 +239,8 @@
                 <p class="text-muted small mb-2" th:if="${cursos != null}">
                     <strong th:text="${#lists.size(cursos)}">0</strong> curso(s) registrado(s).
                 </p>
-                <table class="table table-hover table-bordered table-sm">
-                    <thead class="table-dark">
+                <table class="table table-hover table-bordered table-sm table-admin">
+                    <thead>
                         <tr>
                             <th>ID</th>
                             <th>Nombre</th>
@@ -279,29 +284,29 @@
         </div>
 
         <!-- Modal: Asignar Tutor a Curso -->
-        <div class="modal fade" id="asignarTutorModal" tabindex="-1" aria-hidden="true">
+        <div class="modal fade admin-modal-dark" id="asignarTutorModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
+                <div class="modal-content border-secondary">
                     <form id="asignarTutorForm" method="post" th:action="@{/admin/cursos/0/asignar-tutor}">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                         <div class="modal-header">
-                            <h5 class="modal-title">Asignar tutor al curso</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            <h5 class="modal-title"><i class="fas fa-user-tie me-2 text-warning"></i>Asignar tutor al curso</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                         </div>
                         <div class="modal-body">
                             <p class="mb-2">Curso: <strong id="asignarTutorCursoNombre">—</strong></p>
                             <p class="text-muted small mb-3">ID: <span id="asignarTutorCursoId">—</span></p>
 
                             <label class="form-label fw-semibold">Tutor</label>
-                            <select name="idPersonaTutor" id="idPersonaTutorModal" class="form-select">
+                            <select name="idPersonaTutor" id="idPersonaTutorModal" class="form-select bg-dark text-white border-secondary">
                                 <option value="">— Sin asignar —</option>
                                 <option th:each="p : ${personasTutorSelect}" th:value="${p.id}"
                                     th:text="${p.nombre}"></option>
                             </select>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-primary">Guardar</button>
+                            <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-yellow-action">Guardar</button>
                         </div>
                     </form>
                 </div>
@@ -380,6 +385,7 @@
             });
         </script>
 
+        </div>
     </div>
 </body>
 

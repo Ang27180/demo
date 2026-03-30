@@ -1,6 +1,7 @@
 package com.proyectojpa.demo.controller;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
@@ -10,8 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.proyectojpa.demo.Service.FileStorageService;
 import com.proyectojpa.demo.models.Persona;
 import com.proyectojpa.demo.models.Tutor;
 import com.proyectojpa.demo.repository.PersonaRepository;
@@ -26,10 +29,13 @@ public class AdminTutorMvcController {
 
     private final TutorRepository tutorRepository;
     private final PersonaRepository personaRepository;
+    private final FileStorageService fileStorageService;
 
-    public AdminTutorMvcController(TutorRepository tutorRepository, PersonaRepository personaRepository) {
+    public AdminTutorMvcController(TutorRepository tutorRepository, PersonaRepository personaRepository,
+            FileStorageService fileStorageService) {
         this.tutorRepository = tutorRepository;
         this.personaRepository = personaRepository;
+        this.fileStorageService = fileStorageService;
     }
 
     @GetMapping
@@ -76,6 +82,7 @@ public class AdminTutorMvcController {
             @RequestParam Integer idPersona,
             @RequestParam(required = false) String experiencia,
             @RequestParam(required = false) String observaciones,
+            @RequestParam(required = false) MultipartFile imagenArchivo,
             RedirectAttributes redirectAttributes) {
         try {
             Persona persona = personaRepository.findById(idPersona)
@@ -102,6 +109,13 @@ public class AdminTutorMvcController {
             tutor.setPersona(persona);
             tutor.setExperiencia(experiencia);
             tutor.setObservaciones(observaciones);
+
+            if (imagenArchivo != null && !imagenArchivo.isEmpty()) {
+                String nueva = fileStorageService.guardarFotoTutor(imagenArchivo);
+                fileStorageService.eliminarSiRutaFotoTutor(tutor.getImagen());
+                tutor.setImagen(nueva);
+            }
+
             tutorRepository.save(tutor);
             redirectAttributes.addFlashAttribute("msgAdmin", "Tutor guardado correctamente.");
         } catch (Exception e) {
@@ -113,7 +127,14 @@ public class AdminTutorMvcController {
     @GetMapping("/eliminar/{id}")
     public String eliminar(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
         try {
-            tutorRepository.deleteById(id);
+            Optional<Tutor> opt = tutorRepository.findById(id);
+            if (opt.isEmpty()) {
+                redirectAttributes.addFlashAttribute("errorAdmin", "Tutor no encontrado.");
+                return "redirect:/admin/tutores";
+            }
+            Tutor t = opt.get();
+            fileStorageService.eliminarSiRutaFotoTutor(t.getImagen());
+            tutorRepository.delete(t);
             redirectAttributes.addFlashAttribute("msgAdmin", "Tutor eliminado.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorAdmin", "No se pudo eliminar: " + e.getMessage());

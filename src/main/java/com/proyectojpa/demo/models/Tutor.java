@@ -27,6 +27,10 @@ public class Tutor {
     @Column(name = "cantidad")
     private Integer cantidad; // Nueva cantidad solicitada para el tutor
 
+    /** Ruta pública servida por {@code /files/tutores/**} (p. ej. {@code /files/tutores/uuid.jpg}), o null. */
+    @Column(name = "imagen", length = 255)
+    private String imagen;
+
     /**
      * FK hacia {@code persona.id_persona}. En MySQL la tabla {@code tutor} tiene también
      * {@code persona_id_persona} (nullable); la columna obligatoria es {@code id_persona}.
@@ -75,5 +79,13 @@ public class Tutor {
 
     public void setCantidad(Integer cantidad) {
         this.cantidad = cantidad;
+    }
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
     }
 }

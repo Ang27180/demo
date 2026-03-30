@@ -336,3 +336,178 @@ footer.site-footer i:hover {
   color: black !important;
   border-color: white;
 }
+
+/* ================================================================ */
+/* Página de inicio (.home-page) — layout oscuro premium             */
+/* (Clases luxury-* usadas en home.html; deben vivir aquí tras merge) */
+/* ================================================================ */
+
+.home-page {
+  background-color: #0a0a0a;
+  color: #fff;
+  width: 100%;
+  min-height: calc(100vh - 80px);
+  padding-bottom: 2rem;
+}
+
+.home-page .hero-section {
+  min-height: 52vh;
+  padding: 5rem 1rem;
+}
+
+.home-page .hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.home-page .text-gold {
+  color: var(--yellow-accent) !important;
+}
+
+/* Barra de iconos bajo el hero */
+.home-page .features-bar {
+  padding: 1.75rem 1.5rem;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+.home-page .feature-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  color: #1a1a1a;
+}
+
+.home-page .feature-icon-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #f8c325, #d4a017);
+  color: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+}
+
+/* Sidebars */
+.home-page .sidebar-luxury-box {
+  background: rgba(26, 26, 26, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 1.25rem;
+}
+
+.home-page .news-item-luxury {
+  transition: opacity 0.25s ease;
+}
+
+.home-page .news-item-luxury:hover {
+  opacity: 1 !important;
+}
+
+/* Tarjetas de cursos destacados */
+.home-page .luxury-card {
+  background: #141414;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.home-page .luxury-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+}
+
+.home-page .luxury-card .card-img-box {
+  height: 140px;
+  overflow: hidden;
+  background: #222;
+}
+
+.home-page .luxury-card .card-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.home-page .card-body-luxury {
+  padding: 1rem 1.1rem 1.15rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0.75rem;
+}
+
+.home-page .card-title-luxury {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.35;
+  margin: 0;
+  min-height: 2.6em;
+}
+
+.home-page .card-price-luxury {
+  font-weight: 800;
+  color: var(--yellow-accent);
+  font-size: 1rem;
+}
+
+.home-page .btn-pill-gold {
+  display: inline-block;
+  background: linear-gradient(145deg, #f8c325, #d4a017);
+  color: #111 !important;
+  font-weight: 700;
+  border-radius: 999px;
+  border: none;
+  white-space: nowrap;
+}
+
+.home-page .btn-pill-gold:hover {
+  filter: brightness(1.08);
+  color: #000 !important;
+}
+
+/* Banner promo + cuenta atrás */
+.home-page .promo-luxury-banner {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(248, 195, 37, 0.25);
+  background: linear-gradient(90deg, #1a1208 0%, #0d0d0d 100%);
+}
+
+.home-page .promo-overlay {
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.75) 0%, rgba(30, 22, 10, 0.9) 100%);
+}
+
+.home-page .countdown-digit {
+  display: inline-block;
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(248, 195, 37, 0.35);
+  border-radius: 6px;
+  font-family: ui-monospace, monospace;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #fff;
+  min-width: 2.25rem;
+  text-align: center;
+}
+
+/* Fondo general del bloque principal: evita franjas grises del body */
+.home-page main.container-fluid {
+  background: transparent;
+}
+
+/* Utilidades usadas en home.html, perfil, etc. (no vienen con Bootstrap) */
+.hover-opacity-100:hover {
+  opacity: 1 !important;
+}
+
+.transition-all {
+  transition: opacity 0.25s ease;
+}

@@ -29,7 +29,15 @@
                         
                         <!-- Cabecera Perfil (Avatar y Nombres) -->
                         <div class="text-center mb-5">
-                            <div class="avatar-circle">
+                            <div class="mb-3" th:if="${persona.rolId != null && persona.rolId == 3}">
+                                <img th:if="${tutor != null && tutor.imagen != null && !#strings.isEmpty(tutor.imagen)}"
+                                    th:src="${tutor.imagen}" alt="" class="rounded-circle shadow"
+                                    style="width: 120px; height: 120px; object-fit: cover;">
+                                <img th:unless="${tutor != null && tutor.imagen != null && !#strings.isEmpty(tutor.imagen)}"
+                                    th:src="@{/imagenes/usuario-default.png}" alt="" class="rounded-circle shadow"
+                                    style="width: 120px; height: 120px; object-fit: cover;">
+                            </div>
+                            <div class="avatar-circle" th:unless="${persona.rolId != null && persona.rolId == 3}">
                                 <i class="fas fa-user-tie"></i>
                             </div>
                             <h2 class="profile-name" th:text="${persona.nombre}">Nombre de Usuario</h2>
@@ -38,12 +46,13 @@
 
                         <!-- Notificaciones de Sistema -->
                         <div th:if="${mensaje}" 
-                             th:class="'alert alert-' + (${tipoMensaje == 'success' ? 'success' : 'danger'}) + ' text-center rounded-4 border-0 shadow-sm mb-5'" 
+                             th:class="'alert alert-' + (${tipoMensaje == 'success' ? 'success' : (tipoMensaje == 'warning' ? 'warning' : 'danger')}) + ' text-center rounded-4 border-0 shadow-sm mb-5'" 
                              th:text="${mensaje}">
                         </div>
 
                         <!-- Formulario de Actualización -->
-                        <form th:action="@{/perfil/actualizar}" th:object="${persona}" method="post">
+                        <form th:action="@{/perfil/actualizar}" th:object="${persona}" method="post"
+                              th:enctype="${persona.rolId != null && persona.rolId == 3} ? 'multipart/form-data' : 'application/x-www-form-urlencoded'">
                             <input type="hidden" th:field="*{id}">
 
                             <!-- Sección: Información Personal -->
@@ -81,6 +90,13 @@
                                             <i class="fas fa-map-marker-alt"></i>
                                             <input type="text" th:field="*{direccion}" placeholder="Dirección completa" required>
                                         </div>
+                                    </div>
+
+                                    <div class="col-md-12 input-premium-wrapper" th:if="${persona.rolId != null && persona.rolId == 3}">
+                                        <label>Foto pública (tutor)</label>
+                                        <p class="text-white-50 small mb-2">Opcional. Aparece en «Nuestros tutores». JPG, PNG, GIF o WebP.</p>
+                                        <input type="file" name="imagenTutorArchivo" class="form-control bg-dark text-white border-secondary"
+                                            accept="image/jpeg,image/png,image/gif,image/webp">
                                     </div>
                                 </div>
                             </div>

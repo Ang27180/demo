@@ -18,6 +18,7 @@
                 <thead class="table-dark">
                     <tr>
                         <th>ID</th>
+                        <th>Imagen</th>
                         <th>Persona</th>
                         <th>Email</th>
                         <th>Experiencia</th>
@@ -27,6 +28,12 @@
                 <tbody>
                     <tr th:each="t : ${tutores}">
                         <td th:text="${t.idTutor}"></td>
+                        <td>
+                            <img th:if="${t.imagen != null && !#strings.isEmpty(t.imagen)}" th:src="${t.imagen}" alt=""
+                                class="rounded" style="width: 48px; height: 48px; object-fit: cover;">
+                            <img th:unless="${t.imagen != null && !#strings.isEmpty(t.imagen)}" th:src="@{/imagenes/usuario-default.png}" alt=""
+                                class="rounded" style="width: 48px; height: 48px; object-fit: cover;">
+                        </td>
                         <td th:text="${t.persona != null ? t.persona.nombre : '—'}"></td>
                         <td th:text="${t.persona != null ? t.persona.email : '—'}"></td>
                         <td th:text="${t.experiencia}">—</td>

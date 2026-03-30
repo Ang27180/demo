@@ -33,7 +33,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // RECURSOS PÚBLICOS Y ACCESO INICIAL
                         .requestMatchers("/", "/home", "/nosotros", "/nuestros-tutores", "/registro", "/login", "/forgot-password").permitAll()
-                        .requestMatchers("/css/**", "/js/**", "/imagenes/**", "/files/medios-pago/**", "/favicon.ico", "/error").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/imagenes/**", "/files/medios-pago/**", "/files/tutores/**",
+                                "/files/lecciones-pdf/**", "/favicon.ico", "/error").permitAll()
                         .requestMatchers("/correo/**").permitAll()
 
                         // CURSOS
@@ -56,15 +57,15 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/tutor/**").hasRole("ADMIN")
                         .requestMatchers("/tutor-panel", "/tutor-panel-estudiantes", "/tutor/panel/**").hasAnyRole("ADMIN", "TUTOR")
 
-                        // PANEL ADMINISTRATIVO
-                        .requestMatchers("/admin/**", "/personas/**", "/personas/exportarExcel", "/correo/formulario").hasRole("ADMIN")
-
-                        // CONTENIDO DE CURSOS PARA ADMIN Y TUTOR
+                        // Rutas bajo /admin/ compartidas con TUTOR (deben ir ANTES del comodín /admin/**)
                         .requestMatchers(HttpMethod.GET, "/admin/cursos/*/contenido").hasAnyRole("ADMIN", "TUTOR")
                         .requestMatchers(HttpMethod.POST, "/admin/cursos/*/modulos").hasAnyRole("ADMIN", "TUTOR")
                         .requestMatchers(HttpMethod.POST, "/admin/cursos/modulos/*/lecciones").hasAnyRole("ADMIN", "TUTOR")
                         .requestMatchers(HttpMethod.GET, "/admin/cursos/modulos/eliminar/*").hasAnyRole("ADMIN", "TUTOR")
                         .requestMatchers(HttpMethod.GET, "/admin/cursos/lecciones/eliminar/*").hasAnyRole("ADMIN", "TUTOR")
+
+                        // PANEL ADMINISTRATIVO (resto de /admin/** solo ADMIN)
+                        .requestMatchers("/admin/**", "/personas/**", "/personas/exportarExcel", "/correo/formulario").hasRole("ADMIN")
 
                         // PANELES DE ROL
                         .requestMatchers("/estudiante/**", "/mis-cursos/**").hasAnyRole("ADMIN", "ESTUDIANTE")
@@ -117,7 +118,10 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/home?logout=true")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
-                        .permitAll());
+                        .permitAll())
+
+                /* Permite embeber PDFs propios (misma app) en iframes de /cursos/... */
+                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
 
         return http.build();
     }
