@@ -15,15 +15,23 @@ public class Acudiente {
     @Column(name = "id_acudiente")
     private Integer idAcudiente;
 
+    /**
+     * Columna física alineada con el esquema real (registro TI y consultas SQL):
+     * {@code acudiente.id_persona} → {@code persona.id_persona}.
+     */
     @ManyToOne
-    @JoinColumn(name = "Id_persona", referencedColumnName = "id_persona")
+    @JoinColumn(name = "id_persona", referencedColumnName = "id_persona")
     private Persona persona;
 
+    /**
+     * {@code acudiente.id_estudiante_dependiente} → {@code estudiante.id_estudiante}.
+     */
     @ManyToOne
-    @JoinColumn(name = "Id_Estudiante_dependiente", referencedColumnName = "id_estudiante")
+    @JoinColumn(name = "id_estudiante_dependiente", referencedColumnName = "id_estudiante")
     private Estudiante estudianteDependiente;
 
-    @Column(name = "parentesco", length = 45)
+    /** En BD histórica la columna se llama {@code Autorizacion} (datos del tutor en registro TI). */
+    @Column(name = "Autorizacion", length = 45)
     private String parentesco;
 
     // Getters y Setters

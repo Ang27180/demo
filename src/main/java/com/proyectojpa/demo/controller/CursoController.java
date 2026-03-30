@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.proyectojpa.demo.Service.CertificadoAutorizacionService;
 import com.proyectojpa.demo.Service.InscripcionAccesoService;
 import com.proyectojpa.demo.Service.ProgresoLeccionService;
+import com.proyectojpa.demo.Service.ReciboService;
 import com.proyectojpa.demo.domain.InscripcionEstados;
 import com.proyectojpa.demo.models.Curso;
 import com.proyectojpa.demo.repository.EstudianteRepository;
@@ -44,8 +45,15 @@ public class CursoController {
     @Autowired
     private CertificadoAutorizacionService certificadoAutorizacionService;
 
+    @Autowired
+    private ReciboService reciboService;
+
     @GetMapping
-    public String listarCursos(Model model) {
+    public String listarCursos(Model model, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        if (userDetails != null && userDetails.getPersona().getRolId() != null
+                && userDetails.getPersona().getRolId() == 4) {
+            return "redirect:/acudiente/panel";
+        }
         model.addAttribute("cursos", cursoRepository.findAll());
         return "cursos";
     }
@@ -53,6 +61,10 @@ public class CursoController {
     @GetMapping("/{id}")
     public String verInformacionCurso(@PathVariable("id") Integer id, Model model,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
+        if (userDetails != null && userDetails.getPersona().getRolId() != null
+                && userDetails.getPersona().getRolId() == 4) {
+            return "redirect:/acudiente/panel";
+        }
         Curso curso = cursoRepository.findByIdWithContenido(id)
                 .orElseThrow(() -> new IllegalArgumentException("Curso no encontrado: " + id));
         model.addAttribute("curso", curso);
@@ -63,6 +75,9 @@ public class CursoController {
         model.addAttribute("leccionesCompletadasIds", Collections.emptyList());
         model.addAttribute("progresoCursoPorcentaje", 0);
         model.addAttribute("puedeDescargarCertificado", false);
+        model.addAttribute("tieneAcudienteVinculado", false);
+        model.addAttribute("mostrarCertificadoDisponible", false);
+        model.addAttribute("necesitaAutorizacionAcudienteCertificado", false);
 
         if (userDetails != null && userDetails.getPersona().getRolId() != null
                 && userDetails.getPersona().getRolId() == 2) {
@@ -74,6 +89,8 @@ public class CursoController {
                                 .equals(insc.getEstado().getCodigo());
                         model.addAttribute("pagoPendiente", !acceso && pendiente);
                         model.addAttribute("puedeRegistrarProgreso", acceso);
+                        boolean tieneAcudiente = reciboService.tieneAcudienteVinculado(est);
+                        model.addAttribute("tieneAcudienteVinculado", tieneAcudiente);
                         if (acceso) {
                             int pct = progresoLeccionService.calcularPorcentaje(est, curso);
                             model.addAttribute("progresoCursoPorcentaje", pct);
@@ -82,6 +99,12 @@ public class CursoController {
                             model.addAttribute("puedeDescargarCertificado",
                                     certificadoAutorizacionService.puedeDescargar(userDetails.getPersona(),
                                             insc.getId()));
+                            boolean mostrarCert = pct >= 100;
+                            model.addAttribute("mostrarCertificadoDisponible", mostrarCert);
+                            model.addAttribute("necesitaAutorizacionAcudienteCertificado",
+                                    mostrarCert && tieneAcudiente
+                                            && (insc.getCertificadoAutorizado() == null
+                                                    || !insc.getCertificadoAutorizado()));
                         }
                     }));
         }

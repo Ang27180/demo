@@ -43,6 +43,11 @@
             Mis Cursos
           </a>
         </li>
+        <li class="nav-item" sec:authorize="hasRole('ACUDIENTE')">
+          <a th:href="@{/acudiente/panel}" class="nav-link">
+            <i class="fas fa-user-shield me-1"></i>Panel acudiente
+          </a>
+        </li>
         <li class="nav-item"><a th:href="@{/contacto}" class="nav-link">Contacto</a></li>
         <!-- Solo visible para ADMIN -->
         <li class="nav-item" sec:authorize="hasRole('ADMIN')">

@@ -1,62 +1,90 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
     layout:decorate="~{layout}">
+
 <head>
     <title layout:fragment="titulo">Mis cursos a cargo</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
+
 <body>
-    <div layout:fragment="contenido" class="container mt-5 pt-5 pb-5">
-        <h2 class="mb-4" th:text="${vistaSupervisionAdmin} ? 'Todos los cursos (por tutor)' : 'Mis cursos a cargo'">Mis cursos</h2>
-
-        <form th:if="${vistaSupervisionAdmin}" th:action="@{/tutor/panel/cursos}" method="get" class="card border mb-4 p-3">
-            <p class="text-uppercase small text-muted fw-bold mb-2">Filtros</p>
-            <div class="row g-2 align-items-end">
-                <div class="col-md-4">
-                    <label class="form-label small mb-1">Tutor (rol)</label>
-                    <select name="filtroIdPersona" class="form-select form-select-sm">
-                        <option value="">Todos</option>
-                        <option th:each="p : ${personasTutorFiltroSelect}" th:value="${p.id}"
-                            th:selected="${filtroIdPersona != null && filtroIdPersona == p.id}"
-                            th:text="${p.nombre}">—</option>
-                    </select>
+    <div layout:fragment="contenido" class="admin-panel-page pt-5 pb-5">
+        <div class="container">
+            <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+                <div>
+                    <h1 class="h2 fw-bold mb-1"
+                        th:text="${vistaSupervisionAdmin} ? 'Todos los cursos (por tutor)' : 'Mis cursos a cargo'">Mis cursos</h1>
+                    <p class="text-muted mb-0"
+                        th:text="${vistaSupervisionAdmin} ? 'Vista de administrador: filtra por tutor o curso.' : 'Accede a alumnos y contenido de cada curso asignado.'">
+                        Descripción
+                    </p>
                 </div>
-                <div class="col-md-4">
-                    <label class="form-label small mb-1">Curso</label>
-                    <select name="filtroIdCurso" class="form-select form-select-sm">
-                        <option value="">Todos</option>
-                        <option th:each="c : ${cursosFiltroSelect}" th:value="${c.id}"
-                            th:selected="${filtroIdCurso != null && filtroIdCurso == c.id}"
-                            th:text="${c.nombre}">—</option>
-                    </select>
-                </div>
-                <div class="col-md-4 d-flex flex-wrap gap-2">
-                    <button type="submit" class="btn btn-primary btn-sm flex-grow-1"><i class="fas fa-filter me-1"></i> Aplicar</button>
-                    <a th:href="@{/tutor/panel/cursos}" class="btn btn-outline-secondary btn-sm">Limpiar</a>
-                </div>
+                <a th:href="@{/tutor-panel}" class="btn btn-outline-light rounded-pill btn-sm">
+                    <i class="fas fa-arrow-left me-1"></i> Panel tutor
+                </a>
             </div>
-        </form>
 
-        <p class="text-muted" th:if="${#lists.isEmpty(cursos)}">No hay cursos en el listado.</p>
-        <p class="alert alert-light border small" th:if="${vistaSupervisionAdmin}">
-            Vista de administrador: se listan los cursos con el tutor asignado (usa los filtros para acotar).
-        </p>
-        <div class="list-group" th:if="${!#lists.isEmpty(cursos)}">
-            <div th:each="c : ${cursos}" class="list-group-item d-flex flex-wrap justify-content-between align-items-center gap-2">
-                <span>
-                    <span class="fw-medium" th:text="${c.nombre}">Curso</span>
-                    <span th:if="${vistaSupervisionAdmin && c.tutor != null && c.tutor.persona != null}"
-                        class="badge bg-secondary ms-2" th:text="${c.tutor.persona.nombre}">Tutor</span>
-                </span>
-                <div class="d-flex flex-wrap gap-2">
-                    <a th:href="@{/tutor/panel/cursos/{id}/alumnos(id=${c.id})}" class="btn btn-sm btn-primary rounded-pill">
-                        Ver alumnos
-                    </a>
-                    <a th:href="@{/admin/cursos/{id}/contenido(id=${c.id})}" class="btn btn-sm btn-info text-white rounded-pill">
-                        Gestionar contenido
-                    </a>
+            <form th:if="${vistaSupervisionAdmin}" th:action="@{/tutor/panel/cursos}" method="get"
+                class="card tutor-card border-0 rounded-4 p-4 mb-4 shadow-sm">
+                <p class="text-uppercase small text-muted fw-bold mb-3 letter-spacing-1">Filtros</p>
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label small mb-1 text-white-50">Tutor (rol)</label>
+                        <select name="filtroIdPersona" class="form-select form-select-sm">
+                            <option value="">Todos</option>
+                            <option th:each="p : ${personasTutorFiltroSelect}" th:value="${p.id}"
+                                th:selected="${filtroIdPersona != null && filtroIdPersona == p.id}"
+                                th:text="${p.nombre}">—</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small mb-1 text-white-50">Curso</label>
+                        <select name="filtroIdCurso" class="form-select form-select-sm">
+                            <option value="">Todos</option>
+                            <option th:each="c : ${cursosFiltroSelect}" th:value="${c.id}"
+                                th:selected="${filtroIdCurso != null && filtroIdCurso == c.id}"
+                                th:text="${c.nombre}">—</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 d-flex flex-wrap gap-2">
+                        <button type="submit" class="btn btn-yellow-action btn-sm flex-grow-1 rounded-pill">
+                            <i class="fas fa-filter me-1"></i> Aplicar
+                        </button>
+                        <a th:href="@{/tutor/panel/cursos}" class="btn btn-outline-light btn-sm rounded-pill">Limpiar</a>
+                    </div>
+                </div>
+            </form>
+
+            <div th:if="${vistaSupervisionAdmin}" class="alert border-0 mb-4 small"
+                style="background: rgba(248, 195, 37, 0.12); color: #e8d9a8; border: 1px solid rgba(248, 195, 37, 0.25) !important;">
+                <i class="fas fa-user-shield me-2 text-warning"></i>
+                Vista de administrador: se listan los cursos con el tutor asignado (usa los filtros para acotar).
+            </div>
+
+            <p class="text-muted fst-italic" th:if="${#lists.isEmpty(cursos)}">No hay cursos en el listado.</p>
+
+            <div class="d-flex flex-column gap-3" th:if="${!#lists.isEmpty(cursos)}">
+                <div th:each="c : ${cursos}"
+                    class="tutor-card border-0 rounded-4 p-4 d-flex flex-wrap justify-content-between align-items-center gap-3 shadow-sm">
+                    <div>
+                        <span class="fw-semibold text-white fs-5" th:text="${c.nombre}">Curso</span>
+                        <span th:if="${vistaSupervisionAdmin && c.tutor != null && c.tutor.persona != null}"
+                            class="badge bg-secondary ms-2 rounded-pill" th:text="${c.tutor.persona.nombre}">Tutor</span>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a th:href="@{/tutor/panel/cursos/{id}/alumnos(id=${c.id})}"
+                            class="btn btn-sm btn-yellow-action rounded-pill">
+                            <i class="fas fa-users me-1"></i> Ver alumnos
+                        </a>
+                        <a th:href="@{/admin/cursos/{id}/contenido(id=${c.id})}"
+                            class="btn btn-sm btn-outline-info rounded-pill">
+                            <i class="fas fa-layer-group me-1"></i> Gestionar contenido
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </body>
+
 </html>

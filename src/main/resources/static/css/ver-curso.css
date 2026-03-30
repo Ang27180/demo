@@ -15,6 +15,7 @@ body {
 
 .course-detail-section {
   position: relative;
+  isolation: isolate;
   min-height: 100vh;
   background-image: url('/imagenes/pasta-794464_1280.jpg');
   background-size: cover;
@@ -23,18 +24,18 @@ body {
   padding-bottom: 5rem;
 }
 
-/* Luxury Overlay */
+/* Overlay detrás del contenido (sin z-index alto en hijos: los modales Bootstrap quedan por encima del backdrop) */
 .course-detail-section::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
   background: radial-gradient(circle at center, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.92) 100%);
-  z-index: 1;
+  z-index: -1;
+  pointer-events: none;
 }
 
 .course-detail-section > * {
   position: relative;
-  z-index: 2;
 }
 
 /* Header Cinematic */
@@ -69,6 +70,44 @@ body {
 }
 
 /* Certification Box (Style Login) */
+/* Modal certificado (misma línea visual luxury) */
+.ver-curso-modal-dark {
+  background: rgba(20, 20, 22, 0.97);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #fff;
+}
+
+.ver-curso-modal-dark .modal-header .btn-close {
+  filter: invert(1);
+}
+
+/* Modal por encima del backdrop si algún ancestro limita el apilamiento */
+.modal.ver-curso-cert-modal {
+  z-index: 1060;
+}
+
+/* Barra de progreso del curso */
+.curso-progress-wrap {
+  background: rgba(31, 31, 34, 0.75);
+  border: 1px solid var(--border-glass);
+  border-radius: 20px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.curso-progress-wrap .progress {
+  height: 14px;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.curso-progress-wrap .progress-bar {
+  background: linear-gradient(90deg, #c9a227, var(--gold-accent));
+  transition: width 0.45s ease;
+}
+
 .cert-box-premium {
   background: rgba(31, 31, 34, 0.8);
   backdrop-filter: blur(15px);

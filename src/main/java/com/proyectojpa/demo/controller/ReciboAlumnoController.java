@@ -74,6 +74,15 @@ public class ReciboAlumnoController {
             model.addAttribute("qrsRecibos", qrs);
         }
 
+        if (reciboService.tieneAcudienteVinculado(insc.getEstudiante())) {
+            try {
+                reciboNotificacionAcudienteService.notificarPrimeraVisitaReciboSiCorresponde(userDetails.getPersona(),
+                        idInscripcion);
+            } catch (Exception ignored) {
+                // Si falla el correo, el estudiante puede usar el botón «Enviar aviso» o reintentar al recargar.
+            }
+        }
+
         return "recibo-nuevo";
     }
 
@@ -91,7 +100,9 @@ public class ReciboAlumnoController {
                     "Se envió el aviso por correo a tu acudiente (" + n + " destinatario(s)). "
                             + "Debe iniciar sesión para generar el recibo de pago.");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorRecibo", e.getMessage());
+            String detalle = e.getMessage() != null ? e.getMessage()
+                    : "No fue posible enviar el correo al acudiente. Verifica la configuración SMTP.";
+            redirectAttributes.addFlashAttribute("errorRecibo", detalle);
         }
         return "redirect:/mis-cursos/recibo/nuevo/" + idInscripcion;
     }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.proyectojpa.demo.dto.DatoEstadisticoDTO;
+import com.proyectojpa.demo.Service.CertificadoAutorizacionService;
 import com.proyectojpa.demo.Service.QrCodeService;
 import com.proyectojpa.demo.Service.ReciboAutorizacionService;
 import com.proyectojpa.demo.Service.ReporteJasperService;
@@ -37,6 +38,7 @@ public class ReporteController {
     private final ReciboRepository reciboRepository;
     private final ReciboAutorizacionService reciboAutorizacionService;
     private final QrCodeService qrCodeService;
+    private final CertificadoAutorizacionService certificadoAutorizacionService;
 
     public ReporteController(ReporteJasperService reporteJasperService,
                              PersonaRepository personaRepository,
@@ -44,7 +46,8 @@ public class ReporteController {
                              InscripcionRepository inscripcionRepository,
                              ReciboRepository reciboRepository,
                              ReciboAutorizacionService reciboAutorizacionService,
-                             QrCodeService qrCodeService) {
+                             QrCodeService qrCodeService,
+                             CertificadoAutorizacionService certificadoAutorizacionService) {
         this.reporteJasperService = reporteJasperService;
         this.personaRepository = personaRepository;
         this.jdbcTemplate = jdbcTemplate;
@@ -52,6 +55,7 @@ public class ReporteController {
         this.reciboRepository = reciboRepository;
         this.reciboAutorizacionService = reciboAutorizacionService;
         this.qrCodeService = qrCodeService;
+        this.certificadoAutorizacionService = certificadoAutorizacionService;
     }
 
     // -------------------------------
@@ -133,25 +137,11 @@ public class ReporteController {
                 return;
             }
 
-            // Seguridad: Solo el dueño o el ADMIN
             boolean esAdmin = personaActual.getRolId() != null && personaActual.getRolId().equals(1);
-            boolean esPropietario = inscripcion.getEstudiante() != null
-                    && inscripcion.getEstudiante().getPersona() != null
-                    && inscripcion.getEstudiante().getPersona().getId().equals(personaActual.getId());
-
-            if (!esAdmin && !esPropietario) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN, "No tienes permiso para descargar este certificado.");
+            if (!esAdmin && !certificadoAutorizacionService.puedeDescargar(personaActual, idInscripcion)) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN,
+                        "No tienes permiso para descargar este certificado o falta autorización del acudiente.");
                 return;
-            }
-
-            // Autorización facultativa (Acudiente para menores)
-            if (esPropietario && "TI".equalsIgnoreCase(personaActual.getTipoDocumento())) {
-                Boolean estaAutorizado = inscripcion.getCertificadoAutorizado();
-                if (estaAutorizado == null || !estaAutorizado) {
-                    response.setContentType("text/html;charset=UTF-8");
-                    response.getOutputStream().write("<script>alert('¡ATENCIÓN! Tu acudiente debe autorizar la emisión de firma antes de descargar el certificado.'); window.history.back();</script>".getBytes("UTF-8"));
-                    return;
-                }
             }
 
             // Obtención de datos reales para el certificado

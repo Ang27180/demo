@@ -22,8 +22,22 @@
         </header>
 
         <div class="container">
+            <!-- Progreso del curso (inscrito) -->
+            <div th:if="${inscripcionActual != null}" class="curso-progress-wrap mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-2 gap-2 flex-wrap">
+                    <span class="text-white-50 small text-uppercase fw-bold letter-spacing-1 mb-0">Progreso del curso</span>
+                    <span class="text-warning fw-bold fs-5 mb-0" th:text="${progresoCursoPorcentaje} + '%'">0%</span>
+                </div>
+                <div class="progress shadow-sm" aria-label="Progreso del curso">
+                    <div class="progress-bar" role="progressbar"
+                        th:attr="aria-valuenow=${progresoCursoPorcentaje},aria-valuemin=0,aria-valuemax=100"
+                        th:style="'width:' + ${progresoCursoPorcentaje} + '%'"></div>
+                </div>
+            </div>
+
             <!-- Box de Certificación Premium (Sticky Top under header) -->
-            <div th:if="${inscripcionActual != null}" class="cert-box-premium d-flex flex-wrap align-items-center justify-content-between mb-5">
+            <div th:if="${inscripcionActual != null and mostrarCertificadoDisponible}"
+                class="cert-box-premium d-flex flex-wrap align-items-center justify-content-between mb-5">
                 <div class="d-flex align-items-center gap-4">
                     <div class="cert-icon shadow-lg">
                         <i class="fas fa-award"></i>
@@ -34,10 +48,51 @@
                     </div>
                 </div>
                 <div class="mt-3 mt-md-0">
-                    <a th:href="@{'/reportes/certificado/pdf/' + ${inscripcionActual.id}}"
+                    <a th:if="${puedeDescargarCertificado}"
+                        th:href="@{'/reportes/certificado/pdf/' + ${inscripcionActual.id}}"
                         class="btn-yellow px-5 py-3 rounded-pill fw-bold d-inline-flex align-items-center shadow-lg text-decoration-none">
                         <i class="fas fa-file-pdf me-2"></i> Descargar Certificado
                     </a>
+                    <button th:if="${necesitaAutorizacionAcudienteCertificado}" type="button"
+                        class="btn-yellow px-5 py-3 rounded-pill fw-bold d-inline-flex align-items-center shadow-lg border-0"
+                        data-bs-toggle="modal" data-bs-target="#modalCertificadoAcudiente">
+                        <i class="fas fa-file-pdf me-2"></i> Descargar Certificado
+                    </button>
+                </div>
+            </div>
+
+            <!-- Modal: certificado requiere acudiente (mismo mensaje que alerta anterior) -->
+            <div class="modal fade ver-curso-cert-modal" id="modalCertificadoAcudiente" tabindex="-1"
+                aria-labelledby="modalCertificadoAcudienteLabel" aria-hidden="true" data-bs-backdrop="true" data-bs-keyboard="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content ver-curso-modal-dark border border-warning border-opacity-25 rounded-4">
+                        <div class="modal-header border-0 pb-0">
+                            <h5 class="modal-title fw-bold text-white" id="modalCertificadoAcudienteLabel">
+                                <i class="fas fa-user-shield text-warning me-2"></i>Autorización del acudiente
+                            </h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body pt-2">
+                            <p class="text-white-50 mb-3 mb-0">
+                                ¡ATENCIÓN! Tu acudiente debe autorizar la emisión de firma antes de descargar el certificado.
+                            </p>
+                            <p th:if="${inscripcionActual.fechaSolicitudCertificadoAcudiente != null}" class="small text-warning mb-0 mt-2">
+                                <i class="fas fa-paper-plane me-1"></i> Ya se envió una notificación al acudiente
+                                (<span th:text="${#temporals.format(inscripcionActual.fechaSolicitudCertificadoAcudiente, 'dd/MM/yyyy HH:mm')}">—</span>).
+                            </p>
+                        </div>
+                        <div class="modal-footer border-0 pt-0 flex-wrap gap-2">
+                            <form th:action="@{/mis-cursos/certificado/solicitar-autorizacion}" method="post" class="d-inline">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                                <input type="hidden" name="idInscripcion" th:value="${inscripcionActual.id}">
+                                <input type="hidden" name="idCurso" th:value="${curso.id}">
+                                <button type="submit" class="btn btn-warning fw-bold rounded-pill px-4">
+                                    <i class="fas fa-envelope me-1"></i> Notificar al acudiente por correo
+                                </button>
+                            </form>
+                            <button type="button" class="btn btn-outline-light rounded-pill" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -112,12 +167,18 @@
                                                     </th:block>
                                                 </div>
                                             </th:block>
-                                            <form th:if="${puedeRegistrarProgreso}" th:action="@{/cursos/{cid}/lecciones/{lid}/completar(cid=${curso.id},lid=${leccion.id})}" method="post" class="mt-3">
+                                            <form th:if="${puedeRegistrarProgreso and leccionesCompletadasIds != null and !#lists.contains(leccionesCompletadasIds, leccion.id)}"
+                                                th:action="@{/cursos/{cid}/lecciones/{lid}/completar(cid=${curso.id},lid=${leccion.id})}" method="post" class="mt-3">
                                                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                                 <button type="submit" class="btn btn-sm btn-outline-warning rounded-pill">
                                                     <i class="fas fa-check me-1"></i> Marcar como completada
                                                 </button>
                                             </form>
+                                            <div th:if="${puedeRegistrarProgreso and leccionesCompletadasIds != null and #lists.contains(leccionesCompletadasIds, leccion.id)}"
+                                                class="mt-3 d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill border border-success border-opacity-50 bg-success bg-opacity-10 text-success small fw-bold">
+                                                <i class="fas fa-check-circle"></i>
+                                                <span>Completado</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -138,6 +199,10 @@
                         <div class="p-4">
                             <h5 class="fw-bold text-white mb-3">Resumen culinario</h5>
                             <ul class="sidebar-list list-unstyled mb-4">
+                                <li th:if="${inscripcionActual != null}">
+                                    <i class="fas fa-chart-line"></i>
+                                    <span>Progreso: <strong class="text-warning" th:text="${progresoCursoPorcentaje} + '%'">0%</strong></span>
+                                </li>
                                 <li><i class="fas fa-clock"></i> <span th:text="${curso.duracion}">12 Horas</span></li>
                                 <li><i class="fas fa-medal"></i> Certificación oficial</li>
                                 <li><i class="fas fa-infinite"></i> Acceso ilimitado 24/7</li>
@@ -158,6 +223,16 @@
 
             </div>
         </div>
+
+        <!-- Mueve el modal al final de body para que el backdrop de Bootstrap no quede por encima (z-index) -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var modalEl = document.getElementById('modalCertificadoAcudiente');
+                if (modalEl && modalEl.parentElement !== document.body) {
+                    document.body.appendChild(modalEl);
+                }
+            });
+        </script>
     </main>
 </body>
 

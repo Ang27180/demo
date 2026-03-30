@@ -34,8 +34,13 @@ public class ReciboVistaController {
         }
         Recibo r = reciboRepository.findByIdWithDetalle(id).orElseThrow();
         if (!reciboAutorizacionService.puedeVerRecibo(userDetails.getPersona(), r)) {
-            return "redirect:/mis-cursos?error=recibo";
+            boolean acudiente = userDetails.getPersona().getRolId() != null
+                    && userDetails.getPersona().getRolId() == 4;
+            return acudiente ? "redirect:/acudiente/panel?error=recibo" : "redirect:/mis-cursos?error=recibo";
         }
+        boolean esAcudiente = userDetails.getPersona().getRolId() != null
+                && userDetails.getPersona().getRolId() == 4;
+        model.addAttribute("esAcudiente", esAcudiente);
         model.addAttribute("recibo", r);
         model.addAttribute("qrPngBase64", qrCodeService.generarPngBase64(r.getCodigoQrUnico()));
         return "recibo-ver";

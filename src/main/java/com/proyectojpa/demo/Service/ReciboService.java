@@ -56,7 +56,8 @@ public class ReciboService {
         if (estudiante == null || estudiante.getIdEstudiante() == null) {
             return false;
         }
-        return !acudienteRepository.findByEstudianteDependienteIdEstudiante(estudiante.getIdEstudiante()).isEmpty();
+        return !acudienteRepository.findByEstudianteDependienteIdEstudianteWithDetalle(estudiante.getIdEstudiante())
+                .isEmpty();
     }
 
     @Transactional

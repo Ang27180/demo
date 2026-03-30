@@ -48,7 +48,8 @@ public class ReciboAutorizacionService {
         if (persona == null || persona.getId() == null || estudiante == null || estudiante.getIdEstudiante() == null) {
             return false;
         }
-        List<Acudiente> vinculos = acudienteRepository.findByEstudianteDependienteIdEstudiante(estudiante.getIdEstudiante());
+        List<Acudiente> vinculos = acudienteRepository
+                .findByEstudianteDependienteIdEstudianteWithDetalle(estudiante.getIdEstudiante());
         for (Acudiente a : vinculos) {
             if (a.getPersona() != null && persona.getId().equals(a.getPersona().getId())) {
                 return true;

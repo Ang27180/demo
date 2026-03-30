@@ -4,41 +4,60 @@
 
 <head>
     <title layout:fragment="titulo">Generar recibo</title>
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 
 <body>
-    <main layout:fragment="contenido" class="container mt-5 pt-4">
-        <h2 class="mb-4">Generar recibo (administrador)</h2>
-        <p class="text-muted">Solo aparecen inscripciones en estado <strong>PENDIENTE_PAGO</strong> sin recibo previo.</p>
+    <div layout:fragment="contenido" class="admin-panel-page pt-5 pb-5">
+        <div class="container" style="max-width: 42rem;">
+            <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+                <div>
+                    <h1 class="h2 fw-bold mb-1">Generar recibo</h1>
+                    <p class="text-muted mb-0">Solo aparecen inscripciones en estado <strong class="text-warning">PENDIENTE_PAGO</strong> sin recibo previo.</p>
+                </div>
+                <a th:href="@{/admin/recibos}" class="btn btn-outline-light btn-sm rounded-pill">
+                    <i class="fas fa-receipt me-1"></i> Listado recibos
+                </a>
+            </div>
 
-        <div th:if="${inscripciones == null or inscripciones.isEmpty()}" class="alert alert-info">
-            No hay inscripciones pendientes de pago sin recibo. Puede revisar el listado general en
-            <a th:href="@{/admin/recibos}">Recibos</a>.
+            <div th:if="${inscripciones == null or inscripciones.isEmpty()}" class="alert border-0 mb-4"
+                style="background: rgba(23, 64, 90, 0.6); color: #cfe8ff;">
+                <i class="fas fa-info-circle me-2"></i>
+                No hay inscripciones pendientes de pago sin recibo. Puede revisar el listado general en
+                <a th:href="@{/admin/recibos}" class="text-warning text-decoration-none fw-bold">Recibos</a>.
+            </div>
+
+            <div th:if="${inscripciones != null and !inscripciones.isEmpty()}" class="card tutor-card border-0 rounded-4 p-4 shadow-sm">
+                <form th:action="@{/admin/recibos/generar}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <div class="mb-3">
+                        <label class="form-label text-white-50" for="idInscripcion">Inscripción</label>
+                        <select class="form-select" id="idInscripcion" name="idInscripcion" required>
+                            <option value="" disabled selected>Seleccione…</option>
+                            <option th:each="i : ${inscripciones}" th:value="${i.id}"
+                                th:text="|#${i.id} — ${i.estudiante.persona.nombre} — ${i.curso.nombre}|">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label text-white-50" for="idMedioPago">Medio de pago</label>
+                        <select class="form-select" id="idMedioPago" name="idMedioPago" required>
+                            <option value="" disabled selected>Seleccione…</option>
+                            <option th:each="m : ${medios}" th:value="${m.id}" th:text="${m.nombre}">Nequi</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-yellow-action rounded-pill">
+                        <i class="fas fa-file-invoice me-1"></i> Generar recibo
+                    </button>
+                </form>
+            </div>
+
+            <a th:href="@{/admin/recibos}" class="btn btn-outline-light mt-4 rounded-pill">
+                <i class="fas fa-arrow-left me-1"></i> Volver a recibos
+            </a>
+            <a th:href="@{/admin}" class="btn btn-link text-warning mt-2 d-block">Ir al panel de administración</a>
         </div>
-
-        <form th:if="${inscripciones != null and !inscripciones.isEmpty()}" th:action="@{/admin/recibos/generar}" method="post" class="card card-body shadow-sm" style="max-width: 36rem;">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-            <div class="mb-3">
-                <label class="form-label" for="idInscripcion">Inscripción</label>
-                <select class="form-select" id="idInscripcion" name="idInscripcion" required>
-                    <option value="" disabled selected>Seleccione…</option>
-                    <option th:each="i : ${inscripciones}" th:value="${i.id}"
-                        th:text="|#${i.id} — ${i.estudiante.persona.nombre} — ${i.curso.nombre}|">
-                    </option>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label class="form-label" for="idMedioPago">Medio de pago</label>
-                <select class="form-select" id="idMedioPago" name="idMedioPago" required>
-                    <option value="" disabled selected>Seleccione…</option>
-                    <option th:each="m : ${medios}" th:value="${m.id}" th:text="${m.nombre}">Nequi</option>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Generar recibo</button>
-        </form>
-
-        <a th:href="@{/admin/recibos}" class="btn btn-outline-secondary mt-3">Volver a recibos</a>
-    </main>
+    </div>
 </body>
 
 </html>

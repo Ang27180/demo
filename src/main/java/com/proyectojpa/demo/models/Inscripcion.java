@@ -1,6 +1,7 @@
 package com.proyectojpa.demo.models;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -46,6 +47,18 @@ public class Inscripcion {
     @Column(name = "certificado_autorizado")
     private Boolean certificadoAutorizado = false;
 
+    /** Primera solicitud de recibo de pago (estudiante con acudiente) — notificación al acudiente. */
+    @Column(name = "fecha_solicitud_recibo_acudiente")
+    private LocalDateTime fechaSolicitudReciboAcudiente;
+
+    /** Solicitud de autorización de certificado (estudiante con acudiente). */
+    @Column(name = "fecha_solicitud_certificado_acudiente")
+    private LocalDateTime fechaSolicitudCertificadoAcudiente;
+
+    /** Cuando el acudiente autoriza la descarga del certificado. */
+    @Column(name = "fecha_autorizacion_certificado")
+    private LocalDateTime fechaAutorizacionCertificado;
+
     // getters y setters
 
     public Boolean getCertificadoAutorizado() {
@@ -54,6 +67,30 @@ public class Inscripcion {
 
     public void setCertificadoAutorizado(Boolean certificadoAutorizado) {
         this.certificadoAutorizado = certificadoAutorizado;
+    }
+
+    public LocalDateTime getFechaSolicitudReciboAcudiente() {
+        return fechaSolicitudReciboAcudiente;
+    }
+
+    public void setFechaSolicitudReciboAcudiente(LocalDateTime fechaSolicitudReciboAcudiente) {
+        this.fechaSolicitudReciboAcudiente = fechaSolicitudReciboAcudiente;
+    }
+
+    public LocalDateTime getFechaSolicitudCertificadoAcudiente() {
+        return fechaSolicitudCertificadoAcudiente;
+    }
+
+    public void setFechaSolicitudCertificadoAcudiente(LocalDateTime fechaSolicitudCertificadoAcudiente) {
+        this.fechaSolicitudCertificadoAcudiente = fechaSolicitudCertificadoAcudiente;
+    }
+
+    public LocalDateTime getFechaAutorizacionCertificado() {
+        return fechaAutorizacionCertificado;
+    }
+
+    public void setFechaAutorizacionCertificado(LocalDateTime fechaAutorizacionCertificado) {
+        this.fechaAutorizacionCertificado = fechaAutorizacionCertificado;
     }
 
     public Integer getId() {

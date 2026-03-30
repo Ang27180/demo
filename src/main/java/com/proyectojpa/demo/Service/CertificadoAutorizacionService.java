@@ -55,18 +55,26 @@ public class CertificadoAutorizacionService {
         if (estudiante == null || estudiante.getPersona() == null) {
             return false;
         }
+        List<Acudiente> vinculos = acudienteRepository
+                .findByEstudianteDependienteIdEstudianteWithDetalle(estudiante.getIdEstudiante());
+        boolean conAcudiente = !vinculos.isEmpty();
+
         if (persona.getId() != null && persona.getId().equals(estudiante.getPersona().getId())) {
+            if (conAcudiente) {
+                Boolean auth = inscripcion.getCertificadoAutorizado();
+                return auth != null && auth;
+            }
             return true;
         }
         if (persona.getEmail() == null || persona.getEmail().isBlank()) {
             return false;
         }
         String emailLogin = persona.getEmail().trim();
-        List<Acudiente> vinculos = acudienteRepository.findByEstudianteDependienteIdEstudiante(estudiante.getIdEstudiante());
         for (Acudiente a : vinculos) {
             if (a.getPersona() != null && a.getPersona().getEmail() != null
                     && emailLogin.equalsIgnoreCase(a.getPersona().getEmail().trim())) {
-                return true;
+                Boolean auth = inscripcion.getCertificadoAutorizado();
+                return auth != null && auth;
             }
         }
         return false;
