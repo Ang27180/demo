@@ -6,8 +6,10 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.proyectojpa.demo.dto.EstudianteDTO;
+import com.proyectojpa.demo.models.Acudiente;
 import com.proyectojpa.demo.models.Estudiante;
 import com.proyectojpa.demo.models.Persona;
+import com.proyectojpa.demo.repository.AcudienteRepository;
 import com.proyectojpa.demo.repository.EstadoInscripcionRepository;
 import com.proyectojpa.demo.repository.EstudianteRepository;
 import com.proyectojpa.demo.repository.PersonaRepository;
@@ -18,13 +20,16 @@ public class EstudianteService {
     private final EstudianteRepository estudianteRepository;
     private final PersonaRepository PersonaRepository;
     private final EstadoInscripcionRepository estadoInscripcionRepository;
+    private final AcudienteRepository acudienteRepository;
 
     public EstudianteService(EstudianteRepository estudianteRepository,
                              PersonaRepository PersonaRepository,
-                             EstadoInscripcionRepository estadoInscripcionRepository) {
+                             EstadoInscripcionRepository estadoInscripcionRepository,
+                             AcudienteRepository acudienteRepository) {
         this.estudianteRepository = estudianteRepository;
         this.PersonaRepository = PersonaRepository;
         this.estadoInscripcionRepository = estadoInscripcionRepository;
+        this.acudienteRepository = acudienteRepository;
     }
 
   // =============================================
@@ -38,10 +43,14 @@ public class EstudianteService {
             dto.setProgreso(e.getProgreso());
             dto.setIdEstadoEstudiante(e.getEstadoEstudiante() != null ? e.getEstadoEstudiante().getId() : null);
             dto.setIdPersona(e.getPersona() != null ? e.getPersona().getId() : null);
-            if (e.getPersona() != null) {
-                dto.setTutorNombre(e.getPersona().getTutorNombre());
-                dto.setTutorTelefono(e.getPersona().getTutorTelefono());
-                dto.setTutorEmail(e.getPersona().getTutorEmail());
+            if (e.getIdEstudiante() != null) {
+                List<Acudiente> vinculos = acudienteRepository.findByEstudianteDependienteIdEstudiante(e.getIdEstudiante());
+                if (!vinculos.isEmpty() && vinculos.get(0).getPersona() != null) {
+                    Persona ap = vinculos.get(0).getPersona();
+                    dto.setTutorNombre(ap.getNombre());
+                    dto.setTutorTelefono(ap.getTelefono());
+                    dto.setTutorEmail(ap.getEmail());
+                }
             }
             return dto;
         }).collect(Collectors.toList());
@@ -59,21 +68,30 @@ public class EstudianteService {
         }
         Persona p = PersonaRepository.findById(dto.getIdPersona())
                 .orElseThrow(() -> new RuntimeException("La persona no existe"));
-
-        if (dto.getTutorNombre() != null) {
-            p.setTutorNombre(dto.getTutorNombre());
+        if (p.getRolId() == null || p.getRolId() != 2) {
+            throw new IllegalArgumentException("Solo personas con rol estudiante (id_rol=2) pueden tener fila en estudiante");
         }
-        if (dto.getTutorTelefono() != null) {
-            p.setTutorTelefono(dto.getTutorTelefono());
-        }
-        if (dto.getTutorEmail() != null) {
-            p.setTutorEmail(dto.getTutorEmail());
-        }
-        PersonaRepository.save(p);
 
         e.setPersona(p);
 
         estudianteRepository.save(e);
+
+        if (dto.getTutorNombre() != null || dto.getTutorTelefono() != null || dto.getTutorEmail() != null) {
+            List<Acudiente> vinculos = acudienteRepository.findByEstudianteDependienteIdEstudiante(e.getIdEstudiante());
+            if (!vinculos.isEmpty() && vinculos.get(0).getPersona() != null) {
+                Persona ap = vinculos.get(0).getPersona();
+                if (dto.getTutorNombre() != null) {
+                    ap.setNombre(dto.getTutorNombre());
+                }
+                if (dto.getTutorTelefono() != null) {
+                    ap.setTelefono(dto.getTutorTelefono());
+                }
+                if (dto.getTutorEmail() != null) {
+                    ap.setEmail(dto.getTutorEmail());
+                }
+                PersonaRepository.save(ap);
+            }
+        }
 
         dto.setIdEstudiante(e.getIdEstudiante());
         return dto;
@@ -95,6 +113,12 @@ public class EstudianteService {
     }
 
     public void save(Estudiante e) {
+        if (e.getPersona() != null) {
+            Persona p = e.getPersona();
+            if (p.getRolId() == null || p.getRolId() != 2) {
+                throw new IllegalArgumentException("Solo personas con rol estudiante (id_rol=2) pueden tener fila en estudiante");
+            }
+        }
         estudianteRepository.save(e);
     }
 

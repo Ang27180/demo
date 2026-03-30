@@ -15,6 +15,8 @@ import com.proyectojpa.demo.models.Inscripcion;
 public interface InscripcionRepository extends JpaRepository<Inscripcion, Integer> {
     List<Inscripcion> findByEstudiante_IdEstudiante(Integer idEstudiante);
 
+    void deleteByEstudiante_IdEstudiante(Integer idEstudiante);
+
     @Query("SELECT DISTINCT i FROM Inscripcion i "
             + "JOIN FETCH i.curso "
             + "JOIN FETCH i.estado "
@@ -33,6 +35,7 @@ public interface InscripcionRepository extends JpaRepository<Inscripcion, Intege
             + "JOIN FETCH i.estudiante e "
             + "JOIN FETCH e.persona "
             + "JOIN FETCH i.curso "
+            + "JOIN FETCH i.estado "
             + "WHERE i.id = :id")
     Optional<Inscripcion> findByIdWithEstudiantePersonaAndCurso(@Param("id") Integer id);
 
@@ -59,4 +62,25 @@ public interface InscripcionRepository extends JpaRepository<Inscripcion, Intege
     List<Inscripcion> findByCursoIdWithEstudianteAndEstado(@Param("idCurso") Integer idCurso);
 
     List<Inscripcion> findByCurso_Tutor_IdTutor(Integer idTutor);
+
+    /** Panel admin en tutor-panel: todas las inscripciones con curso, tutor y estudiante cargados. */
+    @Query("SELECT i FROM Inscripcion i "
+            + "JOIN FETCH i.estudiante e "
+            + "JOIN FETCH e.persona "
+            + "JOIN FETCH i.curso c "
+            + "LEFT JOIN FETCH c.tutor t "
+            + "LEFT JOIN FETCH t.persona "
+            + "JOIN FETCH i.estado "
+            + "ORDER BY t.idTutor ASC, c.id ASC, i.id ASC")
+    List<Inscripcion> findAllForAdminTutorPanel();
+
+    /** Inscripciones en estado pendiente de pago que aún no tienen recibo (panel admin). */
+    @Query("SELECT i FROM Inscripcion i "
+            + "JOIN FETCH i.estudiante e "
+            + "JOIN FETCH e.persona "
+            + "JOIN FETCH i.curso "
+            + "JOIN FETCH i.estado es "
+            + "WHERE es.codigo = :codigo "
+            + "AND NOT EXISTS (SELECT 1 FROM Recibo r WHERE r.inscripcion = i)")
+    List<Inscripcion> findPendientePagoSinRecibo(@Param("codigo") String codigo);
 }

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+<head>
+    <title layout:fragment="titulo">Confirmar orden Nequi</title>
+    <link rel="stylesheet" th:href="@{/css/misCursos.css}">
+</head>
+<body>
+    <main layout:fragment="contenido" class="mis-cursos-section pt-5 pb-5">
+        <div class="container mt-5">
+            <a th:href="@{/mis-cursos}" class="btn btn-outline-light btn-sm mb-4 rounded-pill">
+                <i class="fas fa-arrow-left me-1"></i> Mis cursos
+            </a>
+
+            <div class="section-header">
+                <h1 class="display-5 fw-bold text-white mb-2">Orden de pago Nequi</h1>
+                <p class="text-white-50 lead mb-0">Genera una referencia única y sube tu comprobante cuando pagues.</p>
+            </div>
+
+            <div th:if="${errorPago}" class="alert alert-danger border-0 shadow-sm mb-4" th:text="${errorPago}"></div>
+
+            <div class="course-card-premium p-4 p-md-5 mx-auto" style="max-width: 640px;">
+                <h2 class="course-title h4 mb-3" th:text="${inscripcion.curso.nombre}">Curso</h2>
+                <p class="course-desc mb-4">
+                    Monto según tarifa del curso:
+                    <strong class="text-yellow"
+                        th:text="${#numbers.formatDecimal(inscripcion.curso.costo != null ? inscripcion.curso.costo : 0, 0, 'COMMA', 2, 'POINT')} + ' COP'">0</strong>
+                </p>
+                <p class="text-white-50 small mb-4">
+                    Se creará una <strong class="text-white">referencia única</strong> y un plazo para pagar por Nequi.
+                    Luego podrás adjuntar el comprobante desde la pantalla de la orden.
+                </p>
+                <form th:action="@{/mis-cursos/pagos/orden/inscripcion/{id}(id=${inscripcion.id})}" method="post" class="d-flex flex-wrap gap-2 align-items-center">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <button type="submit" class="btn btn-yellow px-4 py-2 rounded-pill fw-bold">
+                        <i class="fas fa-bolt me-1"></i> Generar orden de pago
+                    </button>
+                    <a th:href="@{/mis-cursos}" class="btn btn-outline-light rounded-pill px-4">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

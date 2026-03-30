@@ -22,6 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
         try {
             Path base = Paths.get(uploadDir).toAbsolutePath().normalize();
             Files.createDirectories(base.resolve("medios-pago"));
+            Files.createDirectories(base.resolve("comprobantes"));
         } catch (Exception e) {
             throw new IllegalStateException("No se pudo crear el directorio de subidas: " + uploadDir, e);
         }

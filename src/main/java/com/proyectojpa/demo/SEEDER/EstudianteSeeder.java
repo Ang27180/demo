@@ -1,6 +1,7 @@
 package com.proyectojpa.demo.SEEDER;
 
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import com.proyectojpa.demo.domain.InscripcionEstados;
@@ -11,6 +12,7 @@ import com.proyectojpa.demo.repository.EstudianteRepository;
 import com.proyectojpa.demo.repository.PersonaRepository;
 
 @Component
+@Order(30)
 public class EstudianteSeeder implements CommandLineRunner {
 
     private final EstudianteRepository estudianteRepository;

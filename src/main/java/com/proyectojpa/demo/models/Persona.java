@@ -13,13 +13,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 import jakarta.persistence.Transient;
+
+import com.proyectojpa.demo.validation.OnAdminCreate;
+import com.proyectojpa.demo.validation.OnRegistro;
 
 @Entity
 @Table(name = "persona")
@@ -32,34 +34,42 @@ public class Persona implements Serializable {
     private Integer id;
 
     @NotBlank(message = "El documento no puede estar vacío")
-    @Pattern(regexp = "\\d+", message = "El documento debe contener solo números")
+    @Pattern(regexp = "\\d{5,}", message = "El documento debe contener solo números (mínimo 5)")
     @Column(name = "no_documento", nullable = false, unique = true)
     private String documento;
 
     @NotBlank(message = "El tipo de documento es obligatorio")
+    @Pattern(regexp = "CC|TI|CE", message = "Tipo de documento: CC, TI o CE")
     @Column(name = "tipo_documento", nullable = false)
     private String tipoDocumento;
 
     @NotBlank(message = "El género es obligatorio")
+    @Pattern(regexp = "Femenino|Masculino|Otro", message = "Género no válido")
     @Column(name = "genero", nullable = false)
     private String genero;
 
     @NotBlank(message = "El nombre es obligatorio")
     @Size(min = 2, max = 100, message = "El nombre debe tener entre 2 y 100 caracteres")
+    @Pattern(regexp = "^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s]+$", message = "El nombre solo puede contener letras y espacios")
     @Column(name = "nombre_persona", nullable = false)
     private String nombre;
 
     @NotBlank(message = "El correo es obligatorio")
-    @Email(message = "Debe ingresar un correo válido")
+    @Pattern(
+            regexp = "^[\\w.%+-]+@(?i)(gmail\\.com|hotmail\\.com|hotmail\\.es|outlook\\.com|yahoo\\.com|yahoo\\.es|live\\.com|icloud\\.com|proton\\.me)$",
+            message = "Correo inválido o dominio no permitido (use Gmail, Hotmail, Outlook, Yahoo, Live, iCloud o Proton)")
     @Column(name = "email_persona")
     private String email;
 
     @NotBlank(message = "La dirección no puede estar vacía")
+    @Pattern(
+            regexp = "^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑüÜ#.,\\-\\s]+$",
+            message = "La dirección debe ser alfanumérica (puede incluir # . , -)")
     @Column(name = "Direccion_Persona")
     private String direccion;
 
     @NotBlank(message = "El teléfono es obligatorio")
-    @Pattern(regexp = "\\d{7,10}", message = "El teléfono debe tener entre 7 y 10 dígitos")
+    @Pattern(regexp = "^3\\d{9}$", message = "Teléfono: 10 dígitos numéricos, debe iniciar con 3")
     @Column(name = "telefono_persona")
     private String telefono;
 
@@ -67,16 +77,20 @@ public class Persona implements Serializable {
     @Column(name = "id_rol")
     private Integer rolId;
 
-    @NotBlank(message = "La contraseña es obligatoria")
-    @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
+    @NotBlank(message = "La contraseña es obligatoria", groups = { OnRegistro.class, OnAdminCreate.class })
+    @Pattern(
+            regexp = "^$|^(?=.*[0-9])(?=.*[A-Z])(?=.*[^a-zA-Z0-9\\s]).{8,}$",
+            message = "Mínimo 8 caracteres, una mayúscula, un número y un carácter especial")
     @Column(name = "contrasena", nullable = false)
     private String contrasena;
 
     /**
      * Históricamente se modeló como 1-1, pero en BD pueden existir varias filas {@code estudiante}
      * para la misma persona (duplicados). OneToMany evita el fallo de Hibernate al cargar el admin.
+     * Solo REMOVE: al guardar una {@code Persona} (p. ej. acudiente con rol 4) no se deben persistir
+     * filas en {@code estudiante} por cascade; esas filas se crean explícitamente vía {@code EstudianteRepository}.
      */
-    @OneToMany(mappedBy = "persona", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "persona", cascade = CascadeType.REMOVE)
     private List<Estudiante> estudiantes = new ArrayList<>();
 
     // ✅ Campos transitorios para validación de formulario
@@ -86,16 +100,16 @@ public class Persona implements Serializable {
     @Transient
     private Boolean aceptaTerminos;
 
-    @Column(name = "tutor_nombre")
+    /** Solo formulario (TI): datos del acudiente van a {@code persona} del acudiente + {@link com.proyectojpa.demo.models.Acudiente#parentesco}. */
+    @Transient
     private String tutorNombre;
 
-    @Column(name = "tutor_telefono")
+    @Transient
     private String tutorTelefono;
 
-    @Column(name = "tutor_email")
+    @Transient
     private String tutorEmail;
 
-    // ✅ Campos transitorios para el acudiente (Registro TI)
     @Transient
     private String tutorTipoDocumento;
 

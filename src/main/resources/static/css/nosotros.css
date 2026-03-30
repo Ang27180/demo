@@ -14,7 +14,6 @@ body {
   font-family: 'Segoe UI', sans-serif;
   margin: 0;
   padding-top: 80px;
-  padding-bottom: 60px;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -104,23 +103,17 @@ main {
   justify-content: space-between;
 }
 
-/* Footer */
-footer.fixed-bottom {
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1020;
-  border-top: 1px solid #1d1d1d;
+/* Footer del layout (mismo pie; no fixed) */
+footer.site-footer {
   background-color: rgb(0, 0, 0) !important;
 }
 
-footer i {
+footer.site-footer i {
   cursor: pointer;
   transition: transform 0.3s ease;
 }
 
-footer i:hover {
+footer.site-footer i:hover {
   transform: scale(1.1);
 }
 

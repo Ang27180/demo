@@ -11,10 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
+import com.proyectojpa.demo.models.Acudiente;
 import com.proyectojpa.demo.models.Estudiante;
 import com.proyectojpa.demo.models.Persona;
-import com.proyectojpa.demo.repository.PersonaRepository;
+import com.proyectojpa.demo.repository.AcudienteRepository;
 import com.proyectojpa.demo.repository.EstudianteRepository;
+import com.proyectojpa.demo.repository.PersonaRepository;
 import com.proyectojpa.demo.security.CustomUserDetails;
 
 @Controller
@@ -26,6 +30,9 @@ public class PerfilController {
 
     @Autowired
     private EstudianteRepository estudianteRepository;
+
+    @Autowired
+    private AcudienteRepository acudienteRepository;
 
     @GetMapping
     public String verPerfil(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
@@ -61,11 +68,25 @@ public class PerfilController {
             personaExistente.setTelefono(personaForm.getTelefono());
             personaExistente.setDireccion(personaForm.getDireccion());
 
-            if (estudianteRepository.findByPersona(personaExistente).isPresent()) {
-                personaExistente.setTutorNombre(tutorNombre);
-                personaExistente.setTutorTelefono(tutorTelefono);
-                personaExistente.setTutorEmail(tutorEmail);
-            }
+            estudianteRepository.findByPersona(personaExistente).ifPresent(est -> {
+                if (tutorNombre == null && tutorTelefono == null && tutorEmail == null) {
+                    return;
+                }
+                List<Acudiente> vinculos = acudienteRepository.findByEstudianteDependienteIdEstudiante(est.getIdEstudiante());
+                if (!vinculos.isEmpty() && vinculos.get(0).getPersona() != null) {
+                    Persona acud = vinculos.get(0).getPersona();
+                    if (tutorNombre != null && !tutorNombre.isBlank()) {
+                        acud.setNombre(tutorNombre.trim());
+                    }
+                    if (tutorTelefono != null && !tutorTelefono.isBlank()) {
+                        acud.setTelefono(tutorTelefono.trim());
+                    }
+                    if (tutorEmail != null && !tutorEmail.isBlank()) {
+                        acud.setEmail(tutorEmail.trim().toLowerCase());
+                    }
+                    personaRepository.save(acud);
+                }
+            });
 
             personaRepository.save(personaExistente);
 

@@ -6,11 +6,47 @@
 </head>
 <body>
     <div layout:fragment="contenido" class="container mt-5 pt-5 pb-5">
-        <h2 class="mb-4">Mis cursos a cargo</h2>
-        <p class="text-muted" th:if="${#lists.isEmpty(cursos)}">No tienes cursos asignados. Un administrador debe vincular tu perfil tutor a cada curso.</p>
+        <h2 class="mb-4" th:text="${vistaSupervisionAdmin} ? 'Todos los cursos (por tutor)' : 'Mis cursos a cargo'">Mis cursos</h2>
+
+        <form th:if="${vistaSupervisionAdmin}" th:action="@{/tutor/panel/cursos}" method="get" class="card border mb-4 p-3">
+            <p class="text-uppercase small text-muted fw-bold mb-2">Filtros</p>
+            <div class="row g-2 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label small mb-1">Tutor (rol)</label>
+                    <select name="filtroIdPersona" class="form-select form-select-sm">
+                        <option value="">Todos</option>
+                        <option th:each="p : ${personasTutorFiltroSelect}" th:value="${p.id}"
+                            th:selected="${filtroIdPersona != null && filtroIdPersona == p.id}"
+                            th:text="${p.nombre}">—</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label small mb-1">Curso</label>
+                    <select name="filtroIdCurso" class="form-select form-select-sm">
+                        <option value="">Todos</option>
+                        <option th:each="c : ${cursosFiltroSelect}" th:value="${c.id}"
+                            th:selected="${filtroIdCurso != null && filtroIdCurso == c.id}"
+                            th:text="${c.nombre}">—</option>
+                    </select>
+                </div>
+                <div class="col-md-4 d-flex flex-wrap gap-2">
+                    <button type="submit" class="btn btn-primary btn-sm flex-grow-1"><i class="fas fa-filter me-1"></i> Aplicar</button>
+                    <a th:href="@{/tutor/panel/cursos}" class="btn btn-outline-secondary btn-sm">Limpiar</a>
+                </div>
+            </div>
+        </form>
+
+        <p class="text-muted" th:if="${#lists.isEmpty(cursos)}">No hay cursos en el listado.</p>
+        <p class="alert alert-light border small" th:if="${vistaSupervisionAdmin}">
+            Vista de administrador: se listan los cursos con el tutor asignado (usa los filtros para acotar).
+        </p>
         <div class="list-group" th:if="${!#lists.isEmpty(cursos)}">
             <div th:each="c : ${cursos}" class="list-group-item d-flex flex-wrap justify-content-between align-items-center gap-2">
-                <span class="fw-medium" th:text="${c.nombre}">Curso</span>
+                <span>
+                    <span class="fw-medium" th:text="${c.nombre}">Curso</span>
+                    <span th:if="${vistaSupervisionAdmin && c.tutor != null && c.tutor.persona != null}"
+                        class="badge bg-secondary ms-2" th:text="${c.tutor.persona.nombre}">Tutor</span>
+                </span>
                 <div class="d-flex flex-wrap gap-2">
                     <a th:href="@{/tutor/panel/cursos/{id}/alumnos(id=${c.id})}" class="btn btn-sm btn-primary rounded-pill">
                         Ver alumnos

@@ -40,6 +40,7 @@ public class AcudienteService {
                 entity.getEstudianteDependiente() != null ?
                         entity.getEstudianteDependiente().getIdEstudiante() : null
         );
+        dto.setParentesco(entity.getParentesco());
         return dto;
     }
 
@@ -59,6 +60,7 @@ public class AcudienteService {
 
         acudiente.setPersona(persona);
         acudiente.setEstudianteDependiente(estudiante);
+        acudiente.setParentesco(dto.getParentesco());
 
         return acudiente;
     }

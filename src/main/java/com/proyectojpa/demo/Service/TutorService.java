@@ -5,6 +5,7 @@ import com.proyectojpa.demo.models.Persona;
 import com.proyectojpa.demo.repository.TutorRepository;
 import com.proyectojpa.demo.repository.PersonaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +26,29 @@ public class TutorService {
                 .stream()
                 .map(this::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    /** Todas las personas con rol tutor (3), ordenadas por nombre (selectores admin / cursos). */
+    public List<Persona> listarPersonasRolTutor() {
+        return PersonaRepository.findByRolIdOrderByNombreAsc(3);
+    }
+
+    /**
+     * Obtiene el {@link Tutor} vinculado a la persona o crea uno mínimo si aún no existe
+     * (persona dada de alta solo con rol 3 en {@code persona}).
+     */
+    @Transactional
+    public Tutor obtenerOCrearTutorParaPersonaId(Integer idPersona) {
+        Persona persona = PersonaRepository.findById(idPersona)
+                .orElseThrow(() -> new IllegalArgumentException("Persona no encontrada: " + idPersona));
+        if (persona.getRolId() == null || persona.getRolId() != 3) {
+            throw new IllegalArgumentException("La persona debe tener rol tutor (id_rol = 3)");
+        }
+        return tutorRepository.findByPersona(persona).orElseGet(() -> {
+            Tutor t = new Tutor();
+            t.setPersona(persona);
+            return tutorRepository.save(t);
+        });
     }
 
     public TutorDTO guardar(TutorDTO dto) {

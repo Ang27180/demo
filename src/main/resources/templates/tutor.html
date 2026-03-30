@@ -48,8 +48,119 @@
 <body style="background-color: #000;">
     <div layout:fragment="contenido" class="container mt-5 pt-5 pb-5">
 
-        <!-- Bienvenida -->
-        <div class="text-center mb-5">
+        <!-- Vista administrador: supervisión de todos los tutores -->
+        <div th:if="${vistaSupervisionAdmin}" class="mb-4">
+            <div class="text-center mb-4">
+                <h1 class="fw-bold text-white mb-2">
+                    Supervisión de tutores
+                </h1>
+                <p class="lead text-white-50 mb-0">
+                    Vista global: cada tutor con sus cursos y accesos a alumnos (sesión de administrador).
+                </p>
+            </div>
+
+            <form th:action="@{/tutor-panel}" method="get" class="card bg-dark border-secondary text-white mb-4 p-3 rounded-3">
+                <input type="hidden" name="page" value="0"/>
+                <p class="text-uppercase small text-white-50 fw-bold mb-2">Filtros</p>
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label small mb-1">Tutor (rol)</label>
+                        <select name="filtroIdPersona" class="form-select form-select-sm bg-black text-white border-secondary">
+                            <option value="">Todos</option>
+                            <option th:each="p : ${personasTutorFiltroSelect}" th:value="${p.id}"
+                                th:selected="${filtroIdPersona != null && filtroIdPersona == p.id}"
+                                th:text="${p.nombre}">—</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small mb-1">Curso</label>
+                        <select name="filtroIdCurso" class="form-select form-select-sm bg-black text-white border-secondary">
+                            <option value="">Todos</option>
+                            <option th:each="c : ${cursosFiltroSelect}" th:value="${c.id}"
+                                th:selected="${filtroIdCurso != null && filtroIdCurso == c.id}"
+                                th:text="${c.nombre}">—</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 d-flex flex-wrap gap-2">
+                        <button type="submit" class="btn btn-warning btn-sm flex-grow-1">
+                            <i class="fas fa-filter me-1"></i> Aplicar
+                        </button>
+                        <a th:href="@{/tutor-panel}" class="btn btn-outline-light btn-sm">Limpiar</a>
+                    </div>
+                </div>
+            </form>
+
+            <div th:if="${!hayPersonasRolTutor}" class="alert alert-secondary text-center">
+                No hay personas con rol tutor en el sistema.
+            </div>
+
+            <div class="accordion accordion-flush" id="accordionTutoresAdmin"
+                th:if="${hayPersonasRolTutor && personasTutorPage != null && !personasTutorPage.isEmpty()}">
+                <div class="accordion-item bg-dark border-secondary mb-2 rounded-3 overflow-hidden" th:each="per : ${personasTutorPage.content}">
+                    <h2 class="accordion-header" th:id="|head${per.id}|">
+                        <button class="accordion-button collapsed bg-dark text-white fw-semibold" type="button"
+                            data-bs-toggle="collapse" th:attr="data-bs-target=|#collapse${per.id}|">
+                            <i class="fas fa-chalkboard-teacher text-warning me-2"></i>
+                            <span th:text="${per.nombre}">Tutor</span>
+                            <span class="badge bg-secondary ms-2"
+                                th:text="|${#lists.size(cursosAsignadosPorPersonaId.get(per.id))} curso(s)|">0</span>
+                        </button>
+                    </h2>
+                    <div class="accordion-collapse collapse" th:id="|collapse${per.id}|"
+                        th:attr="aria-labelledby=|head${per.id}|" data-bs-parent="#accordionTutoresAdmin">
+                        <div class="accordion-body bg-black bg-opacity-50 text-white-50">
+                            <ul class="list-unstyled mb-0" th:if="${!cursosMostrarPorPersonaId.get(per.id).isEmpty()}">
+                                <li th:each="c : ${cursosMostrarPorPersonaId.get(per.id)}" class="d-flex flex-wrap justify-content-between align-items-center gap-2 py-2 border-bottom border-secondary border-opacity-25">
+                                    <span class="text-white" th:text="${c.nombre}">Curso</span>
+                                    <span>
+                                        <a th:href="@{/tutor/panel/cursos/{id}/alumnos(id=${c.id})}" class="btn btn-sm btn-outline-warning rounded-pill me-1">Alumnos</a>
+                                        <a th:href="@{/admin/cursos/{id}/contenido(id=${c.id})}" class="btn btn-sm btn-outline-info rounded-pill">Contenido</a>
+                                    </span>
+                                </li>
+                            </ul>
+                            <p th:if="${cursosAsignadosPorPersonaId.get(per.id).isEmpty()}"
+                                class="mb-0 fst-italic text-white-50">Sin cursos asignados</p>
+                            <p th:if="${!cursosAsignadosPorPersonaId.get(per.id).isEmpty() && cursosMostrarPorPersonaId.get(per.id).isEmpty()}"
+                                class="mb-0 fst-italic text-warning">Ningún curso coincide con el filtro de curso.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <nav th:if="${hayPersonasRolTutor && personasTutorPage != null && personasTutorPage.totalPages > 1}"
+                class="d-flex justify-content-center mt-3" aria-label="Paginación tutores">
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item" th:classappend="${personasTutorPage.first} ? 'disabled'">
+                        <a class="page-link bg-dark text-white border-secondary"
+                            th:href="@{/tutor-panel(page=${personasTutorPage.number - 1}, filtroIdPersona=${filtroIdPersona}, filtroIdCurso=${filtroIdCurso})}">Anterior</a>
+                    </li>
+                    <li class="page-item disabled">
+                        <span class="page-link bg-black text-white-50 border-secondary"
+                            th:text="|Página ${personasTutorPage.number + 1} de ${personasTutorPage.totalPages}|">Página</span>
+                    </li>
+                    <li class="page-item" th:classappend="${personasTutorPage.last} ? 'disabled'">
+                        <a class="page-link bg-dark text-white border-secondary"
+                            th:href="@{/tutor-panel(page=${personasTutorPage.number + 1}, filtroIdPersona=${filtroIdPersona}, filtroIdCurso=${filtroIdCurso})}">Siguiente</a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="row g-4 justify-content-center mt-4">
+                <div class="col-md-5">
+                    <a th:href="@{/tutor/panel/cursos(filtroIdPersona=${filtroIdPersona}, filtroIdCurso=${filtroIdCurso})}" class="btn btn-yellow-action w-100 py-3 rounded-3 fw-bold">
+                        <i class="fas fa-layer-group me-2"></i> Ver todos los cursos (lista)
+                    </a>
+                </div>
+                <div class="col-md-5">
+                    <a th:href="@{/tutor-panel-estudiantes(filtroIdPersona=${filtroIdPersona}, filtroIdCurso=${filtroIdCurso})}" class="btn btn-success-action w-100 py-3 rounded-3 fw-bold">
+                        <i class="fas fa-users me-2"></i> Todas las inscripciones
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bienvenida tutor (sin cambios de distribución) -->
+        <div th:unless="${vistaSupervisionAdmin}" class="text-center mb-5">
             <h1 class="fw-bold text-white mb-3">
                 ¡Bienvenido/a Tutor <span th:text="${persona?.nombre}">Estelar</span> 👩‍🏫!
             </h1>
@@ -58,8 +169,8 @@
             </p>
         </div>
 
-        <!-- Opciones de Gestión -->
-        <div class="row g-4 justify-content-center">
+        <!-- Opciones de Gestión (solo tutor) -->
+        <div th:unless="${vistaSupervisionAdmin}" class="row g-4 justify-content-center">
 
             <!-- Gestión de Cursos -->
             <div class="col-md-5">

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+<head>
+    <title layout:fragment="titulo">Orden de pago</title>
+    <link rel="stylesheet" th:href="@{/css/misCursos.css}">
+</head>
+<body>
+    <main layout:fragment="contenido" class="mis-cursos-section pt-5 pb-5">
+        <div class="container mt-5">
+        <a th:href="@{/mis-cursos}" class="btn btn-outline-light btn-sm mb-4 rounded-pill"><i class="fas fa-arrow-left me-1"></i> Mis cursos</a>
+
+        <div class="section-header">
+            <h1 class="display-5 fw-bold text-white mb-2">Tu orden de pago (Nequi)</h1>
+            <p class="text-white-50">Referencia, monto y comprobante en un solo lugar.</p>
+        </div>
+        <div th:if="${msgPago}" class="alert alert-success" th:text="${msgPago}"></div>
+        <div th:if="${errorPago}" class="alert alert-danger" th:text="${errorPago}"></div>
+
+        <div class="card bg-dark border-secondary text-white mb-4">
+            <div class="card-body">
+                <p class="mb-1"><span class="text-white-50">Referencia:</span>
+                    <code class="text-warning fs-5" th:text="${orden.referencia}">SMC-</code>
+                </p>
+                <p class="mb-1"><span class="text-white-50">Estado:</span>
+                    <span class="badge bg-secondary" th:text="${orden.estado}">—</span>
+                </p>
+                <p class="mb-1"><span class="text-white-50">Concepto:</span> <span th:text="${orden.concepto}">—</span></p>
+                <p class="mb-1"><span class="text-white-50">Monto exacto:</span>
+                    <strong class="text-warning" th:text="${#numbers.formatDecimal(orden.monto, 0, 'COMMA', 2, 'POINT')} + ' COP'">0</strong>
+                </p>
+                <p class="mb-0 small text-white-50" th:if="${orden.fechaVencimiento != null}">
+                    Vence el: <span th:text="${#temporals.format(orden.fechaVencimiento, 'dd/MM/yyyy')}">—</span>
+                </p>
+            </div>
+        </div>
+
+        <div class="alert alert-info border-0 bg-opacity-25" style="background-color: #1a3a52; color: #cfe8ff;">
+            <h6 class="fw-bold"><i class="fas fa-info-circle me-1"></i> Cómo pagar</h6>
+            <ol class="mb-0 small ps-3">
+                <li>Abre Nequi y envía <strong>exactamente</strong> el monto indicado.</li>
+                <li>Si puedes, indica la referencia <code th:text="${orden.referencia}"></code> en el concepto o mensaje.</li>
+                <li>Guarda captura o PDF del comprobante.</li>
+                <li>Completa el formulario de abajo con la fecha/hora del pago y adjunta el archivo.</li>
+            </ol>
+        </div>
+
+        <div th:if="${comprobante != null}" class="card bg-dark border-success mb-4">
+            <div class="card-body">
+                <h6 class="text-success"><i class="fas fa-check-circle me-1"></i> Comprobante recibido</h6>
+                <p class="mb-1 small text-white-50" th:text="${comprobante.nombreArchivoOriginal}">archivo</p>
+                <a th:href="@{/mis-cursos/pagos/orden/{id}/comprobante/archivo(id=${orden.id})}" class="btn btn-outline-light btn-sm" target="_blank">Ver archivo</a>
+            </div>
+        </div>
+
+        <div th:if="${orden.estado == 'PENDIENTE' && ordenAbierta}" class="card bg-black border-warning">
+            <div class="card-header text-warning fw-bold">Subir comprobante</div>
+            <div class="card-body">
+                <form th:action="@{/mis-cursos/pagos/orden/{id}/comprobante(id=${orden.id})}" method="post"
+                    enctype="multipart/form-data" class="row g-3">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <div class="col-12">
+                        <label class="form-label text-white-50">Archivo (JPG, PNG o PDF, máx. 5 MB)</label>
+                        <input type="file" name="archivo" class="form-control bg-dark text-white border-secondary" required
+                            accept="image/jpeg,image/png,application/pdf">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-white-50">Fecha del pago</label>
+                        <input type="date" name="fechaPago" class="form-control bg-dark text-white border-secondary" required
+                            th:value="${T(java.time.LocalDate).now()}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-white-50">Hora (opcional, 24h)</label>
+                        <input type="time" name="horaPago" class="form-control bg-dark text-white border-secondary">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-white-50">Valor pagado (debe coincidir con el monto)</label>
+                        <input type="number" step="0.01" name="valorReportado" class="form-control bg-dark text-white border-secondary" required
+                            th:value="${orden.monto}">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-white-50">Teléfono desde el que pagó</label>
+                        <input type="text" name="telefonoPagador" class="form-control bg-dark text-white border-secondary" placeholder="300…">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-white-50">Últimos 4 dígitos (opcional)</label>
+                        <input type="text" name="ultimos4Digitos" maxlength="4" class="form-control bg-dark text-white border-secondary" placeholder="1234">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label text-white-50">Observación (opcional)</label>
+                        <textarea name="observacionEstudiante" class="form-control bg-dark text-white border-secondary" rows="2"></textarea>
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-warning fw-bold">Enviar comprobante</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <p th:if="${orden.estado == 'COMPROBANTE_CARGADO' || orden.estado == 'EN_REVISION'}" class="text-white-50 mt-3">
+            <i class="fas fa-hourglass-half me-1"></i> Tu pago está en validación. Te avisaremos cuando se apruebe.
+        </p>
+        <p th:if="${orden.estado == 'APROBADO'}" class="text-success mt-3 fw-bold">
+            <i class="fas fa-check me-1"></i> Pago aprobado. Ya tienes acceso al curso.
+        </p>
+        <p th:if="${orden.estado == 'RECHAZADO'}" class="text-danger mt-3">
+            Esta orden fue rechazada. Puedes generar una nueva orden desde «Mis cursos» si la inscripción sigue pendiente.
+        </p>
+        <p th:if="${orden.estado == 'VENCIDO'}" class="text-warning mt-3">
+            Esta orden venció. Genera una nueva orden si aún tienes plazo de inscripción.
+        </p>
+        </div>
+    </main>
+</body>
+</html>

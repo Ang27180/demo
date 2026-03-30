@@ -1,7 +1,9 @@
 package com.proyectojpa.demo.controller;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,7 +12,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.proyectojpa.demo.models.Estudiante;
+import com.proyectojpa.demo.Service.OrdenPagoService;
 import com.proyectojpa.demo.models.Inscripcion;
+import com.proyectojpa.demo.models.OrdenPago;
 import com.proyectojpa.demo.models.Persona;
 import com.proyectojpa.demo.models.Tutor;
 import com.proyectojpa.demo.domain.InscripcionEstados;
@@ -39,6 +43,9 @@ public class MisCursosController {
 
     @Autowired
     private EstadoInscripcionRepository estadoInscripcionRepository;
+
+    @Autowired
+    private OrdenPagoService ordenPagoService;
 
     @GetMapping("/mis-cursos")
     public String misCursos(Model model) {
@@ -71,8 +78,8 @@ public class MisCursosController {
             }
             model.addAttribute("inscripciones", falsasInscripciones);
             model.addAttribute("esTutor", true);
-        } else {
-            // Lógica original para Estudiante
+        } else if (persona.getRolId() != null && persona.getRolId().equals(2)) {
+            // Solo rol estudiante: fila en tabla estudiante; acudientes u otros roles no.
             Estudiante estudiante = estudianteRepository
                     .findByPersona(persona)
                     .orElseGet(() -> {
@@ -85,7 +92,14 @@ public class MisCursosController {
                     });
 
             List<Inscripcion> inscripciones = inscripcionRepo.findByEstudianteIdWithCursoAndEstado(estudiante.getIdEstudiante());
+            Map<Integer, OrdenPago> ordenActivaPorInscripcion = ordenPagoService
+                    .mapaOrdenActivaPorInscripciones(estudiante.getIdEstudiante());
             model.addAttribute("inscripciones", inscripciones);
+            model.addAttribute("ordenActivaPorInscripcion", ordenActivaPorInscripcion);
+            model.addAttribute("esTutor", false);
+        } else {
+            model.addAttribute("inscripciones", new ArrayList<Inscripcion>());
+            model.addAttribute("ordenActivaPorInscripcion", Collections.emptyMap());
             model.addAttribute("esTutor", false);
         }
 

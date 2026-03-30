@@ -4,6 +4,8 @@ public class AcudienteDTO {
     private Integer idAcudiente;
     private Integer idPersona;
     private Integer idEstudianteDependiente;
+    /** MADRE, PADRE, OTRO, etc. */
+    private String parentesco;
 
     public Integer getIdAcudiente() {
         return idAcudiente;
@@ -27,5 +29,13 @@ public class AcudienteDTO {
 
     public void setIdEstudianteDependiente(Integer idEstudianteDependiente) {
         this.idEstudianteDependiente = idEstudianteDependiente;
+    }
+
+    public String getParentesco() {
+        return parentesco;
+    }
+
+    public void setParentesco(String parentesco) {
+        this.parentesco = parentesco;
     }
 }

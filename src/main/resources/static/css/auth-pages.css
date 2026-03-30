@@ -1,20 +1,18 @@
 /**
- * Área útil entre navbar fija y footer fijo: formulario + imagen sin desbordar el viewport.
+ * Área útil bajo la navbar fija: el footer va en flujo normal debajo del contenido (scroll de página).
  */
 :root {
   --auth-navbar-offset: 90px;
-  --auth-footer-offset: 80px;
 }
 
 .auth-page-shell {
   width: 100%;
   margin-top: var(--auth-navbar-offset);
   box-sizing: border-box;
-  min-height: calc(100vh - var(--auth-navbar-offset) - var(--auth-footer-offset));
-  max-height: calc(100vh - var(--auth-navbar-offset) - var(--auth-footer-offset));
-  min-height: calc(100dvh - var(--auth-navbar-offset) - var(--auth-footer-offset));
-  max-height: calc(100dvh - var(--auth-navbar-offset) - var(--auth-footer-offset));
-  overflow: hidden;
+  min-height: calc(100vh - var(--auth-navbar-offset));
+  min-height: calc(100dvh - var(--auth-navbar-offset));
+  max-height: none;
+  overflow: visible;
   display: flex;
   flex-direction: column;
 }

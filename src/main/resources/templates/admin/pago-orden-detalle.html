@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+<head>
+    <title layout:fragment="titulo">Orden de pago</title>
+</head>
+<body>
+    <main layout:fragment="contenido" class="container mt-5 pt-5 pb-5">
+        <a th:href="@{/admin/pagos/ordenes}" class="btn btn-outline-secondary btn-sm mb-3">← Volver al listado</a>
+
+        <h2 class="mb-3">Orden #<span th:text="${orden.id}">0</span></h2>
+        <div th:if="${msgAdmin}" class="alert alert-success" th:text="${msgAdmin}"></div>
+        <div th:if="${errorAdmin}" class="alert alert-danger" th:text="${errorAdmin}"></div>
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card border-secondary">
+                    <div class="card-header fw-bold">Datos de la orden</div>
+                    <div class="card-body small">
+                        <p><strong>Referencia:</strong> <code th:text="${orden.referencia}">—</code></p>
+                        <p><strong>Estado:</strong> <span th:text="${orden.estado}">—</span></p>
+                        <p><strong>Monto:</strong> <span th:text="${#numbers.formatDecimal(orden.monto, 0, 'COMMA', 2, 'POINT')}">0</span> COP</p>
+                        <p><strong>Estudiante:</strong> <span th:text="${orden.inscripcion.estudiante.persona.nombre}">—</span></p>
+                        <p><strong>Email:</strong> <span th:text="${orden.inscripcion.estudiante.persona.email}">—</span></p>
+                        <p><strong>Curso:</strong> <span th:text="${orden.inscripcion.curso.nombre}">—</span></p>
+                        <p><strong>Creada:</strong> <span th:text="${#temporals.format(orden.fechaCreacion, 'dd/MM/yyyy HH:mm')}">—</span></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6" th:if="${comprobante != null}">
+                <div class="card border-success">
+                    <div class="card-header fw-bold text-success">Comprobante</div>
+                    <div class="card-body small">
+                        <p><strong>Archivo:</strong> <span th:text="${comprobante.nombreArchivoOriginal}">—</span></p>
+                        <p><strong>SHA-256:</strong> <code style="word-break:break-all;font-size:0.75rem" th:text="${comprobante.hashSha256}">—</code></p>
+                        <p><strong>Valor declarado:</strong> <span th:text="${comprobante.valorReportado}">—</span></p>
+                        <p><strong>Fecha pago (declarada):</strong>
+                            <span th:if="${comprobante.fechaHoraPagoReportada != null}"
+                                th:text="${#temporals.format(comprobante.fechaHoraPagoReportada, 'dd/MM/yyyy HH:mm')}">—</span>
+                        </p>
+                        <p><strong>Teléfono:</strong> <span th:text="${comprobante.telefonoPagador}">—</span></p>
+                        <p><strong>Últimos 4:</strong> <span th:text="${comprobante.ultimos4Digitos}">—</span></p>
+                        <a th:href="@{/admin/pagos/ordenes/{id}/comprobante/archivo(id=${orden.id})}" class="btn btn-sm btn-primary" target="_blank">Ver archivo</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4" th:if="${comprobante != null && (orden.estado == 'COMPROBANTE_CARGADO' || orden.estado == 'EN_REVISION')}">
+            <form th:action="@{/admin/pagos/ordenes/{id}/revision(id=${orden.id})}" method="post" class="d-inline">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <button type="submit" class="btn btn-outline-secondary btn-sm">Marcar en revisión</button>
+            </form>
+            <form th:action="@{/admin/pagos/ordenes/{id}/aprobar(id=${orden.id})}" method="post" class="d-inline ms-1">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <input type="text" name="detalle" class="form-control form-control-sm d-inline-block w-auto" placeholder="Nota (opcional)">
+                <button type="submit" class="btn btn-success btn-sm">Aprobar y activar inscripción</button>
+            </form>
+            <form th:action="@{/admin/pagos/ordenes/{id}/rechazar(id=${orden.id})}" method="post" class="mt-2">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <div class="input-group input-group-sm" style="max-width:480px">
+                    <input type="text" name="motivo" class="form-control" placeholder="Motivo del rechazo" required>
+                    <button type="submit" class="btn btn-danger">Rechazar</button>
+                </div>
+            </form>
+        </div>
+
+        <h5 class="mt-5">Historial</h5>
+        <ul class="list-group list-group-flush border rounded small">
+            <li class="list-group-item" th:each="h : ${historial}">
+                <span class="text-muted" th:text="${#temporals.format(h.fecha, 'dd/MM/yyyy HH:mm')}">—</span>
+                <strong th:text="${h.accion}">—</strong>
+                <span th:if="${h.usuario != null}" th:text="' · ' + ${h.usuario}"></span>
+                <div class="text-muted" th:if="${h.detalle != null}" th:text="${h.detalle}"></div>
+            </li>
+        </ul>
+    </main>
+</body>
+</html>

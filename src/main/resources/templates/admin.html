@@ -29,13 +29,16 @@
                         <a th:href="@{/admin/recibos}" class="btn btn-outline-secondary btn-sm me-1 mb-1">
                             <i class="fas fa-receipt me-1"></i>Recibos
                         </a>
+                        <a th:href="@{/admin/recibos/generar}" class="btn btn-outline-secondary btn-sm me-1 mb-1">
+                            <i class="fas fa-plus me-1"></i>Generar recibo
+                        </a>
+                        <a th:href="@{/admin/pagos/ordenes}" class="btn btn-outline-primary btn-sm me-1 mb-1">
+                            <i class="fas fa-mobile-alt me-1"></i>Órdenes Nequi
+                        </a>
                     </div>
                     <div class="col-md-4">
-                        <h6 class="text-muted text-uppercase small">Informes</h6>
-                        <a th:href="@{/reportes}" class="btn btn-outline-info btn-sm me-1 mb-1">
-                            <i class="fas fa-chart-pie me-1"></i>Reporte web
-                        </a>
-                        <a th:href="@{/personas/exportarExcel(filtroNombre=${filtroNombre}, filtroRol=${filtroRol}, filtroNombreCurso=${filtroNombreCurso}, filtroIdTutor=${filtroIdTutor})}"
+                        <h6 class="text-muted text-uppercase small">Informes</h6>                        
+                        <a th:href="@{/personas/exportarExcel(filtroNombre=${filtroNombre}, filtroRol=${filtroRol}, filtroNombreCurso=${filtroNombreCurso}, filtroIdPersonaTutor=${filtroIdPersonaTutor})}"
                             class="btn btn-outline-success btn-sm me-1 mb-1">
                             <i class="fas fa-file-excel me-1"></i>Excel
                         </a>
@@ -47,13 +50,7 @@
                         <h6 class="text-muted text-uppercase small">Comunicación y tutores</h6>
                         <a th:href="@{/correo/formulario}" class="btn btn-outline-success btn-sm me-1 mb-1">
                             <i class="fas fa-envelope me-1"></i>Correo
-                        </a>
-                        <a th:href="@{/admin/correo-curso}" class="btn btn-outline-primary btn-sm me-1 mb-1">
-                            <i class="fas fa-users me-1"></i>Correo por curso
-                        </a>
-                        <a th:href="@{/admin/tutores}" class="btn btn-outline-dark btn-sm mb-1">
-                            <i class="fas fa-user-tie me-1"></i>Gestión tutores
-                        </a>
+                        </a>                                               
                     </div>
                 </div>
             </div>
@@ -96,22 +93,15 @@
         <div class="card p-4 mb-5">
             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
                 <h4 class="fw-bold">Gestión de Usuarios</h4>
-                <div class="d-flex flex-wrap gap-2">
-                    <a th:href="@{/correo/formulario}" class="btn btn-outline-success btn-sm"><i
-                            class="fas fa-paper-plane me-1"></i>Correo</a>
-                    <a th:href="@{/admin/correo-curso}" class="btn btn-outline-primary btn-sm"><i
-                            class="fas fa-users me-1"></i>Correo por curso</a>
+                <div class="d-flex flex-wrap gap-2">                    
                     <a th:href="@{/personas/nueva}" class="btn btn-success btn-sm">➕ Añadir Usuario</a>
-                    <a th:href="@{/personas/exportarExcel(filtroNombre=${filtroNombre}, filtroRol=${filtroRol}, filtroNombreCurso=${filtroNombreCurso}, filtroIdTutor=${filtroIdTutor})}"
-                        class="btn btn-outline-success btn-sm">⬇️ Excel</a>
-                    <a th:href="@{/reportes/estadistico/pdf}" class="btn btn-success btn-sm" target="_blank">⬇️ PDF</a>
                 </div>
             </div>
 
             <form th:action="@{/admin}" method="get" class="mb-3">
                 <p class="text-muted small text-uppercase fw-bold mb-2">Filtros — usuarios</p>
                 <input type="hidden" name="filtroNombreCurso" th:value="${filtroNombreCurso}" th:if="${filtroNombreCurso != null && !filtroNombreCurso.isEmpty()}">
-                <input type="hidden" name="filtroIdTutor" th:value="${filtroIdTutor}" th:if="${filtroIdTutor != null}">
+                <input type="hidden" name="filtroIdPersonaTutor" th:value="${filtroIdPersonaTutor}" th:if="${filtroIdPersonaTutor != null}">
                 <div class="row g-2 mb-2">
                     <div class="col-md-5">
                         <input type="text" name="filtroNombre" class="form-control" placeholder="Buscar por nombre..."
@@ -123,15 +113,15 @@
                             <option th:value="1" th:selected="${filtroRol != null && filtroRol == 1}">Administrador</option>
                             <option th:value="2" th:selected="${filtroRol != null && filtroRol == 2}">Estudiante</option>
                             <option th:value="3" th:selected="${filtroRol != null && filtroRol == 3}">Tutor</option>
-                            <option th:value="4" th:selected="${filtroRol != null && filtroRol == 4}">Proveedor</option>
+                            <option th:value="4" th:selected="${filtroRol != null && filtroRol == 4}">Acudiente</option>
                         </select>
                     </div>
                     <div class="col-md-3 d-flex flex-column gap-2">
                         <button type="submit" class="btn btn-outline-primary w-100">🔍 Buscar</button>
-                        <a th:if="${(filtroNombreCurso != null && !filtroNombreCurso.isEmpty()) || filtroIdTutor != null}"
-                            th:href="@{/admin(filtroNombreCurso=${filtroNombreCurso}, filtroIdTutor=${filtroIdTutor})}"
+                        <a th:if="${(filtroNombreCurso != null && !filtroNombreCurso.isEmpty()) || filtroIdPersonaTutor != null}"
+                            th:href="@{/admin(filtroNombreCurso=${filtroNombreCurso}, filtroIdPersonaTutor=${filtroIdPersonaTutor})}"
                             class="btn btn-outline-secondary w-100">Limpiar filtros de usuarios</a>
-                        <a th:unless="${(filtroNombreCurso != null && !filtroNombreCurso.isEmpty()) || filtroIdTutor != null}"
+                        <a th:unless="${(filtroNombreCurso != null && !filtroNombreCurso.isEmpty()) || filtroIdPersonaTutor != null}"
                             th:href="@{/admin}" class="btn btn-outline-secondary w-100">Limpiar filtros de usuarios</a>
                     </div>
                 </div>
@@ -170,7 +160,7 @@
                                         <span th:case="1">Administrador</span>
                                         <span th:case="2">Estudiante</span>
                                         <span th:case="3">Tutor</span>
-                                        <span th:case="4">Proveedor</span>
+                                        <span th:case="4">Acudiente</span>
                                         <span th:case="*">Sin rol</span>
                                     </span>
                                 </td>
@@ -189,8 +179,9 @@
                                         th:title="${persona.estudiante != null && persona.estudiante.estadoEstudiante != null && persona.estudiante.estadoEstudiante.codigo == 'ACTIVO'} ? 'Desactivar cuenta' : 'Activar cuenta'">
                                         <i class="fas fa-power-off"></i>
                                     </button>
-                                    <a th:href="@{/personas/eliminar/{id}(id=${persona.id})}"
-                                        onclick="return confirm('¿Seguro que deseas eliminar esta persona?')"
+                                    <a th:unless="${persona.rolId != null && persona.rolId == 1}"
+                                        th:href="@{/personas/eliminar/{id}(id=${persona.id})}"
+                                        th:attr="onclick=|return confirm('¿Eliminar esta persona? Se borrarán en cascada datos asociados (estudiante: inscripciones, recibos, progreso; acudiente: vínculos en tabla acudiente).');|"
                                         class="btn btn-danger btn-sm py-0">Eliminar</a>
                                 </td>
                             </tr>
@@ -221,11 +212,11 @@
                             th:value="${filtroNombreCurso}">
                     </div>
                     <div class="col-md-4">
-                        <select name="filtroIdTutor" class="form-select">
-                            <option value="" th:selected="${filtroIdTutor == null}">Todos los tutores</option>
-                            <option th:each="t : ${tutoresParaFiltro}" th:value="${t.idTutor}"
-                                th:selected="${filtroIdTutor != null && filtroIdTutor == t.idTutor}"
-                                th:text="${t.persona != null ? t.persona.nombre : ('Tutor #' + t.idTutor)}">Tutor</option>
+                        <select name="filtroIdPersonaTutor" class="form-select">
+                            <option value="" th:selected="${filtroIdPersonaTutor == null}">Todos los tutores</option>
+                            <option th:each="p : ${personasTutorSelect}" th:value="${p.id}"
+                                th:selected="${filtroIdPersonaTutor != null && filtroIdPersonaTutor == p.id}"
+                                th:text="${p.nombre}">Tutor</option>
                         </select>
                     </div>
                     <div class="col-md-3 d-flex flex-column gap-2">
@@ -273,7 +264,7 @@
                                 <a th:href="@{/admin/cursos/{id}/contenido(id=${curso.id})}" class="btn btn-info btn-sm text-white py-0">Contenido</a>
                                 <button type="button" class="btn btn-outline-primary btn-sm py-0"
                                     data-bs-toggle="modal" data-bs-target="#asignarTutorModal"
-                                    th:attr="data-curso-id=${curso.id}, data-curso-nombre=${curso.nombre}, data-tutor-id=${curso.tutor != null ? curso.tutor.idTutor : ''}">
+                                    th:attr="data-curso-id=${curso.id}, data-curso-nombre=${curso.nombre}, data-persona-tutor-id=${curso.tutor != null && curso.tutor.persona != null ? curso.tutor.persona.id : ''}">
                                     <i class="fas fa-user-tie me-1"></i>Asignar tutor
                                 </button>
                                 <a th:href="@{/admin/cursos/form/{id}(id=${curso.id})}" class="btn btn-warning btn-sm py-0">Editar</a>
@@ -302,10 +293,10 @@
                             <p class="text-muted small mb-3">ID: <span id="asignarTutorCursoId">—</span></p>
 
                             <label class="form-label fw-semibold">Tutor</label>
-                            <select name="idTutor" id="idTutorModal" class="form-select">
+                            <select name="idPersonaTutor" id="idPersonaTutorModal" class="form-select">
                                 <option value="">— Sin asignar —</option>
-                                <option th:each="t : ${tutoresParaFiltro}" th:value="${t.idTutor}"
-                                    th:text="${t.persona != null ? t.persona.nombre : ('Tutor #' + t.idTutor)}"></option>
+                                <option th:each="p : ${personasTutorSelect}" th:value="${p.id}"
+                                    th:text="${p.nombre}"></option>
                             </select>
                         </div>
                         <div class="modal-footer">
@@ -327,7 +318,7 @@
                         const button = event.relatedTarget;
                         const courseId = button.getAttribute('data-curso-id');
                         const courseNombre = button.getAttribute('data-curso-nombre');
-                        const tutorId = button.getAttribute('data-tutor-id');
+                        const personaTutorId = button.getAttribute('data-persona-tutor-id');
 
                         document.getElementById('asignarTutorCursoId').textContent = courseId;
                         document.getElementById('asignarTutorCursoNombre').textContent = courseNombre;
@@ -335,8 +326,8 @@
                         const form = document.getElementById('asignarTutorForm');
                         form.action = baseUrl + 'admin/cursos/' + courseId + '/asignar-tutor';
 
-                        const select = document.getElementById('idTutorModal');
-                        select.value = (tutorId && tutorId !== '') ? tutorId : '';
+                        const select = document.getElementById('idPersonaTutorModal');
+                        select.value = (personaTutorId && personaTutorId !== '') ? personaTutorId : '';
                     });
                 }
 

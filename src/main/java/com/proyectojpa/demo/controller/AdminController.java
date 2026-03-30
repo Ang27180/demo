@@ -28,10 +28,10 @@ import com.proyectojpa.demo.domain.InscripcionEstados;
 import com.proyectojpa.demo.models.Curso;
 import com.proyectojpa.demo.models.Estudiante;
 import com.proyectojpa.demo.models.Persona;
+import com.proyectojpa.demo.Service.TutorService;
 import com.proyectojpa.demo.repository.EstadoInscripcionRepository;
 import com.proyectojpa.demo.repository.EstudianteRepository;
 import com.proyectojpa.demo.repository.PersonaRepository;
-import com.proyectojpa.demo.repository.TutorRepository;
 import com.proyectojpa.demo.repository.cursoRepository;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -45,7 +45,7 @@ public class AdminController {
     private cursoRepository cursoRepository;
 
     @Autowired
-    private TutorRepository tutorRepository;
+    private TutorService tutorService;
 
     @Autowired
     private EstudianteRepository estudianteRepository;
@@ -60,7 +60,7 @@ public class AdminController {
             @RequestParam(name = "filtroNombre", required = false) String filtroNombre,
             @RequestParam(name = "filtroRol", required = false) Integer filtroRol,
             @RequestParam(name = "filtroNombreCurso", required = false) String filtroNombreCurso,
-            @RequestParam(name = "filtroIdTutor", required = false) Integer filtroIdTutor,
+            @RequestParam(name = "filtroIdPersonaTutor", required = false) Integer filtroIdPersonaTutor,
             Model model) {
 
         // inicializar si vienen nulos
@@ -77,8 +77,9 @@ public class AdminController {
                 .filter(c -> filtroNombreCursoFinal.isEmpty()
                         || (c.getNombre() != null
                                 && c.getNombre().toLowerCase().contains(filtroNombreCursoFinal.toLowerCase())))
-                .filter(c -> filtroIdTutor == null
-                        || (c.getTutor() != null && filtroIdTutor.equals(c.getTutor().getIdTutor())))
+                .filter(c -> filtroIdPersonaTutor == null
+                        || (c.getTutor() != null && c.getTutor().getPersona() != null
+                                && filtroIdPersonaTutor.equals(c.getTutor().getPersona().getId())))
                 .toList();
 
         model.addAttribute("personas", personas);
@@ -89,8 +90,8 @@ public class AdminController {
         model.addAttribute("filtroNombre", filtroNombre);
         model.addAttribute("filtroRol", filtroRol);
         model.addAttribute("filtroNombreCurso", filtroNombreCurso);
-        model.addAttribute("filtroIdTutor", filtroIdTutor);
-        model.addAttribute("tutoresParaFiltro", tutorRepository.findAllWithPersona());
+        model.addAttribute("filtroIdPersonaTutor", filtroIdPersonaTutor);
+        model.addAttribute("personasTutorSelect", tutorService.listarPersonasRolTutor());
 
         // Tarjetas resumen dinámicas
         model.addAttribute("totalUsuarios", personaRepository.count());
@@ -139,7 +140,7 @@ public class AdminController {
                 personas.stream().filter(p -> p.getRolId() != null && p.getRolId() == 1).collect(Collectors.toList()));
         putSiNoVacio(map, "Tutores",
                 personas.stream().filter(p -> p.getRolId() != null && p.getRolId() == 3).collect(Collectors.toList()));
-        putSiNoVacio(map, "Proveedores",
+        putSiNoVacio(map, "Acudientes",
                 personas.stream().filter(p -> p.getRolId() != null && p.getRolId() == 4).collect(Collectors.toList()));
         putSiNoVacio(map, "Otros / sin rol",
                 personas.stream().filter(p -> p.getRolId() == null || p.getRolId() < 1 || p.getRolId() > 4)
@@ -162,7 +163,7 @@ public class AdminController {
             @RequestParam(name = "filtroNombre", required = false) String filtroNombre,
             @RequestParam(name = "filtroRol", required = false) Integer filtroRol,
             @RequestParam(name = "filtroNombreCurso", required = false) String filtroNombreCurso,
-            @RequestParam(name = "filtroIdTutor", required = false) Integer filtroIdTutor) throws IOException {
+            @RequestParam(name = "filtroIdPersonaTutor", required = false) Integer filtroIdPersonaTutor) throws IOException {
 
         final String filtroNombreFinal = (filtroNombre == null) ? "" : filtroNombre;
         final String filtroNombreCursoFinal = (filtroNombreCurso == null) ? "" : filtroNombreCurso.trim();
@@ -176,8 +177,9 @@ public class AdminController {
                 .filter(c -> filtroNombreCursoFinal.isEmpty()
                         || (c.getNombre() != null
                                 && c.getNombre().toLowerCase().contains(filtroNombreCursoFinal.toLowerCase())))
-                .filter(c -> filtroIdTutor == null
-                        || (c.getTutor() != null && filtroIdTutor.equals(c.getTutor().getIdTutor())))
+                .filter(c -> filtroIdPersonaTutor == null
+                        || (c.getTutor() != null && c.getTutor().getPersona() != null
+                                && filtroIdPersonaTutor.equals(c.getTutor().getPersona().getId())))
                 .toList();
 
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
@@ -217,7 +219,7 @@ public class AdminController {
                     case 1 -> "Administrador";
                     case 2 -> "Estudiante";
                     case 3 -> "Tutor";
-                    case 4 -> "Proveedor";
+                    case 4 -> "Acudiente";
                     default -> "Desconocido";
                 };
             }

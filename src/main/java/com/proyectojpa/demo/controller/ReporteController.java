@@ -5,11 +5,15 @@ import java.util.List;
 import java.util.Map;
 
 import com.proyectojpa.demo.dto.DatoEstadisticoDTO;
+import com.proyectojpa.demo.Service.QrCodeService;
+import com.proyectojpa.demo.Service.ReciboAutorizacionService;
 import com.proyectojpa.demo.Service.ReporteJasperService;
 import com.proyectojpa.demo.models.Inscripcion;
 import com.proyectojpa.demo.models.Persona;
+import com.proyectojpa.demo.models.Recibo;
 import com.proyectojpa.demo.repository.PersonaRepository;
 import com.proyectojpa.demo.repository.InscripcionRepository;
+import com.proyectojpa.demo.repository.ReciboRepository;
 import com.proyectojpa.demo.security.CustomUserDetails;
 import org.springframework.core.io.ClassPathResource;
 
@@ -30,15 +34,24 @@ public class ReporteController {
     private final PersonaRepository personaRepository;
     private final JdbcTemplate jdbcTemplate;
     private final InscripcionRepository inscripcionRepository;
+    private final ReciboRepository reciboRepository;
+    private final ReciboAutorizacionService reciboAutorizacionService;
+    private final QrCodeService qrCodeService;
 
     public ReporteController(ReporteJasperService reporteJasperService,
                              PersonaRepository personaRepository,
                              JdbcTemplate jdbcTemplate,
-                             InscripcionRepository inscripcionRepository) {
+                             InscripcionRepository inscripcionRepository,
+                             ReciboRepository reciboRepository,
+                             ReciboAutorizacionService reciboAutorizacionService,
+                             QrCodeService qrCodeService) {
         this.reporteJasperService = reporteJasperService;
         this.personaRepository = personaRepository;
         this.jdbcTemplate = jdbcTemplate;
         this.inscripcionRepository = inscripcionRepository;
+        this.reciboRepository = reciboRepository;
+        this.reciboAutorizacionService = reciboAutorizacionService;
+        this.qrCodeService = qrCodeService;
     }
 
     // -------------------------------
@@ -80,7 +93,8 @@ public class ReporteController {
 
             Map<String, Object> parametros = new HashMap<>();
             parametros.put("TITULO", "Reporte estadístico de personas");
-            parametros.put("NUMEROPERSONAS", "Total Personas registradas: " + datos.stream().mapToDouble(DatoEstadisticoDTO::getValor).sum());
+            long totalPersonas = personaRepository.count();
+            parametros.put("NUMEROPERSONAS", String.valueOf(totalPersonas));
 
             byte[] pdfBytes = reporteJasperService.generarReporteEstadisticoPdf(datos, parametros);
 
@@ -253,6 +267,49 @@ public class ReporteController {
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Error al generar el certificado PDF: " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * PDF del recibo de pago (estudiante dueño o admin).
+     */
+    @GetMapping("/recibo/pdf/{idRecibo}")
+    public void descargarReciboPdf(@PathVariable("idRecibo") Integer idRecibo,
+            HttpServletResponse response) {
+        try {
+            Persona personaActual = getPersonaActual();
+            if (personaActual == null) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Debes iniciar sesión.");
+                return;
+            }
+            Recibo recibo = reciboRepository.findByIdWithDetalle(idRecibo).orElse(null);
+            if (recibo == null) {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Recibo no encontrado.");
+                return;
+            }
+            if (!reciboAutorizacionService.puedeVerRecibo(personaActual, recibo)) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "No tienes permiso para descargar este recibo.");
+                return;
+            }
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("NOMBRE_CURSO", recibo.getInscripcion().getCurso().getNombre());
+            parametros.put("NOMBRE_ESTUDIANTE", recibo.getInscripcion().getEstudiante().getPersona().getNombre());
+            parametros.put("MEDIO_NOMBRE", recibo.getMedioPago().getNombre());
+            parametros.put("MEDIO_TIPO", recibo.getMedioPago().getTipo() != null ? recibo.getMedioPago().getTipo() : "");
+            parametros.put("FECHA_EMISION", recibo.getFechaEmision() != null ? recibo.getFechaEmision().toString() : "");
+            parametros.put("REFERENCIA", recibo.getCodigoQrUnico());
+            parametros.put("ESTADO_RECIBO", recibo.getEstado());
+            parametros.put("QR_IMAGE", qrCodeService.generarImagenQr(recibo.getCodigoQrUnico()));
+
+            byte[] pdfBytes = reporteJasperService.generarReciboPdf(parametros);
+            response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition", "attachment; filename=recibo_" + idRecibo + ".pdf");
+            response.setContentLength(pdfBytes.length);
+            response.getOutputStream().write(pdfBytes);
+            response.getOutputStream().flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error al generar el PDF del recibo: " + e.getMessage(), e);
         }
     }
 

@@ -21,8 +21,29 @@ body {
   background-color: #f5f6fa;
   font-family: 'Segoe UI', system-ui, sans-serif;
   margin: 0;
-  /* Offset para navbar fijo */
+  /* Offset para navbar fija */
   padding-top: 80px;
+}
+
+/* Contenido entre navbar y footer: crece para empujar el pie al final en páginas cortas */
+body.d-flex.flex-column.min-vh-100 > nav + * {
+  flex-grow: 1;
+}
+
+/* Pie del layout: en flujo normal (no fixed) para no solapar contenido al hacer scroll */
+footer.site-footer {
+  width: 100%;
+  flex-shrink: 0;
+  border-top: 1px solid #0a0a0a;
+}
+
+footer.site-footer i {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+footer.site-footer i:hover {
+  transform: scale(1.1);
 }
 
 /* ============================= */

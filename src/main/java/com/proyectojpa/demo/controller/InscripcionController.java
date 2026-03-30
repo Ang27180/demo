@@ -102,12 +102,13 @@ public class InscripcionController {
             return "redirect:/login";
         }
 
-        // 2. Estudiante asociado a la persona
+        // 2. Estudiante asociado a la persona (solo si el rol es estudiante)
+        if (personaActual.getRolId() == null || personaActual.getRolId() != 2) {
+            return "redirect:/cursos?error=rol";
+        }
         Estudiante estudiante = estudianteRepository
                 .findByPersona(personaActual)
                 .orElseGet(() -> {
-                    // AJUSTE: Si no existe el registro de estudiante, lo creamos automáticamente
-                    // para evitar el error "La persona no está registrada como estudiante"
                     Estudiante nuevoEstudiante = new Estudiante();
                     nuevoEstudiante.setPersona(personaActual);
                     nuevoEstudiante.setProgreso("0%");

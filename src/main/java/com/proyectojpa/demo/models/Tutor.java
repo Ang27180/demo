@@ -27,10 +27,13 @@ public class Tutor {
     @Column(name = "cantidad")
     private Integer cantidad; // Nueva cantidad solicitada para el tutor
 
-    // Relación con Persona
+    /**
+     * FK hacia {@code persona.id_persona}. En MySQL la tabla {@code tutor} tiene también
+     * {@code persona_id_persona} (nullable); la columna obligatoria es {@code id_persona}.
+     */
     @ManyToOne
-@JoinColumn(name = "persona_id_persona", referencedColumnName = "id_persona")
-private Persona persona;
+    @JoinColumn(name = "id_persona", referencedColumnName = "id_persona", nullable = false)
+    private Persona persona;
 
 
     // Getters y Setters

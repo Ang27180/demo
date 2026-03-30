@@ -3,35 +3,103 @@
     layout:decorate="~{layout}">
 
 <head>
-    <title layout:fragment="titulo">Generar recibo</title>
+    <title layout:fragment="titulo">Recibo de pago</title>
 </head>
 
 <body>
     <main layout:fragment="contenido" class="container mt-5 pt-4">
-        <h2 class="mb-3">Generar recibo de pago</h2>
+        <h2 class="mb-3">Recibo de pago</h2>
         <p class="text-muted">Curso: <strong th:text="${inscripcion.curso.nombre}">—</strong></p>
+
+        <div th:if="${msgRecibo}" class="alert alert-success" th:text="${msgRecibo}"></div>
         <div th:if="${errorRecibo}" class="alert alert-danger" th:text="${errorRecibo}"></div>
 
-        <div th:if="${#lists.isEmpty(medios)}" class="alert alert-warning">
-            No hay medios de pago configurados. Un administrador debe registrarlos en el panel.
+        <!-- Recibos ya generados: ver, QR y PDF -->
+        <div th:if="${recibosExistentes != null and !recibosExistentes.isEmpty()}" class="mb-4">
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-1"></i>
+                <span th:if="${requiereAcudienteParaRecibo}">Ya hay un recibo para esta inscripción (generado por el acudiente o por administración). Puedes verlo aquí.</span>
+                <span th:if="${requiereAcudienteParaRecibo == null or !requiereAcudienteParaRecibo}">
+                    Ya tienes <span th:text="${recibosExistentes.size() == 1 ? 'un recibo' : 'recibos'}">un recibo</span>
+                    para esta inscripción. Puedes abrirlos, usar el código QR o descargar el PDF cuando lo necesites.
+                </span>
+            </div>
+
+            <div th:each="r : ${recibosExistentes}" class="card shadow-sm border-0 rounded-4 mb-4" style="max-width: 560px;">
+                <div class="card-body p-4">
+                    <h3 class="h6 text-muted mb-3">Recibo #<span th:text="${r.id}">1</span></h3>
+                    <p class="mb-1"><strong>Medio:</strong> <span th:text="${r.medioPago.nombre}">—</span>
+                        (<span th:text="${r.medioPago.tipo}">QR</span>)</p>
+                    <p class="mb-1"><strong>Fecha emisión:</strong> <span th:text="${r.fechaEmision}">—</span></p>
+                    <p class="mb-1"><strong>Estado:</strong>
+                        <span class="badge" th:classappend="${r.estado == 'PAGADO'} ? ' bg-success' : ' bg-warning text-dark'"
+                            th:text="${r.estado}">PENDIENTE</span></p>
+                    <p class="mb-3"><strong>Referencia:</strong> <code th:text="${r.codigoQrUnico}">REC-</code></p>
+
+                    <div th:if="${qrsRecibos != null}" class="text-center my-3">
+                        <img th:src="|data:image/png;base64,${qrsRecibos.get(r.id)}|" alt="Código QR del recibo"
+                            class="img-fluid border rounded p-2 bg-white" style="max-width: 220px;">
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2">
+                        <a th:href="@{/recibos/{id}/ver(id=${r.id})}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-expand-alt me-1"></i>Ver pantalla completa
+                        </a>
+                        <a th:href="@{/reportes/recibo/pdf/{id}(id=${r.id})}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-file-pdf me-1"></i>Descargar PDF
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <form th:if="${!#lists.isEmpty(medios)}" th:action="@{/mis-cursos/recibo/generar}" method="post" class="row g-3">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-            <input type="hidden" name="idInscripcion" th:value="${inscripcion.id}">
-            <div class="col-md-6">
-                <label class="form-label">Medio de pago</label>
-                <select name="idMedioPago" class="form-select" required>
-                    <option value="">Seleccione…</option>
-                    <option th:each="m : ${medios}" th:value="${m.id}"
-                        th:text="${m.nombre} + ' (' + ${m.tipo} + ')'">Nequi</option>
-                </select>
+        <!-- Estudiante con acudiente: no genera él; solicita aviso por correo -->
+        <div th:if="${(recibosExistentes == null or recibosExistentes.isEmpty()) and requiereAcudienteParaRecibo}"
+            class="card border-warning bg-light">
+            <div class="card-body">
+                <h3 class="h6 text-dark"><i class="fas fa-user-shield me-1 text-warning"></i> Pago a cargo del acudiente</h3>
+                <p class="mb-3 text-muted small">
+                    Tu cuenta tiene un <strong>acudiente</strong> registrado. Por política del sistema, quien debe
+                    <strong>generar el recibo de pago</strong> (QR / PDF) es el acudiente, iniciando sesión con su propio usuario.
+                </p>
+                <form th:action="@{/mis-cursos/recibo/solicitar-acudiente}" method="post" class="d-inline">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <input type="hidden" name="idInscripcion" th:value="${inscripcion.id}">
+                    <button type="submit" class="btn btn-warning fw-bold">
+                        <i class="fas fa-envelope me-1"></i> Enviar aviso por correo al acudiente
+                    </button>
+                </form>
+                <a th:href="@{/mis-cursos}" class="btn btn-outline-secondary ms-2">Volver a Mis cursos</a>
             </div>
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary">Generar recibo</button>
-                <a th:href="@{/mis-cursos}" class="btn btn-outline-secondary">Cancelar</a>
+        </div>
+
+        <!-- Generar solo si no hay acudiente obligatorio y aún no hay recibo -->
+        <div th:if="${(recibosExistentes == null or recibosExistentes.isEmpty()) and (requiereAcudienteParaRecibo == null or !requiereAcudienteParaRecibo)}">
+            <div th:if="${#lists.isEmpty(medios)}" class="alert alert-warning">
+                No hay medios de pago configurados. Un administrador debe registrarlos en el panel.
             </div>
-        </form>
+
+            <form th:if="${!#lists.isEmpty(medios)}" th:action="@{/mis-cursos/recibo/generar}" method="post" class="row g-3">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <input type="hidden" name="idInscripcion" th:value="${inscripcion.id}">
+                <div class="col-md-6">
+                    <label class="form-label">Medio de pago</label>
+                    <select name="idMedioPago" class="form-select" required>
+                        <option value="">Seleccione…</option>
+                        <option th:each="m : ${medios}" th:value="${m.id}"
+                            th:text="${m.nombre} + ' (' + ${m.tipo} + ')'">Nequi</option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Generar recibo</button>
+                    <a th:href="@{/mis-cursos}" class="btn btn-outline-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+
+        <div th:if="${recibosExistentes != null and !recibosExistentes.isEmpty()}" class="mt-3">
+            <a th:href="@{/mis-cursos}" class="btn btn-outline-secondary">Volver a Mis cursos</a>
+        </div>
     </main>
 </body>
 

@@ -8,7 +8,10 @@
     <div layout:fragment="contenido" class="container mt-5 pt-5 pb-5">
         <a th:href="@{/tutor/panel/cursos}" class="btn btn-outline-secondary btn-sm mb-3">← Volver</a>
         <h2 class="mb-2" th:text="${curso.nombre}">Curso</h2>
-        <p class="text-muted">Progreso del curso según lecciones completadas.</p>
+        <p class="text-muted mb-1">Progreso del curso según lecciones completadas.</p>
+        <p class="small text-primary" th:if="${vistaSupervisionAdmin && curso.tutor != null && curso.tutor.persona != null}">
+            Tutor a cargo: <strong th:text="${curso.tutor.persona.nombre}">—</strong>
+        </p>
         <div class="table-responsive">
             <table class="table table-bordered table-hover">
                 <thead class="table-dark">

@@ -46,11 +46,11 @@
                 </div>
                 <div class="col-md-12">
                     <label class="form-label">Tutor a cargo</label>
-                    <select name="idTutor" class="form-select">
+                    <select name="idPersonaTutor" class="form-select">
                         <option value="">— Sin asignar —</option>
-                        <option th:each="t : ${tutores}" th:value="${t.idTutor}"
-                            th:selected="${curso.tutor != null and curso.tutor.idTutor == t.idTutor}"
-                            th:text="${t.persona != null ? t.persona.nombre : ('Tutor #' + t.idTutor)}">Tutor</option>
+                        <option th:each="p : ${personasTutor}" th:value="${p.id}"
+                            th:selected="${curso.tutor != null && curso.tutor.persona != null && curso.tutor.persona.id == p.id}"
+                            th:text="${p.nombre}">Tutor</option>
                     </select>
                 </div>
             </div>

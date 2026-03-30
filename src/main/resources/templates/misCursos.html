@@ -20,6 +20,8 @@
                     Mis Cursos
                 </h1>
                 <p class="text-white-50 lead">Explora tus lecciones, materiales y progreso culinario.</p>
+                <div th:if="${msgPago}" class="alert alert-success mt-2" th:text="${msgPago}"></div>
+                <div th:if="${errorPago}" class="alert alert-danger mt-2" th:text="${errorPago}"></div>
             </div>
 
             <!-- Empty State -->
@@ -55,6 +57,25 @@
                             <h3 class="course-title" th:text="${inscripcion.curso.nombre}">Nombre del Curso</h3>
                             <p class="course-desc" th:text="${inscripcion.curso.detalle}">Descripción breve del curso...</p>
                             
+                            <div class="mt-3" th:if="${esTutor == null or !esTutor}"
+                                th:with="codigoEst=${inscripcion.estado != null ? inscripcion.estado.codigo : ''}, ord=${ordenActivaPorInscripcion != null ? ordenActivaPorInscripcion[inscripcion.id] : null}">
+                                <div th:if="${codigoEst == 'PENDIENTE_PAGO'}" class="d-grid gap-2">
+                                    <a th:if="${ord == null}"
+                                        th:href="@{/mis-cursos/pagos/orden/inscripcion/{id}(id=${inscripcion.id})}"
+                                        class="btn btn-warning btn-sm rounded-pill fw-bold">
+                                        <i class="fas fa-mobile-alt me-1"></i> Pagar con Nequi (orden)
+                                    </a>
+                                    <a th:if="${ord != null}"
+                                        th:href="@{/mis-cursos/pagos/orden/{id}(id=${ord.id})}"
+                                        class="btn btn-warning btn-sm rounded-pill fw-bold">
+                                        <i class="fas fa-receipt me-1"></i> Ver orden de pago Nequi
+                                    </a>
+                                    <a th:href="@{/mis-cursos/recibo/nuevo/{id}(id=${inscripcion.id})}"
+                                        class="btn btn-outline-light btn-sm rounded-pill">
+                                        <i class="fas fa-qrcode me-1"></i> Otro medio (recibo QR)
+                                    </a>
+                                </div>
+                            </div>
                             <div class="mt-4 pt-4 border-top border-white border-opacity-10">
                                 <a th:href="@{'/cursos/' + ${inscripcion.curso.id}}" class="btn-premium-action">
                                     <i th:class="${esTutor != null and esTutor ? 'fas fa-tools' : 'fas fa-graduation-cap'}"></i>

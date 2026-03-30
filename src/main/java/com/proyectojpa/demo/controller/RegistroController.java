@@ -1,12 +1,13 @@
 package com.proyectojpa.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.Validator;
+import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.proyectojpa.demo.domain.InscripcionEstados;
 import com.proyectojpa.demo.models.Persona;
 import com.proyectojpa.demo.repository.PersonaRepository;
+import com.proyectojpa.demo.validation.OnRegistro;
+
+import jakarta.validation.groups.Default;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +41,7 @@ public class RegistroController {
     private com.proyectojpa.demo.repository.AcudienteRepository acudienteRepository;
 
     @Autowired
-    private Validator validator;
+    private SmartValidator validator;
 
     @GetMapping("/registro")
     public String mostrarFormulario(Model model) {
@@ -59,7 +63,7 @@ public class RegistroController {
         if (persona.getEmail() != null) {
             persona.setEmail(persona.getEmail().trim().toLowerCase(Locale.ROOT));
         }
-        validator.validate(persona, result);
+        validator.validate(persona, result, Default.class, OnRegistro.class);
         if (result.hasErrors()) {
             return "registro";
         }
@@ -88,8 +92,8 @@ public class RegistroController {
                 model.addAttribute("errorTutor", "Los datos del acudiente son requeridos para TI.");
                 return "registro";
             }
-            if (!persona.getTutorDocumento().matches("\\d+")) {
-                model.addAttribute("errorTutor", "El documento del acudiente debe contener solo números.");
+            if (!persona.getTutorDocumento().matches("\\d{5,}")) {
+                model.addAttribute("errorTutor", "El documento del acudiente debe ser numérico (mínimo 5 dígitos).");
                 return "registro";
             }
             if (personaRepository.findByDocumento(persona.getTutorDocumento()) != null) {
@@ -106,7 +110,7 @@ public class RegistroController {
                 model.addAttribute("errorTutor", "El nombre del acudiente es obligatorio.");
                 return "registro";
             }
-            if (!persona.getTutorNombre().matches("[A-Za-zÁÉÍÓÚáéíóúñÑ\\s]+")) {
+            if (!persona.getTutorNombre().matches("[A-Za-zÁÉÍÓÚáéíóúñÑüÜ\\s]+")) {
                 model.addAttribute("errorTutor", "El nombre del acudiente solo puede contener letras.");
                 return "registro";
             }
@@ -115,9 +119,30 @@ public class RegistroController {
                 model.addAttribute("errorTutor", "El teléfono del acudiente debe ser de 7 a 10 dígitos numéricos.");
                 return "registro";
             }
-            // Validar email del acudiente
-            if (persona.getTutorEmail() != null) {
-                persona.setTutorEmail(persona.getTutorEmail().trim().toLowerCase(Locale.ROOT));
+            if (persona.getTutorAutorizacion() == null || persona.getTutorAutorizacion().isBlank()) {
+                model.addAttribute("errorTutor", "Seleccione parentesco o autorización del acudiente.");
+                return "registro";
+            }
+            if (persona.getTutorDireccion() == null || persona.getTutorDireccion().trim().isEmpty()) {
+                model.addAttribute("errorTutor", "La dirección del acudiente es obligatoria.");
+                return "registro";
+            }
+            if (persona.getTutorGenero() == null || persona.getTutorGenero().isBlank()) {
+                model.addAttribute("errorTutor", "Seleccione el género del acudiente.");
+                return "registro";
+            }
+            if (persona.getTutorTipoDocumento() == null || (!"CC".equals(persona.getTutorTipoDocumento()) && !"CE".equals(persona.getTutorTipoDocumento()))) {
+                model.addAttribute("errorTutor", "Tipo de documento del acudiente no válido (use CC o CE).");
+                return "registro";
+            }
+            if (persona.getTutorEmail() == null || persona.getTutorEmail().trim().isEmpty()) {
+                model.addAttribute("errorTutor", "El correo del acudiente es obligatorio.");
+                return "registro";
+            }
+            persona.setTutorEmail(persona.getTutorEmail().trim().toLowerCase(Locale.ROOT));
+            if (personaRepository.findByEmail(persona.getTutorEmail()) != null) {
+                model.addAttribute("errorTutor", "El correo del acudiente ya está registrado.");
+                return "registro";
             }
         }
 
@@ -150,13 +175,15 @@ public class RegistroController {
                 acudientePersona.setEmail(persona.getTutorEmail());
                 acudientePersona.setContrasena(passCifrada); // Misma contraseña
                 acudientePersona.setRolId(4); // Rol Acudiente
-                
+                acudientePersona.setEstudiantes(new ArrayList<>());
+
                 Persona acudienteGuardado = personaRepository.save(acudientePersona);
 
                 // Vincular en la tabla acudiente
                 com.proyectojpa.demo.models.Acudiente vinculacion = new com.proyectojpa.demo.models.Acudiente();
                 vinculacion.setPersona(acudienteGuardado);
                 vinculacion.setEstudianteDependiente(estudianteGuardado);
+                vinculacion.setParentesco(persona.getTutorAutorizacion());
                 acudienteRepository.save(vinculacion);
             }
         }

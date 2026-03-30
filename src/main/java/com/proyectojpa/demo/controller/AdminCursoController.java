@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.proyectojpa.demo.Service.ProgresoLeccionService;
+import com.proyectojpa.demo.Service.TutorService;
 import com.proyectojpa.demo.models.Curso;
 import com.proyectojpa.demo.models.Inscripcion;
 import com.proyectojpa.demo.models.Tutor;
 import com.proyectojpa.demo.repository.InscripcionRepository;
-import com.proyectojpa.demo.repository.TutorRepository;
 import com.proyectojpa.demo.repository.cursoRepository;
 
 /**
@@ -29,14 +29,14 @@ import com.proyectojpa.demo.repository.cursoRepository;
 public class AdminCursoController {
 
     private final cursoRepository cursoRepository;
-    private final TutorRepository tutorRepository;
+    private final TutorService tutorService;
     private final InscripcionRepository inscripcionRepository;
     private final ProgresoLeccionService progresoLeccionService;
 
-    public AdminCursoController(cursoRepository cursoRepository, TutorRepository tutorRepository,
+    public AdminCursoController(cursoRepository cursoRepository, TutorService tutorService,
             InscripcionRepository inscripcionRepository, ProgresoLeccionService progresoLeccionService) {
         this.cursoRepository = cursoRepository;
-        this.tutorRepository = tutorRepository;
+        this.tutorService = tutorService;
         this.inscripcionRepository = inscripcionRepository;
         this.progresoLeccionService = progresoLeccionService;
     }
@@ -44,7 +44,7 @@ public class AdminCursoController {
     @GetMapping("/form")
     public String nuevo(Model model) {
         model.addAttribute("curso", new Curso());
-        model.addAttribute("tutores", tutorRepository.findAllWithPersona());
+        model.addAttribute("personasTutor", tutorService.listarPersonasRolTutor());
         return "admin-curso-form";
     }
 
@@ -53,7 +53,7 @@ public class AdminCursoController {
         Curso curso = cursoRepository.findByIdWithTutor(id)
                 .orElseThrow(() -> new IllegalArgumentException("Curso no encontrado: " + id));
         model.addAttribute("curso", curso);
-        model.addAttribute("tutores", tutorRepository.findAllWithPersona());
+        model.addAttribute("personasTutor", tutorService.listarPersonasRolTutor());
         return "admin-curso-form";
     }
 
@@ -67,7 +67,7 @@ public class AdminCursoController {
             @RequestParam(required = false) String aprendizaje,
             @RequestParam(required = false) Integer categoria,
             @RequestParam(required = false) String imagen,
-            @RequestParam(required = false) Integer idTutor,
+            @RequestParam(name = "idPersonaTutor", required = false) Integer idPersonaTutor,
             RedirectAttributes redirectAttributes) {
         Curso c = id != null
                 ? cursoRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Curso no encontrado"))
@@ -80,8 +80,8 @@ public class AdminCursoController {
         c.setAprendizaje(aprendizaje);
         c.setCategoria(categoria);
         c.setImagen(imagen);
-        if (idTutor != null) {
-            Tutor t = tutorRepository.findById(idTutor).orElse(null);
+        if (idPersonaTutor != null) {
+            Tutor t = tutorService.obtenerOCrearTutorParaPersonaId(idPersonaTutor);
             c.setTutor(t);
         } else {
             c.setTutor(null);
@@ -97,13 +97,13 @@ public class AdminCursoController {
      */
     @PostMapping("/{id}/asignar-tutor")
     public String asignarTutor(@PathVariable("id") Integer id,
-            @RequestParam(required = false) Integer idTutor,
+            @RequestParam(name = "idPersonaTutor", required = false) Integer idPersonaTutor,
             RedirectAttributes redirectAttributes) {
         Curso c = cursoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Curso no encontrado: " + id));
 
-        if (idTutor != null) {
-            Tutor t = tutorRepository.findById(idTutor).orElse(null);
+        if (idPersonaTutor != null) {
+            Tutor t = tutorService.obtenerOCrearTutorParaPersonaId(idPersonaTutor);
             c.setTutor(t);
         } else {
             c.setTutor(null);

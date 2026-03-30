@@ -9,6 +9,11 @@
 <body>
     <main layout:fragment="contenido" class="container mt-5 pt-4">
         <h2 class="mb-4">Recibos</h2>
+        <p class="mb-3">
+            <a th:href="@{/admin/recibos/generar}" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus me-1"></i>Generar recibo
+            </a>
+        </p>
         <div th:if="${msgAdmin}" class="alert alert-success" th:text="${msgAdmin}"></div>
         <div th:if="${errorAdmin}" class="alert alert-danger" th:text="${errorAdmin}"></div>
 

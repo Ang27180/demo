@@ -18,6 +18,8 @@ public class ReporteJasperService {
             Map<String, Object> parametros
     ) {
         try {
+            System.setProperty("net.sf.jasperreports.xml.validation", "false");
+
             InputStream jrxmlStream = getClass()
                     .getResourceAsStream("/Reportes/Reporte_Estadistico.jrxml");
 
@@ -80,6 +82,22 @@ public class ReporteJasperService {
             System.err.println("[ERROR JASPER] Fallo total: " + e.getMessage());
             e.printStackTrace();
             throw new RuntimeException("Error al generar el certificado: " + e.getMessage(), e);
+        }
+    }
+
+    public byte[] generarReciboPdf(Map<String, Object> parametros) {
+        try {
+            System.setProperty("net.sf.jasperreports.xml.validation", "false");
+            InputStream jrxmlStream = getClass().getResourceAsStream("/Reportes/Recibo.jrxml");
+            if (jrxmlStream == null) {
+                throw new RuntimeException("No se encontró la plantilla: /Reportes/Recibo.jrxml");
+            }
+            JasperReport jasperReport = JasperCompileManager.compileReport(jrxmlStream);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, new JREmptyDataSource());
+            return JasperExportManager.exportReportToPdf(jasperPrint);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error generando PDF del recibo: " + e.getMessage(), e);
         }
     }
 }

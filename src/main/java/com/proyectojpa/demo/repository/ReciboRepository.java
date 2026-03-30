@@ -12,6 +12,8 @@ import com.proyectojpa.demo.models.Recibo;
 
 public interface ReciboRepository extends JpaRepository<Recibo, Integer> {
 
+    void deleteByInscripcion_Estudiante_IdEstudiante(Integer idEstudiante);
+
     boolean existsByInscripcion(Inscripcion inscripcion);
 
     Optional<Recibo> findByInscripcion(Inscripcion inscripcion);
@@ -34,4 +36,13 @@ public interface ReciboRepository extends JpaRepository<Recibo, Integer> {
             + "JOIN FETCH e.persona "
             + "JOIN FETCH r.medioPago")
     List<Recibo> findAllWithDetalle();
+
+    @Query("SELECT r FROM Recibo r "
+            + "JOIN FETCH r.inscripcion i "
+            + "JOIN FETCH i.curso "
+            + "JOIN FETCH i.estudiante e "
+            + "JOIN FETCH e.persona "
+            + "JOIN FETCH r.medioPago "
+            + "WHERE i.id = :idInscripcion ORDER BY r.id DESC")
+    List<Recibo> findAllByInscripcionIdWithDetalle(@Param("idInscripcion") Integer idInscripcion);
 }

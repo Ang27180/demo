@@ -12,6 +12,8 @@ import com.proyectojpa.demo.models.Persona;
 
 public interface EstudianteRepository extends JpaRepository<Estudiante, Integer> {
 
+    List<Estudiante> findAllByPersonaOrderByIdEstudianteAsc(Persona persona);
+
     Optional<Estudiante> findFirstByPersonaOrderByIdEstudianteAsc(Persona persona);
 
     default Optional<Estudiante> findByPersona(Persona persona) {

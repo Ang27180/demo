@@ -1,7 +1,11 @@
 package com.proyectojpa.demo.Service;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
+
+import javax.imageio.ImageIO;
 
 import org.springframework.stereotype.Service;
 
@@ -20,6 +24,15 @@ public class QrCodeService {
      */
     public String generarPngBase64(String texto) {
         return Base64.getEncoder().encodeToString(generarPngBytes(texto));
+    }
+
+    /** Imagen para JasperReports (parámetro tipo {@code java.awt.Image}). */
+    public BufferedImage generarImagenQr(String texto) {
+        try {
+            return ImageIO.read(new ByteArrayInputStream(generarPngBytes(texto)));
+        } catch (Exception e) {
+            throw new IllegalStateException("No se pudo generar la imagen del código QR", e);
+        }
     }
 
     /** Bytes PNG para Jasper u otros usos binarios. */

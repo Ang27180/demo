@@ -3,8 +3,8 @@ package com.proyectojpa.demo.models;
 import jakarta.persistence.*;
 
 /**
- * Entidad Acudiente: Versión DEFINITIVA con solo 3 columnas.
- * id_acudiente, Id_persona e Id_Estudiante_dependiente.
+ * Vincula la {@link Persona} del acudiente con el {@link Estudiante} dependiente.
+ * {@link #parentesco} almacena MADRE, PADRE, OTRO, etc.
  */
 @Entity
 @Table(name = "acudiente")
@@ -22,6 +22,9 @@ public class Acudiente {
     @ManyToOne
     @JoinColumn(name = "Id_Estudiante_dependiente", referencedColumnName = "id_estudiante")
     private Estudiante estudianteDependiente;
+
+    @Column(name = "parentesco", length = 45)
+    private String parentesco;
 
     // Getters y Setters
     public Integer getIdAcudiente() {
@@ -46,5 +49,13 @@ public class Acudiente {
 
     public void setEstudianteDependiente(Estudiante estudianteDependiente) {
         this.estudianteDependiente = estudianteDependiente;
+    }
+
+    public String getParentesco() {
+        return parentesco;
+    }
+
+    public void setParentesco(String parentesco) {
+        this.parentesco = parentesco;
     }
 }

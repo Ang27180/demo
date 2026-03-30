@@ -10,6 +10,8 @@ import com.proyectojpa.demo.models.ProgresoLeccion;
 
 public interface ProgresoLeccionRepository extends JpaRepository<ProgresoLeccion, Integer> {
 
+    void deleteByEstudiante_IdEstudiante(Integer idEstudiante);
+
     boolean existsByEstudiante_IdEstudianteAndLeccion_Id(Integer idEstudiante, Integer idLeccion);
 
     long countByEstudiante_IdEstudianteAndLeccion_Modulo_Curso_Id(Integer idEstudiante, Integer idCurso);

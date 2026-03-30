@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout}">
+<head>
+    <title layout:fragment="titulo">Órdenes de pago Nequi</title>
+</head>
+<body>
+    <main layout:fragment="contenido" class="container mt-5 pt-5 pb-5">
+        <h2 class="mb-4">Órdenes de pago (Nequi)</h2>
+        <form method="get" class="row g-2 align-items-end mb-3">
+            <div class="col-auto">
+                <label class="form-label small">Estado</label>
+                <select name="estado" class="form-select form-select-sm">
+                    <option value="">Todos</option>
+                    <option th:each="e : ${estadosFiltro}" th:value="${e}" th:selected="${filtroEstado == e}" th:text="${e}">—</option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary btn-sm">Filtrar</button>
+                <a th:href="@{/admin/pagos/ordenes}" class="btn btn-outline-secondary btn-sm">Limpiar</a>
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-sm table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Referencia</th>
+                        <th>Estudiante</th>
+                        <th>Curso</th>
+                        <th>Monto</th>
+                        <th>Estado</th>
+                        <th>Fecha</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="o : ${ordenes}">
+                        <td th:text="${o.id}">1</td>
+                        <td><code th:text="${o.referencia}">SMC</code></td>
+                        <td th:text="${o.inscripcion.estudiante.persona.nombre}">—</td>
+                        <td th:text="${o.inscripcion.curso.nombre}">—</td>
+                        <td th:text="${#numbers.formatDecimal(o.monto, 0, 'COMMA', 2, 'POINT')}">0</td>
+                        <td th:text="${o.estado}">—</td>
+                        <td th:text="${#temporals.format(o.fechaCreacion, 'dd/MM/yyyy HH:mm')}">—</td>
+                        <td><a th:href="@{/admin/pagos/ordenes/{id}(id=${o.id})}" class="btn btn-sm btn-outline-primary">Ver</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p th:if="${#lists.isEmpty(ordenes)}" class="text-muted">No hay órdenes.</p>
+    </main>
+</body>
+</html>
