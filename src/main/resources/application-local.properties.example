@@ -1,0 +1,15 @@
+# =============================================================================
+# Copia este archivo a: src/main/resources/application-local.properties
+# Ese archivo está en .gitignore y NO debe subirse a Git.
+#
+# Por defecto la app usa sabormasterclass@gmail.com (application.properties).
+# Añade aquí la contraseña de aplicación Gmail (16 caracteres, sin espacios),
+# o define MAIL_PASSWORD en el entorno (Railway, etc.).
+# =============================================================================
+
+# Obligatorio para enviar correo en local (Gmail: contraseña de aplicación, 16 caracteres sin espacios).
+# Si sigue fallando con 535, genera una nueva en Google Cuenta → Seguridad → Contraseñas de aplicaciones.
+spring.mail.password=TU_CONTRASENA_DE_APLICACION_SIN_ESPACIOS
+
+# Ver diálogo SMTP en consola (errores 535, STARTTLS, etc.)
+# spring.mail.properties.mail.debug=true

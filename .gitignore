@@ -39,3 +39,5 @@ build/
 *.log
 *.sql
 .env
+# Credenciales / overrides locales (no subir secretos)
+src/main/resources/application-local.properties
