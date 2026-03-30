@@ -41,3 +41,23 @@ build/
 .env
 # Credenciales / overrides locales (no subir secretos)
 src/main/resources/application-local.properties
+
+# Archivos generados por usuarios
+uploads/
+*.pdf
+*.jpg
+*.jpeg
+*.png
+
+# Java
+target/
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
