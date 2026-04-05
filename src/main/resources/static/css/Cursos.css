@@ -1,206 +1,133 @@
 /* ================================================================ */
-/* CATÁLOGO DE CURSOS - LUXURY DARK (LOGIN STYLE)                   */
+/* Catálogo /cursos — complemento a misCursos.css (misma sección)   */
 /* ================================================================ */
 
-:root {
-  --gold-accent: #f8c325;
-  --dark-luxury-bg: #0a0a0b;
-  --dark-card-luxury: rgba(31, 31, 34, 0.85);
-  --border-glass: rgba(255, 255, 255, 0.08);
+.sidebar-sticky {
+  position: sticky;
+  top: 6rem;
 }
 
-body {
-  background-color: #000 !important;
+.text-gold {
+  color: var(--gold-accent, #f8c325);
 }
 
-.catalog-section {
-  position: relative;
-  min-height: 100vh;
-  background-image: url('/imagenes/pasta-794464_1280.jpg');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-}
-
-/* Luxury Overlay */
-.catalog-section::before {
-  content: '';
+/* Valoración a la izquierda (mis-cursos usa badge a la derecha) */
+.course-rating-badge {
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: radial-gradient(circle at center, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.92) 100%);
-  z-index: 1;
-}
-
-.catalog-section > * {
-  position: relative;
-  z-index: 2;
-}
-
-/* Header Cinematic */
-.catalog-header {
-  padding: 10rem 0 6rem;
-  text-align: center;
-  margin-bottom: 4rem;
-}
-
-.catalog-header h1 {
-  font-family: 'Playfair Display', serif;
-  font-size: 4.5rem;
-  font-weight: 900;
-  color: #fff;
-  letter-spacing: -2px;
-  margin-bottom: 1.5rem;
-  text-shadow: 0 10px 30px rgba(0,0,0,0.8);
-  background: linear-gradient(to right, #fff, var(--gold-accent));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.accent-line {
-  width: 120px;
-  height: 4px;
-  background: var(--gold-accent);
-  margin: 2rem auto;
-  border-radius: 50px;
-  box-shadow: 0 0 20px rgba(248, 195, 37, 0.5);
-}
-
-/* Course Card (Style Login) */
-.catalog-card {
-  background: var(--dark-card-luxury);
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
-  border: 1px solid var(--border-glass);
-  border-radius: 30px;
-  overflow: hidden;
-  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-.catalog-card:hover {
-  transform: translateY(-15px);
-  border-color: var(--gold-accent);
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
-}
-
-.img-container {
-  height: 220px;
-  overflow: hidden;
-  position: relative;
-}
-
-.img-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.6s ease;
-}
-
-.catalog-card:hover .img-container img {
-  transform: scale(1.15);
-}
-
-.rating-badge {
-  position: absolute;
-  top: 20px; left: 20px;
+  top: 20px;
+  left: 20px;
+  right: auto;
   background: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(10px);
-  color: var(--gold-accent);
-  padding: 6px 12px;
+  color: var(--gold-accent, #f8c325);
+  padding: 6px 14px;
   border-radius: 50px;
   font-size: 0.75rem;
   font-weight: 800;
   z-index: 10;
-  border: 1px solid rgba(248, 195, 37, 0.2);
+  border: 1px solid rgba(248, 195, 37, 0.25);
 }
 
-.catalog-body {
-  padding: 2.5rem 2rem;
+/* Precio + CTA bajo la descripción (catálogo) */
+.course-catalog-cta-block {
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
 }
 
-.catalog-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 1rem;
-}
-
-.catalog-text {
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.95rem;
-  line-height: 1.6;
-}
-
-.catalog-footer {
-  padding: 0 2rem 2.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.catalog-price {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.6rem;
+.course-catalog-price {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.35rem;
   font-weight: 800;
   color: #fff;
 }
 
-.btn-catalog-action {
-  background: var(--gold-accent);
-  color: #000;
-  width: 55px;
-  height: 55px;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  transition: all 0.3s;
-  text-decoration: none;
+.course-catalog-price .label {
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.78);
+  display: block;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-weight: 600;
 }
 
-.btn-catalog-action:hover {
-  background: #fff;
-  transform: rotate(90deg);
+.course-catalog-price-value {
+  color: var(--gold-accent, #f8c325);
 }
 
-/* Testimonials (Style Login) */
+/* Catálogo: más contraste sin romper “Mis cursos” (misma clase .course-desc) */
+.cursos-catalog-page .course-desc--catalog {
+  color: rgba(255, 255, 255, 0.9) !important;
+  margin-bottom: 0;
+}
+
+.cursos-catalog-page .section-header .lead {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+.cursos-catalog-page .testimonial-text {
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+
+@keyframes catalogCtaPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(248, 195, 37, 0.5);
+  }
+  55% {
+    box-shadow: 0 0 0 10px rgba(248, 195, 37, 0);
+  }
+}
+
+.cursos-catalog-page .course-catalog-cta-btn {
+  animation: catalogCtaPulse 2.2s ease-in-out infinite;
+}
+
+.cursos-catalog-page .course-catalog-cta-btn:hover {
+  animation: none;
+}
+
+/* Testimonios lateral */
 .testimonial-premium {
   background: rgba(31, 31, 34, 0.6);
   backdrop-filter: blur(10px);
-  border: 1px solid var(--border-glass);
+  border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.08));
   border-radius: 25px;
-  padding: 2.5rem;
-  margin-bottom: 2rem;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .quote-icon {
-  font-size: 2.5rem;
-  color: var(--gold-accent);
-  opacity: 0.3;
+  font-size: 2rem;
+  color: var(--gold-accent, #f8c325);
+  opacity: 0.35;
   float: right;
-  margin-top: -10px;
+  margin-top: -8px;
 }
 
 .testimonial-name {
   color: #fff;
   font-weight: 700;
-  font-size: 1.2rem;
-  margin-bottom: 5px;
+  font-size: 1.05rem;
+  margin-bottom: 4px;
 }
 
 .testimonial-text {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.72);
   font-style: italic;
-  font-size: 0.95rem;
-  line-height: 1.7;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  margin-bottom: 0;
 }
 
 .bg-yellow-luxury {
-  background: linear-gradient(135deg, var(--gold-accent) 0%, #d8a61c 100%);
-  padding: 2.5rem;
-  border-radius: 30px;
+  background: linear-gradient(135deg, var(--gold-accent, #f8c325) 0%, #d8a61c 100%);
+  padding: 1.75rem;
+  border-radius: 24px;
   color: #000;
-  box-shadow: 0 20px 40px rgba(248, 195, 37, 0.2);
+  box-shadow: 0 16px 36px rgba(248, 195, 37, 0.2);
+}
+
+.bg-yellow-luxury h5 {
+  font-weight: 800;
 }

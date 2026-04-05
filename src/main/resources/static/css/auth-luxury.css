@@ -1,0 +1,242 @@
+/**
+ * Login / registro: fondo pasta + overlay + tarjeta oscura (compartido).
+ * Requiere Home.css en layout para --yellow-accent y utilidades.
+ */
+:root {
+  --dark-card: #1f1f22;
+}
+
+body:has(.login-luxury-wrapper) {
+  background-color: #111 !important;
+}
+
+.login-luxury-wrapper {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url('/imagenes/pasta-794464_1280.jpg');
+  background-size: cover;
+  background-position: center;
+  padding: 2rem 1rem 3rem;
+  margin-top: -80px;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+}
+
+.login-luxury-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.95));
+  z-index: 0;
+}
+
+.login-card-container {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 460px;
+}
+
+.login-card-container--registro {
+  max-width: 560px;
+}
+
+.card-elegant-dark {
+  background-color: var(--dark-card) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 1.5rem !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5) !important;
+  color: #fff !important;
+  overflow: hidden;
+  backdrop-filter: blur(5px);
+}
+
+.card-elegant-dark .card-body--scroll {
+  max-height: min(78vh, 720px);
+  overflow-y: auto;
+}
+
+.login-logo-circle {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border: 3px solid var(--yellow-accent, #f8c325);
+  padding: 2px;
+  background-color: #fff;
+  box-shadow: 0 0 20px rgba(248, 195, 37, 0.3);
+}
+
+.font-serif-italic {
+  font-family: 'Times New Roman', serif;
+  font-style: italic;
+  color: var(--yellow-accent, #f8c325);
+}
+
+.input-group-text-dark {
+  background-color: #121212 !important;
+  border: 1px solid #333 !important;
+  color: var(--yellow-accent, #f8c325) !important;
+  border-right: none !important;
+  border-radius: 0.75rem 0 0 0.75rem !important;
+}
+
+.input-dark-field {
+  background-color: #121212 !important;
+  border: 1px solid #333 !important;
+  color: #fff !important;
+  border-left: none !important;
+  border-radius: 0 0.75rem 0.75rem 0 !important;
+  padding: 12px 15px !important;
+}
+
+.input-dark-field:focus {
+  border-color: var(--yellow-accent, #f8c325) !important;
+  box-shadow: none !important;
+}
+
+.input-group:focus-within .input-group-text-dark {
+  border-color: var(--yellow-accent, #f8c325) !important;
+}
+
+.form-label-gold {
+  color: var(--yellow-accent, #f8c325);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 1.5px;
+  margin-bottom: 0.5rem;
+}
+
+/* Campos sueltos (registro: select, inputs sin input-group) */
+.card-elegant-dark .form-control,
+.card-elegant-dark .form-select {
+  background-color: #121212 !important;
+  border: 1px solid #333 !important;
+  color: #fff !important;
+  border-radius: 0.75rem !important;
+  padding: 12px 15px !important;
+}
+
+.card-elegant-dark .form-control:focus,
+.card-elegant-dark .form-select:focus {
+  border-color: var(--yellow-accent, #f8c325) !important;
+  box-shadow: 0 0 0 0.15rem rgba(248, 195, 37, 0.2) !important;
+  color: #fff !important;
+  background-color: #121212 !important;
+}
+
+/* Placeholders legibles sobre fondo oscuro */
+.card-elegant-dark input::placeholder,
+.card-elegant-dark textarea::placeholder {
+  color: rgba(255, 255, 255, 0.72) !important;
+  opacity: 1;
+}
+
+.card-elegant-dark input::-webkit-input-placeholder,
+.card-elegant-dark textarea::-webkit-input-placeholder {
+  color: rgba(255, 255, 255, 0.72) !important;
+}
+
+.card-elegant-dark input::-moz-placeholder,
+.card-elegant-dark textarea::-moz-placeholder {
+  color: rgba(255, 255, 255, 0.72) !important;
+  opacity: 1;
+}
+
+/* Select con opción vacía: mismo tono que placeholder hasta elegir valor */
+.card-elegant-dark .form-select:required:invalid {
+  color: rgba(255, 255, 255, 0.72) !important;
+}
+
+.card-elegant-dark .form-select:valid {
+  color: #fff !important;
+}
+
+.card-elegant-dark .form-select option {
+  background-color: #1a1a1a;
+  color: #fff;
+}
+
+.card-elegant-dark .form-select option[value=""] {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.card-elegant-dark .form-check-input {
+  background-color: #121212;
+  border-color: #555;
+}
+
+.card-elegant-dark .form-check-input:checked {
+  background-color: var(--yellow-accent, #f8c325);
+  border-color: var(--yellow-accent, #f8c325);
+}
+
+.card-elegant-dark .form-check-label {
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.9rem;
+}
+
+.card-elegant-dark .text-muted,
+.card-elegant-dark .form-text {
+  color: rgba(255, 255, 255, 0.55) !important;
+}
+
+.card-elegant-dark .registro-acudiente-box {
+  background: rgba(0, 0, 0, 0.35) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+.card-elegant-dark .registro-acudiente-box h6 {
+  color: var(--yellow-accent, #f8c325);
+}
+
+.card-elegant-dark .fa-eye,
+.card-elegant-dark .fa-eye-slash {
+  color: var(--yellow-accent, #f8c325);
+  cursor: pointer;
+}
+
+.btn-gold-pill {
+  background-color: var(--yellow-accent, #f8c325) !important;
+  color: #000 !important;
+  font-weight: 700 !important;
+  border-radius: 50px !important;
+  padding: 14px !important;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: none !important;
+}
+
+.btn-gold-pill:hover {
+  background-color: #e0ac10 !important;
+  color: #000 !important;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(248, 195, 37, 0.3) !important;
+}
+
+.helper-link-pill {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+  border-radius: 50px !important;
+  padding: 8px 16px !important;
+  font-size: 0.8rem !important;
+  transition: all 0.2s;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.helper-link-pill:hover {
+  background-color: rgba(248, 195, 37, 0.1) !important;
+  border-color: var(--yellow-accent, #f8c325) !important;
+  color: var(--yellow-accent, #f8c325) !important;
+}
+
+.card-elegant-dark .error {
+  color: #ff8a8a !important;
+}

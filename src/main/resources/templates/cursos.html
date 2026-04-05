@@ -5,96 +5,87 @@
 <head>
     <meta charset="UTF-8" />
     <title layout:fragment="titulo">Explorar Cursos - Sabor MasterClass</title>
-    <!-- CSS Específico de Catálogo -->
+    <link rel="stylesheet" th:href="@{/css/misCursos.css}">
     <link rel="stylesheet" th:href="@{/css/cursos.css}">
 </head>
-<body>
-    <div layout:fragment="contenido" class="catalog-section">
 
-        <!-- Encabezado del Catálogo (Cinematic MasterClass) -->
-        <div class="catalog-header">
-            <div class="content container">
-                <h1 class="animate__animated animate__fadeInDown">Nuestros Cursos</h1>
-                <div class="accent-line animate__animated animate__expand"></div>
-                <p class="lead text-white-50 mx-auto animate__animated animate__fadeIn" style="max-width: 700px; font-size: 1.2rem;">
+<body>
+    <main layout:fragment="contenido" class="mis-cursos-section cursos-catalog-page pt-5 pb-5">
+        <div class="container mt-5">
+
+            <div class="section-header">
+                <h1 class="display-4 fw-bold mb-2">Nuestros Cursos</h1>
+                <p class="text-white-50 lead mx-auto" style="max-width: 640px;">
                     Sumérgete en el arte de la alta gastronomía con experiencias diseñadas por los chefs más prestigiosos del mundo.
                 </p>
             </div>
-        </div>
 
-        <div class="container pb-5">
-
-            <!-- Alertas Premium -->
-            <div th:if="${param.yaInscrito}" class="alert alert-warning alert-dismissible border-warning border-opacity-25 bg-warning bg-opacity-10 text-warning fade show mb-5 rounded-4 animate__animated animate__shakeX" role="alert">
-                <i class="fas fa-exclamation-circle me-2 text-warning"></i><strong>Aviso:</strong> Este curso ya forma parte de tu santuario culinario.
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+            <div th:if="${param.yaInscrito}" class="alert alert-warning border-0 shadow-sm mb-4 rounded-4" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i><strong>Aviso:</strong> Este curso ya forma parte de tu santuario culinario.
             </div>
 
-            <div th:if="${exito}" class="alert alert-success alert-dismissible border-success border-opacity-25 bg-success bg-opacity-10 text-success fade show mb-5 rounded-4 animate__animated animate__fadeIn">
-                <i class="fas fa-check-circle me-2 text-success"></i><span th:text="${exito}">Éxito</span>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+            <div th:if="${exito}" class="alert alert-success border-0 shadow-sm mb-4 rounded-4" role="alert">
+                <i class="fas fa-check-circle me-2"></i><span th:text="${exito}">Éxito</span>
             </div>
 
             <div class="row g-5">
-
-                <!-- Grid de Cursos MasterClass -->
                 <div class="col-lg-9">
-                    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-5">
                         <div class="col" th:each="curso, iter : ${cursos}">
-                            <div class="catalog-card h-100 flex-column d-flex animate__animated animate__fadeInUp"
-                                 th:style="'animation-delay: ' + ${iter.index * 0.1} + 's'">
-                                <div class="img-container">
-                                    <span class="rating-badge"><i class="fas fa-star me-1"></i> 5.0</span>
-                                    <img th:src="${curso.imagen != null and #strings.contains(curso.imagen, 'http') ? curso.imagen : '/imagenes/' + (curso.imagen != null ? curso.imagen : 'default.jpg')}" 
-                                         class="card-img-top" th:alt="${curso.nombre}">
+                            <div class="course-card-premium h-100 shadow-lg d-flex flex-column">
+                                <div class="course-img-wrapper">
+                                    <span class="course-rating-badge"><i class="fas fa-star me-1"></i> 5.0</span>
+                                    <img th:src="${curso.imagen != null and #strings.contains(curso.imagen, 'http') ? curso.imagen : '/imagenes/' + (curso.imagen != null ? curso.imagen : 'default.jpg')}"
+                                        class="course-img" th:alt="${curso.nombre}">
                                 </div>
-                                <div class="catalog-body flex-grow-1">
-                                    <h5 class="catalog-title" th:text="${curso.nombre}">Nombre curso</h5>
-                                    <p class="catalog-text" th:text="${curso.detalle}">Descripción del curso</p>
-                                </div>
-                                <div class="catalog-footer">
-                                    <div class="catalog-price">
-                                        <span class="text-white-50 small d-block" style="font-size: 0.7rem; letter-spacing: 1px;">PRECIO PREMIUM</span>
-                                        <span th:text="${curso.costo}">$0.00</span>
+                                <div class="course-body d-flex flex-column flex-grow-1">
+                                    <h3 class="course-title" th:text="${curso.nombre}">Nombre curso</h3>
+                                    <p class="course-desc course-desc--catalog flex-grow-1" th:text="${curso.detalle}">Descripción del curso</p>
+                                    <div class="course-catalog-cta-block mt-auto">
+                                        <div class="course-catalog-price mb-3">
+                                            <span class="label">PRECIO PREMIUM</span>
+                                            <span class="course-catalog-price-value" th:text="${curso.costo}">0</span>
+                                        </div>
+                                        <a th:href="@{/inscripciones/nueva(idCurso=${curso.id})}"
+                                            class="btn-premium-action course-catalog-cta-btn w-100"
+                                            title="Reservar cupo">
+                                            <i class="fas fa-utensils"></i>
+                                            <span>Reservar cupo</span>
+                                        </a>
                                     </div>
-                                    <a th:href="@{/inscripciones/nueva(idCurso=${curso.id})}" class="btn-catalog-action shadow-sm" title="Reservar Cupo">
-                                        <i class="fas fa-chevron-right"></i>
-                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Sidebar MasterClass Experience -->
                 <div class="col-lg-3">
                     <div class="ps-lg-4 sidebar-sticky">
-                        <h4 class="fw-bold text-white mb-4" style="font-family: 'Playfair Display', serif;">Experiencias</h4>
-                        
-                        <div class="testimonial-premium shadow-lg animate__animated animate__fadeInRight" style="animation-delay: 0.2s;">
+                        <h4 class="fw-bold text-white mb-4" style="font-family: 'Playfair Display', Georgia, serif;">Experiencias</h4>
+
+                        <div class="testimonial-premium shadow-lg">
                             <i class="fas fa-quote-right quote-icon"></i>
                             <div class="testimonial-name">María López</div>
                             <div class="text-gold small mb-2">★★★★★</div>
                             <p class="testimonial-text">"El curso de repostería fue una revelación sensorial. Técnicas maestras al alcance de todos."</p>
                         </div>
 
-                        <div class="testimonial-premium shadow-lg animate__animated animate__fadeInRight" style="animation-delay: 0.4s;">
+                        <div class="testimonial-premium shadow-lg">
                             <i class="fas fa-quote-right quote-icon"></i>
                             <div class="testimonial-name">Carlos Jiménez</div>
                             <div class="text-gold small mb-2">★★★★★</div>
                             <p class="testimonial-text">"La precisión gastronómica de las clases japonesas superó todas mis expectativas."</p>
                         </div>
 
-                        <div class="bg-yellow-luxury p-4 mt-5 animate__animated animate__fadeInUp">
+                        <div class="bg-yellow-luxury mt-4">
                             <h5 class="fw-bold mb-2">Asesoría de Lujo</h5>
                             <p class="small mb-0 opacity-75">Técnicas personalizadas y soporte VIP para tu formación culinaria.</p>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
-    </div>
+    </main>
 </body>
 
 </html>

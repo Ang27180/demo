@@ -1,0 +1,9 @@
+target/
+.git
+.gitignore
+.idea
+*.iml
+.cursor
+**/terminals
+README.md
+*.md

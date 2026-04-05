@@ -1,12 +1,4 @@
 /**
- * Registro: comparte layout con login (auth-pages + login estilos de card/botones).
- * La columna del formulario hace scroll si el contenido es alto (ver auth-pages.css).
+ * Registro: mismo lenguaje visual que login (auth-luxury.css).
  */
-@import url("auth-pages.css");
-@import url("login.css");
-
-.registro-container.auth-page-shell {
-  background-color: #f8f9fa;
-}
-
-
+@import url("auth-luxury.css");
