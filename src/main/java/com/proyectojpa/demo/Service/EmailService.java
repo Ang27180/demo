@@ -3,7 +3,7 @@ package com.proyectojpa.demo.Service;
 import jakarta.mail.MessagingException;
 
 /**
- * Envío de correo vía SMTP (p. ej. Gmail con {@code JavaMailSender}).
+ * Envío de correo: SMTP ({@code app.mail.transport=smtp}) o API Resend ({@code app.mail.transport=resend}).
  * <p>
  * Ejemplo para recuperación de contraseña (texto plano con enlace):
  * </p>

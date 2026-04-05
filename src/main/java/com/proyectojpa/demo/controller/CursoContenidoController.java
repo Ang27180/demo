@@ -2,6 +2,8 @@ package com.proyectojpa.demo.controller;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import com.proyectojpa.demo.Service.FileStorageService;
 import com.proyectojpa.demo.models.Curso;
@@ -35,6 +38,8 @@ import com.proyectojpa.demo.util.YoutubeUrlUtil;
 @Controller
 @RequestMapping("/admin/cursos")
 public class CursoContenidoController {
+
+    private static final Logger log = LoggerFactory.getLogger(CursoContenidoController.class);
 
     @Autowired
     private cursoRepository cursoRepo;
@@ -74,15 +79,31 @@ public class CursoContenidoController {
     }
 
     @PostMapping("/{id}/modulos")
-    public String agregarModulo(@PathVariable("id") Integer id, @ModelAttribute Modulo modulo, Authentication auth) {
-        assertPuedeGestionarContenido(id, auth);
-        Curso curso = cursoRepo.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Curso no encontrado: " + id));
+    public String agregarModulo(@PathVariable("id") Integer id, @ModelAttribute Modulo modulo, Authentication auth,
+            RedirectAttributes redirectAttributes) {
+        try {
+            assertPuedeGestionarContenido(id, auth);
+            Curso curso = cursoRepo.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Curso no encontrado: " + id));
 
-        modulo.setCurso(curso);
-        moduloRepo.save(modulo);
-
-        return "redirect:/admin/cursos/" + id + "/contenido";
+            /* Siempre INSERT: ignorar id (u otros campos) enviados por el cliente para no sobrescribir un módulo existente */
+            modulo.setId(null);
+            modulo.setCurso(curso);
+            moduloRepo.save(modulo);
+            return "redirect:/admin/cursos/" + id + "/contenido";
+        } catch (ResponseStatusException e) {
+            throw e;
+        } catch (DataIntegrityViolationException e) {
+            log.warn("Integridad BD al crear módulo (curso {}): {}", id, e.getMostSpecificCause().getMessage());
+            redirectAttributes.addFlashAttribute("errorModulo",
+                    "No se pudo crear el módulo (restricción en base de datos). ¿Ya existe uno con el mismo nombre o datos inválidos?");
+            return "redirect:/admin/cursos/" + id + "/contenido";
+        } catch (Exception e) {
+            log.error("Error al crear módulo para curso {}", id, e);
+            redirectAttributes.addFlashAttribute("errorModulo",
+                    "No se pudo crear el módulo: " + (e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName()));
+            return "redirect:/admin/cursos/" + id + "/contenido";
+        }
     }
 
     @PostMapping(value = "/modulos/{moduloId}/lecciones", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -153,13 +174,30 @@ public class CursoContenidoController {
     }
 
     @GetMapping("/modulos/eliminar/{id}")
-    public String eliminarModulo(@PathVariable("id") Integer id, Authentication auth) {
+    public String eliminarModulo(@PathVariable("id") Integer id, Authentication auth,
+            RedirectAttributes redirectAttributes) {
         Integer cursoId = moduloRepo.findCursoIdByModuloId(id)
                 .orElseThrow(() -> new IllegalArgumentException("Módulo no encontrado: " + id));
         assertPuedeGestionarContenido(cursoId, auth);
-        Modulo modulo = moduloRepo.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Módulo no encontrado: " + id));
-        moduloRepo.delete(modulo);
+
+        long lecciones = leccionRepo.countByModulo_Id(id);
+        if (lecciones > 0) {
+            redirectAttributes.addFlashAttribute("toastContenido",
+                    "No puedes eliminar el módulo mientras tenga lecciones. Elimina primero cada lección y, después, el módulo.");
+            redirectAttributes.addFlashAttribute("toastTipo", "warning");
+            return "redirect:/admin/cursos/" + cursoId + "/contenido";
+        }
+
+        try {
+            Modulo modulo = moduloRepo.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Módulo no encontrado: " + id));
+            moduloRepo.delete(modulo);
+        } catch (DataIntegrityViolationException e) {
+            log.warn("No se pudo eliminar módulo {} (integridad BD): {}", id, e.getMostSpecificCause().getMessage());
+            redirectAttributes.addFlashAttribute("toastContenido",
+                    "No se pudo eliminar el módulo. Elimina primero todas las lecciones asociadas y vuelve a intentarlo.");
+            redirectAttributes.addFlashAttribute("toastTipo", "warning");
+        }
         return "redirect:/admin/cursos/" + cursoId + "/contenido";
     }
 

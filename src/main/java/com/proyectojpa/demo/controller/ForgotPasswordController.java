@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.proyectojpa.demo.Service.EmailLayoutInstitucional;
 import com.proyectojpa.demo.Service.EmailService;
 import com.proyectojpa.demo.Service.PasswordResetTokenService;
 import com.proyectojpa.demo.models.PasswordResetToken;
@@ -31,22 +32,28 @@ public class ForgotPasswordController {
     private final PasswordResetTokenService passwordResetTokenService;
     private final EmailService emailService;
     private final String publicBaseUrl;
+    private final String mailTransport;
     private final String mailUsername;
     private final String mailPassword;
+    private final String resendApiKey;
 
     public ForgotPasswordController(
             PersonaRepository personaRepository,
             PasswordResetTokenService passwordResetTokenService,
             EmailService emailService,
             @Value("${app.public-url:http://localhost:8080}") String publicBaseUrl,
+            @Value("${app.mail.transport:smtp}") String mailTransport,
             @Value("${spring.mail.username:}") String mailUsername,
-            @Value("${spring.mail.password:}") String mailPassword) {
+            @Value("${spring.mail.password:}") String mailPassword,
+            @Value("${resend.api.key:}") String resendApiKey) {
         this.personaRepository = personaRepository;
         this.passwordResetTokenService = passwordResetTokenService;
         this.emailService = emailService;
-        this.publicBaseUrl = trimTrailingSlash(publicBaseUrl);
+        this.publicBaseUrl = EmailLayoutInstitucional.baseUrlSinSlashFinal(publicBaseUrl);
+        this.mailTransport = mailTransport != null ? mailTransport.trim().toLowerCase(Locale.ROOT) : "smtp";
         this.mailUsername = mailUsername;
         this.mailPassword = mailPassword;
+        this.resendApiKey = resendApiKey;
     }
 
     @GetMapping("/forgot-password")
@@ -75,9 +82,14 @@ public class ForgotPasswordController {
 
         Persona personaEncontrada = persona.get();
 
-        if (!StringUtils.hasText(mailUsername) || !StringUtils.hasText(mailPassword)) {
-            log.error(
-                    "SMTP sin credenciales: define MAIL_USERNAME y MAIL_PASSWORD (contraseña de aplicación Gmail, sin espacios) y reinicia la aplicación.");
+        if (!correoConfiguradoParaEnvio()) {
+            if ("resend".equals(mailTransport)) {
+                log.error(
+                        "Resend sin clave: define RESEND_API_KEY y MAIL_FROM (remitente verificado en Resend).");
+            } else {
+                log.error(
+                        "SMTP sin credenciales: define MAIL_USERNAME y MAIL_PASSWORD (Gmail: contraseña de aplicación, sin espacios).");
+            }
             model.addAttribute("error",
                     "No pudimos enviar el correo en este momento. Intenta de nuevo más tarde.");
             return "forgot-password";
@@ -86,13 +98,14 @@ public class ForgotPasswordController {
         try {
             PasswordResetToken tokenEntity = passwordResetTokenService.crearToken(personaEncontrada);
             String link = publicBaseUrl + "/reset?token=" + tokenEntity.getToken();
-            String cuerpo = construirCuerpoCorreo(link);
+            String html = construirHtmlRecuperacionContrasena(link);
             String destinatario = personaEncontrada.getEmail() != null ? personaEncontrada.getEmail() : normalized;
-            emailService.enviarTexto(destinatario, "Recuperación de contraseña — Sabor MasterClass", cuerpo);
+            emailService.enviarHtml(destinatario, "Recuperación de contraseña — Sabor MasterClass", html);
         } catch (Exception e) {
-            log.warn("Fallo SMTP al enviar recuperación de contraseña (revisa credenciales Gmail y red/puerto 587)", e);
-            model.addAttribute("error",
-                    "No pudimos enviar el correo en este momento. Intenta de nuevo más tarde.");
+            log.error("Fallo al enviar recuperación de contraseña: {}", e.getMessage(), e);
+            String hint = mensajeUsuarioSegunFalloCorreo(e, mailTransport);
+            model.addAttribute("error", hint != null ? hint
+                    : "No pudimos enviar el correo en este momento. Intenta de nuevo más tarde.");
             return "forgot-password";
         }
 
@@ -100,23 +113,79 @@ public class ForgotPasswordController {
         return "forgot-password";
     }
 
-    private static String construirCuerpoCorreo(String link) {
-        return """
-                Hola,
-
-                Has solicitado restablecer tu contraseña en Sabor MasterClass.
-
-                Abre el siguiente enlace (válido por tiempo limitado):
-                %s
-
-                Si no solicitaste este cambio, ignora este mensaje.
-                """.formatted(link);
+    /**
+     * Misma plantilla institucional que pago pendiente; el enlace de reset solo va en el botón (no URL a la vista).
+     */
+    private static String construirHtmlRecuperacionContrasena(String resetUrlAbsoluta) {
+        String inner = """
+                <p style="color: #555555; font-size: 16px; line-height: 1.6; margin-bottom: 25px;">
+                    Hola,
+                </p>
+                <p style="color: #555555; font-size: 16px; line-height: 1.6; margin-bottom: 25px;">
+                    Has solicitado <b>restablecer tu contraseña</b> en Sabor MasterClass.
+                </p>
+                <div style="background-color: #f9f9f9; padding: 25px; border-radius: 8px; border-left: 5px solid #6619f5; color: #444444; font-size: 16px; line-height: 1.6;">
+                    <p style="margin: 0;">
+                        Pulsa el botón de abajo para elegir una <b>nueva contraseña</b>. El enlace caduca pasado un tiempo por seguridad.
+                    </p>
+                </div>
+                <p style="color: #555555; font-size: 15px; line-height: 1.6; margin-top: 22px; margin-bottom: 0;">
+                    Si <b>no</b> solicitaste este cambio, ignora este mensaje; tu contraseña no se modificará.
+                </p>
+                """;
+        return EmailLayoutInstitucional.pagina("&#128273; Recuperación de contraseña", inner,
+                "ESTABLECER NUEVA CONTRASEÑA", resetUrlAbsoluta);
     }
 
-    private static String trimTrailingSlash(String url) {
-        if (url == null || url.isEmpty()) {
-            return "http://localhost:8080";
+    private boolean correoConfiguradoParaEnvio() {
+        if ("resend".equals(mailTransport)) {
+            return StringUtils.hasText(resendApiKey);
         }
-        return url.endsWith("/") ? url.substring(0, url.length() - 1) : url;
+        return StringUtils.hasText(mailUsername) && StringUtils.hasText(mailPassword);
     }
+
+    private static final String AYUDA_RESEND_DOMINIO =
+            "Resend rechazó el envío (validación). Aunque MAIL_FROM sea correcto (p. ej. noreply@tudominio.com), "
+                    + "en resend.com el dominio debe figurar como verificado (DNS SPF/DKIM/MX según indiquen), sin errores. "
+                    + "Comprueba que MAIL_FROM coincida exactamente con una dirección de ese dominio y que la propagación DNS haya terminado. "
+                    + "Si usas cuenta de prueba, revisa las restricciones de destinatarios en la documentación de Resend.";
+
+    private static final String AYUDA_SMTP_TIMEOUT_RENDER =
+            "No se pudo abrir conexión SMTP (tiempo de espera agotado). En Render (y otros PaaS) suele estar bloqueada "
+                    + "la salida hacia smtp.gmail.com en los puertos 587 y 465: no suele ser un fallo de la contraseña "
+                    + "de aplicación. Opciones estables: (1) MAIL_TRANSPORT=resend, RESEND_API_KEY y dominio verificado "
+                    + "en Resend; (2) alojar la app en un VPS que permita SMTP. Como prueba opcional en Render: "
+                    + "MAIL_PORT=465, MAIL_SMTP_SSL=true, MAIL_STARTTLS_ENABLE=false.";
+
+    /**
+     * Mensaje útil sin filtrar secretos (patrones conocidos de Resend/SMTP).
+     */
+    private static String mensajeUsuarioSegunFalloCorreo(Exception e, String mailTransport) {
+        String transport = mailTransport != null ? mailTransport.trim().toLowerCase(Locale.ROOT) : "smtp";
+        for (Throwable t = e; t != null; t = t.getCause()) {
+            String msg = t.getMessage();
+            if (msg == null) {
+                continue;
+            }
+            String m = msg.toLowerCase(Locale.ROOT);
+            boolean resend422 = m.contains("resend http 422");
+            boolean resendCuerpo = m.contains("resend http");
+            if (resend422 || m.contains("validation_error") || m.contains("domain is not verified")
+                    || m.contains("invalid from") || (resendCuerpo && m.contains("not verified"))) {
+                return AYUDA_RESEND_DOMINIO;
+            }
+            if (m.contains("resend http 403") || m.contains("invalid api key") || m.contains("resend http 401")) {
+                return "La clave de envío (Resend) no es válida o no tiene permiso. Revisa RESEND_API_KEY en Render y que sea la del mismo proyecto/región que el dominio.";
+            }
+            if (m.contains("connect timed out") || m.contains("mailconnectexception")
+                    || m.contains("connection timed out") || m.contains("sockettimeoutexception")) {
+                if ("resend".equals(transport)) {
+                    return "No se pudo conectar a la API de Resend (red o cortafuegos). Revisa conectividad del servidor y que RESEND_API_KEY sea correcta.";
+                }
+                return AYUDA_SMTP_TIMEOUT_RENDER;
+            }
+        }
+        return null;
+    }
+
 }

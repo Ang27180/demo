@@ -3,6 +3,7 @@ package com.proyectojpa.demo.Service;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,20 @@ import com.proyectojpa.demo.repository.PersonaRepository;
 public class PasswordResetTokenService {
 
     private static final Duration VIGENCIA_TOKEN = Duration.ofHours(1);
-    private static final int LONGITUD_MINIMA_CONTRASENA = 6;
+
+    /** Misma política que el campo contraseña en registro ({@link com.proyectojpa.demo.models.Persona}). */
+    public static final String MENSAJE_POLITICA_CONTRASENA =
+            "Mínimo 8 caracteres, una mayúscula, un número y un carácter especial";
+
+    private static final Pattern PATRON_CONTRASENA_FUERTE = Pattern
+            .compile("^(?=.*[0-9])(?=.*[A-Z])(?=.*[^a-zA-Z0-9\\s]).{8,}$");
+
+    /**
+     * Contraseña acorde al registro / entidad Persona.
+     */
+    public static boolean cumplePoliticaContrasena(String raw) {
+        return raw != null && PATRON_CONTRASENA_FUERTE.matcher(raw).matches();
+    }
 
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final PersonaRepository personaRepository;
@@ -78,8 +92,8 @@ public class PasswordResetTokenService {
      */
     @Transactional
     public void completarCambioContrasena(String token, String nuevaContraseña) {
-        if (!StringUtils.hasText(nuevaContraseña) || nuevaContraseña.length() < LONGITUD_MINIMA_CONTRASENA) {
-            throw new IllegalArgumentException("La contraseña debe tener al menos 6 caracteres");
+        if (!cumplePoliticaContrasena(nuevaContraseña)) {
+            throw new IllegalArgumentException(MENSAJE_POLITICA_CONTRASENA);
         }
 
         PasswordResetToken resetToken = validarToken(token);

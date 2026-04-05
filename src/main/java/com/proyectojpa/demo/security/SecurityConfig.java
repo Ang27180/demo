@@ -32,7 +32,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         // RECURSOS PÚBLICOS Y ACCESO INICIAL
-                        .requestMatchers("/", "/home", "/nosotros", "/nuestros-tutores", "/registro", "/login", "/forgot-password").permitAll()
+                        .requestMatchers("/", "/home", "/nosotros", "/nuestros-tutores", "/registro", "/login", "/forgot-password",
+                                "/reset").permitAll()
                         .requestMatchers("/css/**", "/js/**", "/imagenes/**", "/files/medios-pago/**", "/files/tutores/**",
                                 "/files/lecciones-pdf/**", "/favicon.ico", "/error").permitAll()
                         .requestMatchers("/correo/**").permitAll()

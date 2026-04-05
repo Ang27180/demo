@@ -58,9 +58,9 @@ public class ResetPasswordController {
 
         String tokenTrim = token.trim();
 
-        if (!StringUtils.hasText(password) || password.length() < 6) {
+        if (!PasswordResetTokenService.cumplePoliticaContrasena(password)) {
             return formularioConErrorTokenValido(tokenTrim, model,
-                    "La contraseña debe tener al menos 6 caracteres.");
+                    PasswordResetTokenService.MENSAJE_POLITICA_CONTRASENA);
         }
 
         if (!password.equals(confirmPassword != null ? confirmPassword : "")) {

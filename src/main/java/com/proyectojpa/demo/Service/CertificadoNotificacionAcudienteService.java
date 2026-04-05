@@ -57,7 +57,7 @@ public class CertificadoNotificacionAcudienteService {
                 .findByEstudianteDependienteIdEstudianteWithDetalle(insc.getEstudiante().getIdEstudiante());
         String nombreEst = insc.getEstudiante().getPersona().getNombre();
         String nombreCurso = insc.getCurso() != null ? insc.getCurso().getNombre() : "el curso";
-        String base = publicUrl.replaceAll("/$", "");
+        String base = EmailLayoutInstitucional.baseUrlSinSlashFinal(publicUrl);
         String loginUrl = base + "/login";
         String panelUrl = base + "/acudiente/panel";
 

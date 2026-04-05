@@ -2,13 +2,19 @@
 # Copia este archivo a: src/main/resources/application-local.properties
 # Ese archivo está en .gitignore y NO debe subirse a Git.
 #
-# Por defecto la app usa sabormasterclass@gmail.com (application.properties).
-# Añade aquí la contraseña de aplicación Gmail (16 caracteres, sin espacios),
-# o define MAIL_PASSWORD en el entorno (Railway, etc.).
+# Local con Gmail (SMTP): contraseña de aplicación (16 caracteres, sin espacios).
+# Producción en Render/Railway: suele fallar SMTP por firewall; usa Resend (HTTPS):
+#   MAIL_TRANSPORT=resend
+#   RESEND_API_KEY=re_...
+#   (Opcional) MAIL_FROM="Sabor MasterClass <noreply@send.sabormasterclass.com>"
+#   Si omites MAIL_FROM y spring.mail.username es Gmail, se usa MAIL_FROM_VERIFIED / noreply@send.sabormasterclass.com
+#   NUNCA uses @gmail.com como From en Resend.
+# Opcional si /actuator/health marca mail DOWN con Resend:
+#   MANAGEMENT_HEALTH_MAIL_ENABLED=false
+# Opcional: MAIL_REPLY_TO=sabormasterclass@gmail.com (responder a tu Gmail)
 # =============================================================================
 
-# Obligatorio para enviar correo en local (Gmail: contraseña de aplicación, 16 caracteres sin espacios).
-# Si sigue fallando con 535, genera una nueva en Google Cuenta → Seguridad → Contraseñas de aplicaciones.
+# Solo si app.mail.transport=smtp (por defecto en local):
 spring.mail.password=TU_CONTRASENA_DE_APLICACION_SIN_ESPACIOS
 
 # Ver diálogo SMTP en consola (errores 535, STARTTLS, etc.)

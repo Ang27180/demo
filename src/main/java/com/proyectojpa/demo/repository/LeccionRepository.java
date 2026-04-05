@@ -12,6 +12,8 @@ public interface LeccionRepository extends JpaRepository<Leccion, Integer> {
 
     long countByModulo_Curso_Id(Integer idCurso);
 
+    long countByModulo_Id(Integer idModulo);
+
     @Query("SELECT m.curso.id FROM Leccion l JOIN l.modulo m WHERE l.id = :id")
     Optional<Integer> findCursoIdByLeccionId(@Param("id") Integer leccionId);
 }

@@ -6,19 +6,24 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+/**
+ * Envío por SMTP (Gmail u otro). En Render/Railway el puerto 587 suele estar bloqueado; usa {@code app.mail.transport=resend}.
+ */
 @Service
-public class EmailServiceImpl implements EmailService {
+@ConditionalOnProperty(name = "app.mail.transport", havingValue = "smtp", matchIfMissing = true)
+public class SmtpEmailServiceImpl implements EmailService {
 
     private final JavaMailSender mailSender;
     private final String fromEmail;
 
-    public EmailServiceImpl(JavaMailSender mailSender,
-            @Value("${spring.mail.username}") String fromEmail) {
+    public SmtpEmailServiceImpl(JavaMailSender mailSender,
+            @Value("${app.mail.from:${spring.mail.username}}") String fromEmail) {
         this.mailSender = mailSender;
         this.fromEmail = fromEmail;
     }

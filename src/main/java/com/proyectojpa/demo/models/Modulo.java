@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 
 @Entity
@@ -28,6 +29,7 @@ public class Modulo {
     private Curso curso;
 
     @OneToMany(mappedBy = "modulo")
+    @OrderBy("id ASC")
     private Set<Leccion> lecciones;
 
     @Column(name = "cantidad")

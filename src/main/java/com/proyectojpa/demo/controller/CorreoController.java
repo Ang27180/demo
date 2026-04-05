@@ -2,7 +2,11 @@ package com.proyectojpa.demo.controller;
 
 import com.proyectojpa.demo.Service.EmailService;
 import jakarta.mail.MessagingException;
+
+import com.proyectojpa.demo.Service.EmailLayoutInstitucional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +18,9 @@ public class CorreoController {
 
     @Autowired
     private EmailService emailService;
+
+    @Value("${app.public-url:http://localhost:8080}")
+    private String publicUrlApp;
 
     // ============================================================
     // 1️⃣ VISTA THYMELEAF
@@ -36,7 +43,7 @@ public class CorreoController {
         try {
             // Se genera el contenido HTML con la nueva plantilla premium diseñada para el proyecto
             // Se eliminó el parámetro 'tipo' para evitar el Error 400 cuando viene de la vista
-            String html = generarPlantillaPremium(para, asunto, mensaje);
+            String html = generarPlantillaPremium(para, asunto, mensaje, enlaceInicioApp());
             
             // Se envía forzosamente como HTML para mantener la estética institucional
             emailService.enviarHtml(para, asunto, html);
@@ -73,7 +80,7 @@ public class CorreoController {
             @RequestParam(name = "para") String para,
             @RequestParam(name = "asunto") String asunto) throws MessagingException {
 
-        String html = generarPlantillaPremium(para, asunto, "Mensaje de bienvenida automático");
+        String html = generarPlantillaPremium(para, asunto, "Mensaje de bienvenida automático", enlaceInicioApp());
         emailService.enviarHtml(para, asunto, html);
 
         return ResponseEntity.ok("Correo enviado correctamente (HTML).");
@@ -140,7 +147,11 @@ public class CorreoController {
     /**
      * Genera una plantilla HTML premium con los colores institucionales (Negro, Dorado y Blanco)
      */
-    private String generarPlantillaPremium(String para, String asunto, String mensaje) {
+    private String enlaceInicioApp() {
+        return EmailLayoutInstitucional.baseUrlSinSlashFinal(publicUrlApp);
+    }
+
+    private String generarPlantillaPremium(String para, String asunto, String mensaje, String urlInicio) {
         return """
                 <!DOCTYPE html>
                 <html>
@@ -175,7 +186,7 @@ public class CorreoController {
                                 <table align="center" border="0" cellpadding="0" cellspacing="0" style="margin-top: 30px;">
                                     <tr>
                                         <td align="center" style="border-radius: 50px; background-color: #000000;">
-                                            <a href="http://localhost:8080/home" style="display: inline-block; padding: 12px 35px; color: #ffffff; text-decoration: none; font-weight: bold; border-radius: 50px; font-size: 14px;">
+                                            <a href="%s" style="display: inline-block; padding: 12px 35px; color: #ffffff; text-decoration: none; font-weight: bold; border-radius: 50px; font-size: 14px;">
                                                 Ir a Sabor MasterClass
                                             </a>
                                         </td>
@@ -198,6 +209,6 @@ public class CorreoController {
                 </body>
                 </html>
                 """
-                .formatted(asunto, para, mensaje);
+                .formatted(asunto, para, mensaje, urlInicio);
     }
 }
