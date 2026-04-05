@@ -176,3 +176,130 @@ body {
   from { opacity: 0; transform: translateY(-30px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ================================================================ */
+/* Catálogo /cursos (antes segundo archivo; unificado para Linux)   */
+/* En Windows Cursos.css y cursos.css coinciden; en Render no → 404  */
+/* ================================================================ */
+
+.cursos-catalog-page .sidebar-sticky {
+  position: sticky;
+  top: 6rem;
+}
+
+.cursos-catalog-page .text-gold {
+  color: var(--gold-accent, #f8c325);
+}
+
+.cursos-catalog-page .course-rating-badge {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: auto;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(10px);
+  color: var(--gold-accent, #f8c325);
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  z-index: 10;
+  border: 1px solid rgba(248, 195, 37, 0.25);
+}
+
+.cursos-catalog-page .course-catalog-cta-block {
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+}
+
+.cursos-catalog-page .course-catalog-price {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.cursos-catalog-page .course-catalog-price .label {
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.78);
+  display: block;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-weight: 600;
+}
+
+.cursos-catalog-page .course-catalog-price-value {
+  color: var(--gold-accent, #f8c325);
+}
+
+.cursos-catalog-page .course-desc--catalog {
+  color: rgba(255, 255, 255, 0.9) !important;
+  margin-bottom: 0;
+}
+
+.cursos-catalog-page .section-header .lead {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+.cursos-catalog-page .testimonial-text {
+  color: rgba(255, 255, 255, 0.92) !important;
+  font-style: italic;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  margin-bottom: 0;
+}
+
+@keyframes catalogCtaPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(248, 195, 37, 0.5);
+  }
+  55% {
+    box-shadow: 0 0 0 10px rgba(248, 195, 37, 0);
+  }
+}
+
+.cursos-catalog-page .course-catalog-cta-btn {
+  animation: catalogCtaPulse 2.2s ease-in-out infinite;
+}
+
+.cursos-catalog-page .course-catalog-cta-btn:hover {
+  animation: none;
+}
+
+.cursos-catalog-page .testimonial-premium {
+  background: rgba(31, 31, 34, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-glass, rgba(255, 255, 255, 0.08));
+  border-radius: 25px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.cursos-catalog-page .quote-icon {
+  font-size: 2rem;
+  color: var(--gold-accent, #f8c325);
+  opacity: 0.35;
+  float: right;
+  margin-top: -8px;
+}
+
+.cursos-catalog-page .testimonial-name {
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin-bottom: 4px;
+}
+
+.cursos-catalog-page .bg-yellow-luxury {
+  background: linear-gradient(135deg, var(--gold-accent, #f8c325) 0%, #d8a61c 100%);
+  padding: 1.75rem;
+  border-radius: 24px;
+  color: #000;
+  box-shadow: 0 16px 36px rgba(248, 195, 37, 0.2);
+}
+
+.cursos-catalog-page .bg-yellow-luxury h5 {
+  font-weight: 800;
+}
